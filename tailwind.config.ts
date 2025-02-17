@@ -8,9 +8,24 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        futurapt: ["var(--font-futurapt)"],
+      },
+      backgroundImage: {
+        "custom-gradient": "linear-gradient(to bottom, #0E0E0E, #0A2C3B )",
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        // "primary-dark": "#48422D",
+        "secondary-dark": "#FFFFFF",
+        accent: "#FFCC00",
+      },
+      screens: {
+        "2xl": { max: "1535px" },
+        xl: { max: "1279px" },
+        lg: { max: "1023px" },
+        navsize: { max: "1180px" },
+        tab: { max: "991px" },
+        mob: { max: "768px" },
       },
     },
   },
