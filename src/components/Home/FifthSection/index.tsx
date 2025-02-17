@@ -19,8 +19,8 @@ const FifthSection = () => {
             MOTION GRAPHICS
           </Text>
           <Link href="#">
-            <Text className="text-accent items-center uppercase tracking-[0.7px]">
-              SHOP MGFX PACKS <span className="ml-[2px]">→</span>{" "}
+            <Text className="text-accent items-center uppercase tracking-[0.7px] underline underline-offset-[3px]">
+              SHOP MGFX PACKS <span className="">→</span>{" "}
             </Text>
           </Link>
         </div>

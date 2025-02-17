@@ -11,7 +11,7 @@ import fb from "@/public/icons/u_facebook-f.svg";
 
 const Footer = () => {
   return (
-    <div className="py-20">
+    <div className="py-20 mob:px-5">
       <Text
         as="h2"
         className="text-center text-[30px] text-[#000000] leading-[38.46px] "

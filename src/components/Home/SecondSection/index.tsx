@@ -2,7 +2,6 @@ import React from "react";
 import Image from "next/image";
 
 import bg from "@/public/images/secondbg.png";
-import bgshadow from "@/public/images/secondshadow.png";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 
@@ -14,12 +13,7 @@ const SecondSection = () => {
         src={bg}
         alt="bg"
       />
-      <Image
-        className="absolute w-full object-cover object-center z-0"
-        src={bgshadow}
-        alt="bgshadow"
-      />
-      <div className="absolute w-full h-full bg-black/10"></div>
+    
 
       <div className="relative z-10 w-full max-w-[358px]">
         <Text as="h1" className="text-center">

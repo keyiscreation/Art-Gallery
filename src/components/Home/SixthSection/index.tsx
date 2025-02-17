@@ -19,8 +19,8 @@ const SixthSection = () => {
           LIMITED EDITION PRINTS
           </Text>
           <Link href="#">
-            <Text className="text-accent items-center uppercase tracking-[0.7px]">
-            SHOP PRINTS <span className="ml-[2px]">→</span>{" "}
+            <Text className="text-accent items-center uppercase tracking-[0.7px] underline underline-offset-[3px]">
+            SHOP PRINTS <span className="">→</span>{" "}
             </Text>
           </Link>
         </div>
