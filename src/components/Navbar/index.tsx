@@ -4,8 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 
-
-
 import Drawer from "@/components/ui/Drawer";
 import logo from "@/public/logo.png";
 // import linkedinsvg from "../../../public/linkedin.svg";
@@ -53,12 +51,10 @@ const Navbar = () => {
 
   return (
     <div className="relative">
-      <nav
-        className="absolute min-h-[80px] bg-cover z-50 w-full  px-14"      >
+      <nav className="absolute min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
-            <div
-              className="flex justify-between items-center w-full mob:px-5 pb-4"            >
+            <div className="flex justify-between items-center w-full mob:px-5 pb-4">
               {/* dekstop navbar */}
               <Link
                 href="/"
@@ -96,10 +92,9 @@ const Navbar = () => {
                         : "text-white"
                     }`}
                   >
-                   ABOUT
+                    ABOUT
                   </Link>
                 </li>
-              
 
                 <li>
                   <Link
@@ -124,10 +119,12 @@ const Navbar = () => {
 
               <div className="flex items-center gap-[32px] xl:hidden">
                 <div className="relative max-w-[29px]">
-                <Image className="" src={cartbucket} alt="cartbucket"  />
-                <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
-                  <Text className="text-[10px] font-futurapt font-bold ">0</Text>
-                </div>
+                  <Image className="" src={cartbucket} alt="cartbucket" />
+                  <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
+                    <Text className="text-[10px] font-futurapt font-bold ">
+                      0
+                    </Text>
+                  </div>
                 </div>
                 <div>
                   <Link
