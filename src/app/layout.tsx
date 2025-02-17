@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
+import Footer from "@/components/Footer";
 
 const futurapt = localFont({
   src: [
@@ -23,6 +24,18 @@ const futurapt = localFont({
   ],
   variable: "--font-futurapt",
 });
+const futura = localFont({
+  src: [
+   
+    {
+      path: "../../public/fonts/Futura/Futura Medium.ttf",
+      weight: "500",
+      style: "medium",
+    },
+ 
+  ],
+  variable: "--font-futura",
+});
 
 export const metadata: Metadata = {
   title: "Art Gallery",
@@ -37,9 +50,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${futurapt.variable} antialiased`}
+        className={` ${futurapt.variable} ${futura.variable} antialiased`}
       >
         {children}
+        <Footer/>
       </body>
     </html>
   );

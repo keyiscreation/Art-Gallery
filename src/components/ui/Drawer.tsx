@@ -87,7 +87,7 @@ const Drawer: React.FC<DrawerProps> = ({
 
         {/* Drawer content */}
         {/* Conditionally render the children based on 'isOpen' */}
-        {isOpen && <div className="h-full  pb-[50px]">{children}</div>}
+        {isOpen && <div className="h-full  pb-[50px] flex justify-center items-center">{children}</div>}
       </div>
     </>
   );

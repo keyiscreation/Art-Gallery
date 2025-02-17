@@ -1,0 +1,57 @@
+import React from "react";
+import Image from "next/image";
+
+import Text from "../ui/Text";
+import Button from "../ui/Button";
+
+import youtube from "@/public/icons/youtube.svg";
+import twiter from "@/public/icons/u_twitter.svg";
+import insta from "@/public/icons/u_instagram.svg";
+import fb from "@/public/icons/u_facebook-f.svg";
+
+const Footer = () => {
+  return (
+    <div className="py-20 mob:px-5">
+      <Text
+        as="h2"
+        className="text-center text-[30px] text-[#000000] leading-[38.46px] "
+      >
+        Newsletter
+      </Text>
+      <Text
+        as="h2"
+        className="text-center text-[#000000] font-medium text-[15px] leading-[38.46px] mb-5"
+      >
+        Get notified when new projects drop.
+      </Text>
+
+      <form action="" className="flex justify-center gap-[34px]">
+        <input
+          placeholder="E-mail Address"
+          type="text"
+          className="px-3 border-[1px] border-[#000000] outline-none h-[60px] w-full max-w-[250px] text-[15px] text-[#000000] font-futurapt font-normal placehoder:text-[#000000] "
+        />
+
+        <Button className="max-w-[146px]  bg-transparent border border-[#000000] text-[15px] text-[#000000] font-futurapt font-normal hover:opacity-100">
+          SUBSCRIBE
+        </Button>
+      </form>
+
+      <Text as="h1" className="text-center text-[#000000] mt-10">
+        Follow
+      </Text>
+      <div className="flex justify-center items-center gap-5 mt-5">
+        <Image
+          className="w-[24.52px] h-[24.52px]"
+          src={youtube}
+          alt="youtube"
+        />
+        <Image className="w-[24.52px] h-[24.52px]" src={twiter} alt="twiter" />
+        <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
+        <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" />
+      </div>
+    </div>
+  );
+};
+
+export default Footer;

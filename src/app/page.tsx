@@ -1,15 +1,22 @@
-import Button from "@/components/ui/Button";
-import Text from "@/components/ui/Text";
+import FifthSection from "@/components/Home/FifthSection";
+import ForthSection from "@/components/Home/ForthSection";
+import HeroSection from "@/components/Home/HeroSection";
+import SecondSection from "@/components/Home/SecondSection";
+import SixthSection from "@/components/Home/SixthSection";
+import ThirdSection from "@/components/Home/ThirdSection";
+
 
 export default function Home() {
   return (
     <>
-      <div className="min-h-screen bg-black">
-        <Text>SHOP</Text>
-        <Text as="h2">LIMITED EDITION PRINTS</Text>
-        <Text as="h1">LOREM IPSUM</Text>
-        <Button >LIMITED EDITION</Button>
-      </div>
+   <div className="overflow-hidden">
+   <HeroSection/>
+   <SecondSection/>
+   <ThirdSection/>
+   <ForthSection/>
+   <FifthSection/>
+   <SixthSection/>
+   </div>
     </>
   );
 }
