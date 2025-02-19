@@ -73,7 +73,7 @@ const Navbar = () => {
               <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[32px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 <li>
                   <Link
-                    href="/"
+                    href="/store"
                     onClick={() => handleTabChange("/")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
                       activeTab === "/" ? " font-medium" : "text-white"
@@ -84,12 +84,10 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    href=""
-                    onClick={() => handleTabChange("/product-and-services")}
+                    href="/about"
+                    onClick={() => handleTabChange("/about")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "/product-and-services"
-                        ? " font-medium"
-                        : "text-white"
+                      activeTab === "/about" ? " font-medium" : "text-white"
                     }`}
                   >
                     ABOUT
@@ -99,9 +97,9 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/"
-                    onClick={() => handleTabChange("/careers")}
+                    onClick={() => handleTabChange("/")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "/careers" ? " font-medium" : "text-white"
+                      activeTab === "" ? " font-medium" : "text-white"
                     }`}
                   >
                     CONTACT
@@ -128,7 +126,7 @@ const Navbar = () => {
                 </div>
                 <div>
                   <Link
-                    href="/"
+                    href="/store"
                     onClick={() => handleTabChange("/")}
                     className={`flex items-center justify-center bg-[#FFFFFF] w-[112.48px] h-[51.2px] rounded-[60px] text-[12px] text-[#000000] font-futurapt font-medium  leading-[15.38px] ${
                       activeTab === "/" ? " font-semibold" : ""
@@ -181,29 +179,27 @@ const Navbar = () => {
                 </div>
                 <Drawer isOpen={isOpen} onClose={onClose}>
                   <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {[
-                      "/",
-                      "/SHOP",
-                      "/ABOUT",
-                      "/CONTACT",
-                      "/SHOP NOW",
-                    ].map((path) => (
-                      <a
-                        href={path}
-                        key={path}
-                        onClick={() => handleTabChange(path)}
-                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white  ${
-                          activeTab === path
-                            ? "t text-white font-medium"
-                            : " text-white"
-                        }`}
-                      >
-                        <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
-                          {path === "/" ? "Home" : path.slice(1).toUpperCase()}
-                        </li>
+                    {["/", "/SHOP", "/ABOUT", "/CONTACT", "/SHOP NOW"].map(
+                      (path) => (
+                        <a
+                          href={path}
+                          key={path}
+                          onClick={() => handleTabChange(path)}
+                          className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white  ${
+                            activeTab === path
+                              ? "t text-white font-medium"
+                              : " text-white"
+                          }`}
+                        >
+                          <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
+                            {path === "/"
+                              ? "Home"
+                              : path.slice(1).toUpperCase()}
+                          </li>
                           <hr className="w-full border border-[#FFFFFF] my-2" />
-                      </a>
-                    ))}
+                        </a>
+                      )
+                    )}
                     {/* <a
                       href="/contact"
                       className="flex justify-center  text-[16px] w-full font-normal leading-7 text-[#FFFFFF] font-inter"

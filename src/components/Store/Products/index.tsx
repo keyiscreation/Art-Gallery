@@ -1,32 +1,20 @@
+"use client"
 import React from "react";
 import Image from "next/image";
 
 import Text from "@/components/ui/Text";
 
 import productsData from "@/lib/constants/ProductsData";
-
-// const products = [
-//   {
-//     id: 1,
-//     title: "Two Infinities, And Beyond",
-//     price: "$0.00",
-//     image: product,
-//   },
-//   {
-//     id: 2,
-//     title: "Infinite Possibilities",
-//     price: "$10.99",
-//     image: product,
-//   },
-//   {
-//     id: 3,
-//     title: "Beyond The Horizon",
-//     price: "$20.99",
-//     image: product,
-//   },
-// ];
+import { useRouter } from "next/navigation";
 
 const Products = () => {
+
+  const router = useRouter();
+
+  const handleNavigation = () => {
+    router.push(`/product`); // Navigates to product page
+  };
+
   return (
     <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
       <Text as="h1" className="text-black text-center">
@@ -40,9 +28,10 @@ const Products = () => {
         {productsData.map((product) => (
           <div key={product.id} className="w-full max-w-[401.99px]">
             <Image
-              className="max-h-[313.93px] w-full object-cover"
+              className="max-h-[313.93px] w-full object-cover cursor-pointer"
               src={product.image}
               alt={product.title}
+              onClick={handleNavigation}
               width={401.99}
               height={313.93}
             />
