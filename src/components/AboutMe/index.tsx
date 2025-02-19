@@ -10,6 +10,7 @@ import youtube from "@/public/icons/youtube.svg";
 import twiter from "@/public/icons/u_twitter.svg";
 import insta from "@/public/icons/u_instagram.svg";
 import fb from "@/public/icons/u_facebook-f.svg";
+
 const AboutMe = () => {
   return (
     <div>
