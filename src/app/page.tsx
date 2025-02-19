@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import FifthSection from "@/components/Home/FifthSection";
 import ForthSection from "@/components/Home/ForthSection";
 import HeroSection from "@/components/Home/HeroSection";
@@ -16,6 +17,7 @@ export default function Home() {
    <ForthSection/>
    <FifthSection/>
    <SixthSection/>
+   <Footer/>
    </div>
     </>
   );

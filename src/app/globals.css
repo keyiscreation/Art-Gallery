@@ -3,12 +3,11 @@
 @tailwind utilities;
 
 /* Custom class for scaling from the top with a shadow on hover */
-.custom-scale {
-  /* transform-origin: top; */
+/* .custom-scale {
   transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .custom-scale:hover {
-  transform: scale(1.2); /* Increase height by 10% when hovered */
-  box-shadow: 0px -20px 100px rgba(255, 255, 255, 0.3); /* Drop shadow on the top side */
-}
+  transform: scale(1.2);
+  box-shadow: 0px -20px 100px rgba(255, 255, 255, 0.3); 
+} */
