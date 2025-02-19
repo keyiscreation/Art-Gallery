@@ -50,8 +50,8 @@ const Navbar = () => {
   }, [isOpen]);
 
   return (
-    <div className="relative">
-      <nav className="absolute min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
+    <div className="relative bg-[#000000] mb-16">
+      <nav className="relative min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
             <div className="flex justify-between items-center w-full mob:px-5 pb-4">
@@ -74,9 +74,9 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/store"
-                    onClick={() => handleTabChange("")}
+                    onClick={() => handleTabChange("/")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "" ? " font-medium" : "text-white"
+                      activeTab === "/" ? " font-medium" : "text-white"
                     }`}
                   >
                     SHOP
@@ -96,15 +96,23 @@ const Navbar = () => {
 
                 <li>
                   <Link
-                    href=""
-                    onClick={() => handleTabChange("/careers")}
+                    href="/"
+                    onClick={() => handleTabChange("/")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "/careers" ? " font-medium" : "text-white"
+                      activeTab === "" ? " font-medium" : "text-white"
                     }`}
                   >
                     CONTACT
                   </Link>
                 </li>
+
+                {/* <li className="xl:hidden">
+                  <Link href="/contact">
+                    <button className="uppercase px-[23px] h-[44px] rounded-[4px] border text-[16px] font-inter font-bold leading-[25.5px] text-[#FFFFFF]">
+                      CONTACT
+                    </button>
+                  </Link>
+                </li> */}
               </ul>
 
               <div className="flex items-center gap-[32px] xl:hidden">
@@ -119,9 +127,9 @@ const Navbar = () => {
                 <div>
                   <Link
                     href="/store"
-                    onClick={() => handleTabChange("/store")}
+                    onClick={() => handleTabChange("/")}
                     className={`flex items-center justify-center bg-[#FFFFFF] w-[112.48px] h-[51.2px] rounded-[60px] text-[12px] text-[#000000] font-futurapt font-medium  leading-[15.38px] ${
-                      activeTab === "/store" ? " font-semibold" : ""
+                      activeTab === "/" ? " font-semibold" : ""
                     }`}
                   >
                     SHOP NOW

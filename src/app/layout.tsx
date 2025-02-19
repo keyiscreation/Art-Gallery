@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
-import Footer from "@/components/Footer";
+
 
 const futurapt = localFont({
   src: [
@@ -53,7 +53,6 @@ export default function RootLayout({
         className={` ${futurapt.variable} ${futura.variable} antialiased`}
       >
         {children}
-        <Footer/>
       </body>
     </html>
   );
