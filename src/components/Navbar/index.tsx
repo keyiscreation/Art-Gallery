@@ -171,33 +171,27 @@ const Navbar = () => {
                 </div>
                 <Drawer isOpen={isOpen} onClose={onClose}>
                   <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {["/", "/SHOP", "/ABOUT", "/CONTACT", "/SHOP NOW"].map(
-                      (path) => (
-                        <a
-                          href={path}
-                          key={path}
-                          onClick={() => handleTabChange(path)}
-                          className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white  ${
-                            activeTab === path
-                              ? "t text-white font-medium"
-                              : " text-white"
-                          }`}
-                        >
-                          <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
-                            {path === "/"
-                              ? "Home"
-                              : path.slice(1).toUpperCase()}
-                          </li>
-                          <hr className="w-full border border-[#FFFFFF] my-2" />
-                        </a>
-                      )
-                    )}
-                    {/* <a
-                      href="/contact"
-                      className="flex justify-center  text-[16px] w-full font-normal leading-7 text-[#FFFFFF] font-inter"
-                    > */}
-
-                    {/* </a> */}
+                    {["/", "/about", "/store"].map((path) => (
+                      <a
+                        href={path}
+                        key={path}
+                        onClick={() => handleTabChange(path)}
+                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white  ${
+                          activeTab === path
+                            ? "text-white font-medium"
+                            : "text-white"
+                        }`}
+                      >
+                        <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
+                          {path === "/"
+                            ? "Home"
+                            : path === "/store"
+                            ? "Shop"
+                            : path.slice(1).toUpperCase()}
+                        </li>
+                        <hr className="w-full border border-[#FFFFFF] my-2" />
+                      </a>
+                    ))}
                   </ul>
                 </Drawer>
               </div>
