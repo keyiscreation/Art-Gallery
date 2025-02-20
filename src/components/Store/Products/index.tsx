@@ -11,8 +11,9 @@ const Products = () => {
 
   const router = useRouter();
 
-  const handleNavigation = () => {
-    router.push(`/product`); // Navigates to product page
+  const handleNavigation = (slugtitle: string) => {
+    const slug = slugtitle;
+    router.push(`/products/${slug}`); 
   };
 
   return (
@@ -31,7 +32,7 @@ const Products = () => {
               className="max-h-[313.93px] w-full object-cover cursor-pointer"
               src={product.image}
               alt={product.title}
-              onClick={handleNavigation}
+              onClick={() => handleNavigation(product.slugtitle)}
               width={401.99}
               height={313.93}
             />

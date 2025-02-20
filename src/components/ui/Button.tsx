@@ -7,6 +7,7 @@ interface ButtonProps {
   className?: string;
   type?: "button" | "submit" | "reset"; 
   loading?: boolean; 
+  onClick?: () => void;
 }
 
 
@@ -16,12 +17,14 @@ const Button: React.FC<ButtonProps> = ({
   className,
   type = "button",
   loading = false,
+  onClick,
 }) => {
   return (
     <>
       <button
       type={type}
       disabled={loading}
+      onClick={onClick}
         className={cn(
           "w-full flex justify-center items-center  bg-accent  h-[62px] max-w-[273px] text-[18px] font-normal leading-[23.08px] text-[#000000] hover:opacity-85 transition duration-500 ease-in-out",
           className
