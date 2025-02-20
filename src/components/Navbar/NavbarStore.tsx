@@ -6,16 +6,15 @@ import { gsap } from "gsap";
 
 import Drawer from "@/components/ui/Drawer";
 import logo from "@/public/logo.png";
-// import linkedinsvg from "../../../public/linkedin.svg";
-// import linkedinsvgmob from "../../../public/linkedin1.svg";
-// import usersvg from "../../../public/user.svg";
-// import loginsvg from "../../../public/login.svg";
 import cartbucket from "@/public/icons/bucketcart.svg";
 import Text from "../ui/Text";
+import useShoppingCart from "@/hooks/useShoppingCart";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/"); // Initial active tab set to home
+
+  const { cartProducts } = useShoppingCart();
 
   // Load activeTab from local storage on component mount
   useEffect(() => {
@@ -116,14 +115,14 @@ const Navbar = () => {
               </ul>
 
               <div className="flex items-center gap-[32px] xl:hidden">
-                <div className="relative max-w-[29px]">
+                <Link href="/cart" className="relative max-w-[29px]">
                   <Image className="" src={cartbucket} alt="cartbucket" />
                   <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
                     <Text className="text-[10px] font-futurapt font-bold ">
-                      0
+                      {cartProducts.length}
                     </Text>
                   </div>
-                </div>
+                </Link>
                 <div>
                   <Link
                     href="/store"
