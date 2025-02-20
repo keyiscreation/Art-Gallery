@@ -1,5 +1,4 @@
-// @ts-ignore
-"use client"; 
+"use client";
 
 import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import Image from "next/image";
@@ -7,7 +6,7 @@ import Image from "next/image";
 // import { Elements } from "@stripe/react-stripe-js";
 // import StripeForm from "./Stripe";
 
-import { orderDataKeys } from "@/lib/constants/orderdetail";
+// import { orderDataKeys } from "@/lib/constants/orderdetail";
 
 import Text from "../ui/Text";
 
@@ -19,9 +18,24 @@ import axios from "axios";
 //   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
 // );
 
-interface IndexSignature {
-  [key: string | number]: any;
-}
+type CartItem = {
+  title: string;
+  price: number;
+  quantity: number;
+};
+
+type OrderFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  streetAddress: string;
+  aptNumber?: number;
+  state: string;
+  zipCode: number;
+  cartValues: CartItem[];
+};
+
+
 const Checkout = () => {
   const {
     cartProducts,
@@ -32,7 +46,18 @@ const Checkout = () => {
     cartProductsTotalPrice,
   } = useShoppingCart();
 
-  const [formData, setFormData] = useState<IndexSignature>(orderDataKeys);
+  const [formData, setFormData] = useState<OrderFormData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    streetAddress: "",
+    aptNumber: undefined,
+    state: "",
+    zipCode: 0,
+    cartValues: [],
+  });
+  
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -46,16 +71,16 @@ const Checkout = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const updatedFormData = { ...formData };
 
     updatedFormData["cartValues"] = cartProducts.map((product) => ({
       title: product.title,
-      price: product.price,
-      // slug: product.slug,
+      price: Number(product.price), // Ensure it's a number
       quantity: getItemQuantity(product.id),
     }));
-
+    
     console.log(updatedFormData, "formData");
     try {
       const res = await axios.post("/api/order", updatedFormData);
@@ -63,6 +88,7 @@ const Checkout = () => {
 
       if (data && data.message === "Email Sent Successfully") {
         alert("Email sent successfully");
+        setLoading(false);
       } else {
         throw new Error(data?.message || "Failed to send email");
       }
@@ -212,9 +238,35 @@ const Checkout = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="mt-4 bg-black max-w-full text-white"
+                className="mt-4 bg-black max-w-full text-white flex justify-center items-center"
               >
-                Submit
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                    Submitting...
+                  </span>
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </form>
 
@@ -256,7 +308,7 @@ const Checkout = () => {
           </div> */}
 
           {/* order details */}
-          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-[480px] mob:max-h-full">
+          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-full mob:max-h-full">
             <Text className="text-[22px] font-medium leading-[28px] text-black">
               Order Details
             </Text>
@@ -286,12 +338,14 @@ const Checkout = () => {
                       {product.title}
                     </Text>
 
-                    <div className="bg-[#F2F2F2] p-2  max-w-[103.3px] flex justify-between gap-10 my-2">
-                      <Text className="font-medium text-black">Qty</Text>
-                      <Text className="font-medium text-black">
-                        {" "}
-                        {getItemQuantity(Number(product.id))}
-                      </Text>
+                    <div className=" flex justify-end">
+                      <div className="bg-[#F2F2F2] p-2  max-w-[103.3px] flex justify-between gap-10 my-2">
+                        <Text className="font-medium text-black">Qty</Text>
+                        <Text className="font-medium text-black">
+                          {" "}
+                          {getItemQuantity(Number(product.id))}
+                        </Text>
+                      </div>
                     </div>
                     <Text
                       onClick={() => removeFromCart(product.id)}

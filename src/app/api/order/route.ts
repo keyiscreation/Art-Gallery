@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
       host: "smtp.gmail.com",
       port: 587,
       auth: {
-        user: "salmanamjad902@gmail.com",
-        pass: "shmn qcwu xjzv mlte",
+        user: "developer@innovativemojo.com",
+        pass: "tjjs zgqd koej xpvf",
       },
     });
 
@@ -69,9 +69,9 @@ export async function POST(request: NextRequest) {
   // </td>
 
     const mailOptionToYou = {
-      from: "salmanamjad902@gmail.com",
+      from: "developer@innovativemojo.com",
       // from: formdata.email,
-      to: "ART GAlLERY <salmanamjad902@gmail.com>",
+      to: "ART GAlLERY <developer@innovativemojo.com>",
       // to: "developer@innovativemojo.com",
       subject: " order",
       html: `
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     };
 
     const mailOptionToUser = {
-      from: "ART GAlLERY <salmanamjad902@gmail.com> ",
+      from: "ART GAlLERY <developer@innovativemojo.com> ",
 
       to: formdata.email,
       subject: "Your order is placed",

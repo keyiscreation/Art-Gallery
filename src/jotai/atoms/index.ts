@@ -1,10 +1,10 @@
-// @ts-ignore
 import { atom, Atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 // import { Product } from "@/shopify/types";
 
 export interface IAtomObject {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
   [key: string]: Atom<any>;
 }
 

@@ -27,15 +27,15 @@ const useShoppingCart = () => {
   );
 
   const getItemQuantity = (id: number | string) => {
-    return cartItems.find((item: any) => item.id === id)?.quantity || 0;
+    return cartItems.find((item: CartItem) => item.id === id)?.quantity || 0;
   };
 
   const increaseCartQuantity = (id: number | string) => {
     setCartItems((currItems: CartItem[]) => {
-      if (currItems.find((item: any) => item.id === id) == null) {
+      if (currItems.find((item: CartItem) => item.id === id) == null) {
         return [...currItems, { id, quantity: 1 }];
       } else {
-        return currItems.map((item: any) => {
+        return currItems.map((item: CartItem) => {
           if (item.id === id) {
             return { ...item, quantity: item.quantity + 1 };
           } else {
@@ -69,17 +69,16 @@ const useShoppingCart = () => {
   };
 
   const cartProducts: Product[] = useMemo(() => {
-    const cartProducts: any[] = [];
-
+    const cartProducts: Product[] = [];
     cartItems.forEach((item: CartItem) => {
       const found = products.find((product) => product.id === item.id);
       if (found) {
         cartProducts.push(found);
       }
     });
-
     return cartProducts;
-  }, [cartItems]);
+  }, [cartItems, products]); 
+  
 
   const cartProductsTotalPrice = useMemo(() => {
     const totalPice = cartProducts.reduce(
