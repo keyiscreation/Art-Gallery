@@ -1,6 +1,6 @@
 interface IndexSignature {
-    [key: string | number]: any;
-  }
+  [key: string]: string;
+}
   
   export const orderDataKeys: IndexSignature = {
     firstName: "",

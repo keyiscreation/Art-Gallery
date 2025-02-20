@@ -5,15 +5,14 @@ import Image from "next/image";
 import useShoppingCart from "@/hooks/useShoppingCart";
 
 import Text from "@/components/ui/Text";
-import Button from "@/components/ui/Button";
 
 const PlaceOrder = () => {
   const {
     cartProducts,
-    getItemQuantity,
-    increaseCartQuantity,
-    decreaseCartQuantity,
-    removeFromCart,
+    // getItemQuantity,
+    // increaseCartQuantity,
+    // decreaseCartQuantity,
+    // removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
 

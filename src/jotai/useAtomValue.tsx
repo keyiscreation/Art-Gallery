@@ -1,4 +1,4 @@
-import { useAtom, Atom } from "jotai";
+import { useAtom } from "jotai";
 
 import { atoms } from "./atoms";
 

@@ -1,61 +1,38 @@
-"use client"; // Required for App Router in Next.js
+// @ts-ignore
+"use client"; 
 
 import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import Image from "next/image";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
+// import StripeForm from "./Stripe";
 
-import StripeForm from "./Stripe";
 import { orderDataKeys } from "@/lib/constants/orderdetail";
 
 import Text from "../ui/Text";
 
 import Button from "../ui/Button";
 import useShoppingCart from "@/hooks/useShoppingCart";
+import axios from "axios";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
-);
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
+// );
 
 interface IndexSignature {
   [key: string | number]: any;
 }
 const Checkout = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const {
     cartProducts,
     getItemQuantity,
     // increaseCartQuantity,
     // decreaseCartQuantity,
-    // removeFromCart,
-    // cartProductsTotalPrice,
+    removeFromCart,
+    cartProductsTotalPrice,
   } = useShoppingCart();
 
-  // Static Dummy Data
-  // const accordionData = [
-  //   {
-  //     title: "What is Tailwind CSS?",
-  //     content:
-  //       "Tailwind CSS is a utility-first CSS framework for creating modern designs.",
-  //   },
-  //   {
-  //     title: "Is Tailwind good for React?",
-  //     content:
-  //       "Yes! Tailwind works seamlessly with React, making UI development faster.",
-  //   },
-  //   {
-  //     title: "How to install Tailwind?",
-  //     content:
-  //       "Run `npm install tailwindcss` and configure it in your project.",
-  //   },
-  // ];
-
-  // const handleToggle = (index: number) => {
-  //   setOpenIndex(openIndex === index ? null : index);
-  // };
-
   const [formData, setFormData] = useState<IndexSignature>(orderDataKeys);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -69,6 +46,30 @@ const Checkout = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const updatedFormData = { ...formData };
+
+    updatedFormData["cartValues"] = cartProducts.map((product) => ({
+      title: product.title,
+      price: product.price,
+      // slug: product.slug,
+      quantity: getItemQuantity(product.id),
+    }));
+
+    console.log(updatedFormData, "formData");
+    try {
+      const res = await axios.post("/api/order", updatedFormData);
+      const data = res?.data;
+
+      if (data && data.message === "Email Sent Successfully") {
+        alert("Email sent successfully");
+      } else {
+        throw new Error(data?.message || "Failed to send email");
+      }
+    } catch (error) {
+      console.error("Error sending email:", error);
+      alert("Email sent Error");
+    }
   };
 
   return (
@@ -82,11 +83,146 @@ const Checkout = () => {
 
         <div className="flex flex-wrap justify-center gap-16 mob:gap-2 mt-20 mb-5">
           {/* details */}
+          <div className="w-full  max-w-[555px] border border-[#000000]/20 px-[25px] py-[25px] mb-10  bg-[#FFFFFF]">
+            <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
+              <div className="flex gap-[16px] mb-3">
+                <Text className="text-[22px] text-[#000000] font-futuraBT font-normal">
+                  Add New Address
+                </Text>
+              </div>
 
-          <Elements stripe={stripePromise}>
-            {/* <StripeForm formData={formData} handleSubmit={handleSubmit} /> */}
-            <StripeForm formData={formData} handleSubmit={handleSubmit} />
-          </Elements>
+              <div className="flex mob:block w-full gap-5 justify-between mb-2">
+                {/* First Name */}
+                <div className="w-full max-w-[272.22px] mob:max-w-full">
+                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                    First Name
+                  </Text>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    required
+                    autoComplete="off"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                  />
+                </div>
+
+                {/* Last Name */}
+                <div className="w-full max-w-[272.22px] mob:max-w-full">
+                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                    Last Name
+                  </Text>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    required
+                    autoComplete="off"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="mb-2">
+                <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  Email
+                </Text>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                  autoComplete="off"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                />
+              </div>
+
+              {/* Street Address */}
+              <div className="mb-2">
+                <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  Street Address
+                </Text>
+                <input
+                  type="text"
+                  name="streetAddress"
+                  value={formData.streetAddress}
+                  onChange={handleInputChange}
+                  required
+                  autoComplete="off"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                />
+              </div>
+
+              {/* Apt, State, Zip */}
+              <div className="flex mob:block w-full gap-5 justify-between mb-5">
+                {/* Apt Number */}
+                <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                    Apt Number
+                  </Text>
+                  <input
+                    type="number"
+                    name="aptNumber"
+                    value={formData.aptNumber}
+                    onChange={handleInputChange}
+                    min="0"
+                    autoComplete="off"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                  />
+                </div>
+
+                {/* State */}
+                <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                    State
+                  </Text>
+                  <input
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    required
+                    autoComplete="off"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                  />
+                </div>
+
+                {/* Zip */}
+                <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                    Zip Code
+                  </Text>
+                  <input
+                    type="number"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    autoComplete="off"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="mt-4 bg-black max-w-full text-white"
+              >
+                Submit
+              </Button>
+            </form>
+
+            {/* <Elements stripe={stripePromise}>
+              <StripeForm formData={formData} handleSubmit={handleSubmit} />
+            </Elements> */}
+          </div>
+
           {/* <div className="">
             {accordionData.map((item, index) => (
               <div key={index} className="border-b border-gray-300">
@@ -120,7 +256,7 @@ const Checkout = () => {
           </div> */}
 
           {/* order details */}
-          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px]">
+          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-[480px] mob:max-h-full">
             <Text className="text-[22px] font-medium leading-[28px] text-black">
               Order Details
             </Text>
@@ -157,7 +293,10 @@ const Checkout = () => {
                         {getItemQuantity(Number(product.id))}
                       </Text>
                     </div>
-                    <Text className="text-[12px] font-medium leading-[18px] text-[#FF0000] text-end underline underline-offset-2 cursor-pointer">
+                    <Text
+                      onClick={() => removeFromCart(product.id)}
+                      className="text-[12px] font-medium leading-[18px] text-[#FF0000] text-end underline underline-offset-2 cursor-pointer"
+                    >
                       Remove
                     </Text>
                   </div>
@@ -173,7 +312,7 @@ const Checkout = () => {
               <input
                 placeholder="E-mail Address"
                 type="text"
-                className="px-3 border-[1px] bg-[#F2F2F2]  outline-none h-[45] w-full max-w-[284px] text-[15px] text-[#00000033] font-futurapt font-normal placehoder:text-[#000000] "
+                className="px-3 border-[1px] bg-[#F2F2F2]  outline-none h-[45] w-full max-w-[284px] text-[15px] text-[#000000] font-futurapt font-normal placehoder:text-[#000000] "
               />
 
               <Button className="max-w-[83px] h-[45px]  bg-transparent border border-[#000000]/30 text-[15px] text-[#000000] font-medium font-futurapt  hover:opacity-100">
@@ -187,7 +326,7 @@ const Checkout = () => {
                 Subtotal
               </Text>
               <Text className="text-[14px] font-medium leading-[18px] text-black">
-                $2000.00
+                ${cartProductsTotalPrice}
               </Text>
             </div>
             <div className="flex justify-between  mb-2">
@@ -213,7 +352,7 @@ const Checkout = () => {
                 Total
               </Text>
               <Text className="text-[24px] font-medium leading-[30.77px] text-black">
-                $0.00
+                ${cartProductsTotalPrice}
               </Text>
             </div>
 

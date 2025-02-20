@@ -27,23 +27,34 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
   const router = useRouter();
   const {
-    cartProducts,
+    // cartProducts,
     getItemQuantity,
     increaseCartQuantity,
     decreaseCartQuantity,
-    removeFromCart,
-    cartProductsTotalPrice,
+    // removeFromCart,
+    // cartProductsTotalPrice,
   } = useShoppingCart();
 
   const onAddToCart = async (id: number) => {
+    const quantity = getItemQuantity(id);
+  
+    // Show validation message if size is not selected
     if (!selectedSize) {
       setShowValidationMessage(true);
       return;
     }
   
-    increaseCartQuantity(id); // Pass the selected size to cart
+    // If quantity is already greater than 0, just navigate to the cart
+    if (quantity > 0) {
+      router.push(`/cart`);
+      return;
+    }
+  
+    // Increase the cart quantity only if item is not already in the cart
+    increaseCartQuantity(id);
     router.push(`/cart`);
   };
+  
   
 
   return (

@@ -4,7 +4,6 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 
-import product from "@/public/images/prints/related1.png";
 import useShoppingCart from "@/hooks/useShoppingCart";
 import { Fragment } from "react";
 export default function CartPage() {
@@ -27,7 +26,7 @@ export default function CartPage() {
           {cartProducts.map((product) => (
             <Fragment key={product.id}>
               <div className="flex flex-wrap justify-between my-10">
-                <div className="flex gap-4 relative">
+                <div className="flex gap-4 relative min-w-[30%] mob:min-w-full ">
                   <Image
                     className="w-[132px] h-[132px] object-cover"
                     src={product.image}
@@ -35,7 +34,7 @@ export default function CartPage() {
                   />
 
                   <div className="">
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-medium">
+                    <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
                       {product.title}
                     </Text>
                     <Text className="text-[#000000] text-[16px] leading-[20px] mt-2">
@@ -83,7 +82,7 @@ export default function CartPage() {
                 </div>
                 {/*  */}
 
-                <div className="ml-20 mob:ml-0 mob:hidden">
+                <div className="ml-20 mob:ml-0 mob:hidden min-w-[100px]">
                   <Text className="text-[#000000] text-[16px] leading-[20px]">
                     <span
                       onClick={() => decreaseCartQuantity(Number(product.id))}
@@ -103,7 +102,7 @@ export default function CartPage() {
 
                 <div className="flex gap-5 mob:hidden">
                   <Text className="text-[#000000] text-[16px] leading-[20px]">
-                    {product.price}
+                  ${(parseFloat(product.price) * getItemQuantity(product.id)).toFixed(2)}
                   </Text>
                   <Text
                     onClick={() => removeFromCart(product.id)}

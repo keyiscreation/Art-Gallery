@@ -4,7 +4,6 @@ import {
     useStripe,
   } from "@stripe/react-stripe-js";
   import axios from "axios";
-  
 //   import useToast from "@/hooks/useToast";
   
   import useShoppingCart from "@/hooks/useShoppingCart";
@@ -43,14 +42,14 @@ import {
   
     const createPayment = async (paymentMethodID: string) => {
       try {
-      const { billing_details, metadata } = getMetaDataAndBillingDetails();
+      const {  metadata } = getMetaDataAndBillingDetails();
   
         const res = await axios.post("/api/stripe", {
           amount: cartProductsTotalPrice,
           metadata
         });
   
-        const { client_secret, success } = res?.data?.data;
+        const { client_secret } = res?.data?.data;
         //   console.log({ client_secret, success });
         //! Now confirm CardPayment
   
@@ -77,8 +76,8 @@ import {
             alert("Payment Successful");
           return { success: true };
         }
-      } catch (error: any) {
-        console.log("axios paymentIntent error", error?.message);
+      } catch (error) {
+        console.log("axios paymentIntent error", error);
         return { success: false };
       }
     };
@@ -86,10 +85,10 @@ import {
     const createPaymentMethod = async () => {
       const cardElement = elements?.getElement(CardNumberElement);
   
-      const { billing_details, metadata } = getMetaDataAndBillingDetails();
+      const {  metadata } = getMetaDataAndBillingDetails();
   
       if (cardElement && stripe) {
-        const createPaymentMethodResult: any = await stripe.createPaymentMethod({
+        const createPaymentMethodResult = await stripe.createPaymentMethod({
           type: "card",
           card: cardElement,
           //   billing_details,
@@ -124,7 +123,10 @@ import {
       };
     };
   
-    const getMetaDataAndBillingDetails = () => {
+    interface User {
+      uid?: string;
+    }
+    const getMetaDataAndBillingDetails = (currentUser: User = {}) => {
       const billing_details = {
         email: "test@gmail.com",
         // name: "test",
@@ -139,7 +141,9 @@ import {
   
       const metadata = {
         email: "test@gmail.com",
-        uid: "currentUser?.uid" || "",
+        uid: currentUser?.uid || "",
+        // uid: "currentUser?.uid" || "",
+
       };
   
       // console.log({ metadata, billing_details });

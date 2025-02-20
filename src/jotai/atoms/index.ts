@@ -1,3 +1,4 @@
+// @ts-ignore
 import { atom, Atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
