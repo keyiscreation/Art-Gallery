@@ -1,17 +1,50 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 import Text from "../ui/Text";
 
-import productimg from "@/public/images/photos on wall 1.png";
+// import productimg from "@/public/images/photos on wall 1.png";
 import Button from "../ui/Button";
 import RelatedProducts from "./RelatedProducts";
-import Link from "next/link";
+import useShoppingCart from "@/hooks/useShoppingCart";
+import { useRouter } from "next/navigation";
 
-const sizes = ["Small", "Medium", "Large", "X-Large"];
-const Product = () => {
-  const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
+
+interface ProductProps {
+  product: {
+    id: number;
+    title: string;
+    slugtitle: string;
+    price: string;
+    image: StaticImageData;
+    sizes: string[];
+  };
+}
+const Product: React.FC<ProductProps> = ({ product }) => {
+    const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
+  const [showValidationMessage, setShowValidationMessage] = useState(false);
+
+  const router = useRouter();
+  const {
+    cartProducts,
+    getItemQuantity,
+    increaseCartQuantity,
+    decreaseCartQuantity,
+    removeFromCart,
+    cartProductsTotalPrice,
+  } = useShoppingCart();
+
+  const onAddToCart = async (id: number) => {
+    if (!selectedSize) {
+      setShowValidationMessage(true);
+      return;
+    }
+  
+    increaseCartQuantity(id); // Pass the selected size to cart
+    router.push(`/cart`);
+  };
+  
 
   return (
     <div>
@@ -25,55 +58,64 @@ const Product = () => {
           <div className="w-full max-w-[670px]">
             <Image
               className="w-full max-w-[670px] object-cover"
-              src={productimg}
-              alt="productimg"
+              src={product.image}
+              alt={product.title}
             />
           </div>
 
           <div className="max-w-[465px]">
             <Text className="text-[38px] text-[#000000] font-semibold font-futura leading-[48px]">
-              Two Infinities, And Beyond
+              {product.title}
             </Text>
             <Text className="text-[26px] text-[#000000] font-normal font-futurapt leading-[33.33px]">
               From $250.00
             </Text>
             <Text className="text-[18px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
-              Two Infinities, And Beyond
+              {product.title}
             </Text>
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
               Size:
             </Text>
-            <select
-              className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-futurapt outline-none font-medium"
-              value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
-            >
-              {sizes.map((size) => (
-                <option
-                  className="text-[16px] font-futurapt"
-                  key={size}
-                  value={size}
-                >
-                  {size}
-                </option>
-              ))}
-            </select>
+          <select
+            className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
+            value={selectedSize}
+            onChange={(e) => setSelectedSize(e.target.value)}
+          >
+            {product.sizes.map((size) => (
+              <option key={size} value={size}>{size}</option>
+            ))}
+          </select>
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
             </Text>
             <div className="border border-[#000000]/70 w-[77px] h-[65px] flex justify-center items-center">
+              <button
+                onClick={() => decreaseCartQuantity(Number(product.id))}
+                className=" px-4"
+              >
+                -
+              </button>
               <Text className="text-[16px] text-[#000000] leading-[20px]">
-                1
+                {getItemQuantity(Number(product.id))}
               </Text>
+              <button
+                onClick={() => increaseCartQuantity(Number(product.id))}
+                className=" px-4"
+              >
+                +
+              </button>
             </div>
 
-            <Link className="w-full max-w-[273px]" href="/cart">
-              <Button className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium mt-10">
+              <Button   onClick={() => onAddToCart(Number(product.id))} className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium mt-10">
                 Add To Cart
               </Button>
-            </Link>
+              {showValidationMessage && (
+              <p className="text-gradient text-[16px] font-jakrata font-medium">
+                Please add quantity before adding to cart.
+              </p>
+            )}
           </div>
         </div>
 

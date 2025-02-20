@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 const HeroSection = () => {
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <Navbar />
+      {/* <Navbar /> */}
       <Image
         className="absolute w-full object-cover object-center h-full"
         src={bg}
