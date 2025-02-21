@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
-
-
+import path from "path";
+import { extname } from "path";
 
 interface Product {
   title: string;
@@ -9,6 +9,7 @@ interface Product {
   price: number;
   quantity: number;
   slugtitle: string;
+  pathnode: string;
 }
 
 export async function POST(request: NextRequest) {
@@ -22,16 +23,31 @@ export async function POST(request: NextRequest) {
       port: 587,
       auth: {
         user: "developer@innovativemojo.com",
-        pass: "tjjs zgqd koej xpvf",
+        pass: "tjjs zgqd koej xpvf",
       },
     });
 
     const grandTotal = formdata.cartValues.reduce(
-      (total: number, product: Product) => total + product.price * product.quantity,
+      (total: number, product: Product) =>
+        total + product.price * product.quantity,
       0
     );
 
+    const attachments = formdata.cartValues.map((product: Product) => {
+      const fileExtension = extname(product.pathnode); // Extracts ".png", ".jpg", ".pdf", etc.
 
+      return {
+        filename: `${product.title}${fileExtension}`, // Preserve original file extension
+        path: path.join(
+          process.cwd(),
+          "public",
+          "images",
+          "store",
+          product.pathnode
+        ),
+        cid: product.slugtitle,
+      };
+    });
     const productListHTML = `
     <table style="width: 100%; border-collapse: collapse;">
       <tr>
@@ -42,12 +58,12 @@ export async function POST(request: NextRequest) {
       </tr>
       ${formdata.cartValues
         .map((product: Product) => {
-          const totalPrice = product.price * product.quantity; 
-    
+          const totalPrice = product.price * product.quantity;
+
           return `
             <tr class="product-row">
             <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
-            <img src="${product.image}" alt="${product.title}" style="max-width: 50px; height: auto;">
+            <img src="cid:${product.slugtitle}" alt="${product.title}" style="max-width: 50px; height: auto;">
           </td>
               <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${product.title}</td>
               <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${product.quantity}</td>
@@ -61,12 +77,10 @@ export async function POST(request: NextRequest) {
       </tr>
     </table>
     `;
-    
-    
 
-  //   <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: center;">
-  //   <img src="${product.title}" alt="Image" style="max-width: 50px;">
-  // </td>
+    //   <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: center;">
+    //   <img src="${product.title}" alt="Image" style="max-width: 50px;">
+    // </td>
 
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
@@ -87,11 +101,7 @@ export async function POST(request: NextRequest) {
           ${productListHTML}
     </ul>
       `,
-      // attachments: formdata.cartValues.map((product: any) => ({
-      //   filename: `${product.title}.png`,
-      //   path: path.join(process.cwd(), 'public', 'imgs', 'merch', product.pathnode),
-      //   cid: product.slug
-      // }))
+      attachments,
     };
 
     const mailOptionToUser = {
@@ -116,7 +126,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     return NextResponse.json(
-      { message: "Failed to Send Email",error },
+      { message: "Failed to Send Email", error },
       { status: 500 }
     );
   }

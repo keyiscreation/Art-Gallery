@@ -6,6 +6,9 @@ import Text from "@/components/ui/Text";
 
 import useShoppingCart from "@/hooks/useShoppingCart";
 import { Fragment } from "react";
+import { useRouter } from "next/navigation";
+
+
 export default function CartPage() {
   const {
     cartProducts,
@@ -15,7 +18,13 @@ export default function CartPage() {
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
-  
+  const router = useRouter();
+
+  const handleNavigation = (slugtitle: string) => {
+    const slug = slugtitle;
+    router.push(`/products/${slug}`);
+  };
+
   return (
     <>
       <div className="overflow-hidden px-5 pb-16">
@@ -27,11 +36,24 @@ export default function CartPage() {
             <Fragment key={product.id}>
               <div className="flex flex-wrap justify-between my-10">
                 <div className="flex gap-4 relative min-w-[30%] mob:min-w-full ">
-                  <Image
-                    className="w-[132px] h-[132px] object-cover"
+                  {/* <Image
+                    className="w-[132px] h-[132px] object-cover cursor-pointer"
                     src={product.image}
+                    onClick={() => handleNavigation(product.slugtitle)}
                     alt="product"
-                  />
+                  /> */}
+                  <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
+                    <Image
+                      className="w-[132px] h-[132px] object-cover cursor-pointer"
+                      src={product.image}
+                      onClick={() => handleNavigation(product.slugtitle)}
+                      alt="product"
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable="false" // Disable dragging
+                    />
+
+                    {/* Optional Watermark Logo */}
+                  </div>
 
                   <div className="">
                     <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
@@ -102,7 +124,10 @@ export default function CartPage() {
 
                 <div className="flex gap-5 mob:hidden">
                   <Text className="text-[#000000] text-[16px] leading-[20px]">
-                  ${(parseFloat(product.price) * getItemQuantity(product.id)).toFixed(2)}
+                    $
+                    {(
+                      parseFloat(product.price) * getItemQuantity(product.id)
+                    ).toFixed(2)}
                   </Text>
                   <Text
                     onClick={() => removeFromCart(product.id)}
@@ -121,7 +146,10 @@ export default function CartPage() {
                 Subtotal
               </Text>
               <Text className="text-[22px] leading-[28px] text-black font-medium">
-                ${cartProductsTotalPrice || 0}
+                $
+                {cartProductsTotalPrice
+                  ? cartProductsTotalPrice.toFixed(2)
+                  : "0.00"}
               </Text>
             </div>
           </div>
