@@ -4,7 +4,7 @@ export default function About() {
   return (
     <>
    <div className="overflow-hidden">
- <AboutMe/>
+  <AboutMe/>
    </div>
     </>
   );
