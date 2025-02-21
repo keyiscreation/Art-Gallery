@@ -6,4 +6,6 @@ export type Product = {
      slugtitle: string;
      price: string;
      image: StaticImageData;
+     pathnode: string; 
+     sizes?: string[];
 };

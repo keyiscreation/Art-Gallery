@@ -10,6 +10,7 @@ import RelatedProducts from "./RelatedProducts";
 import useShoppingCart from "@/hooks/useShoppingCart";
 import { useRouter } from "next/navigation";
 
+import logo from "@/public/logo.png";
 
 interface ProductProps {
   product: {
@@ -22,7 +23,7 @@ interface ProductProps {
   };
 }
 const Product: React.FC<ProductProps> = ({ product }) => {
-    const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
+  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
   const router = useRouter();
@@ -37,25 +38,36 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
   const onAddToCart = async (id: number) => {
     const quantity = getItemQuantity(id);
-  
+
     // Show validation message if size is not selected
     if (!selectedSize) {
       setShowValidationMessage(true);
       return;
     }
-  
+
     // If quantity is already greater than 0, just navigate to the cart
     if (quantity > 0) {
       router.push(`/cart`);
       return;
     }
-  
+
     // Increase the cart quantity only if item is not already in the cart
     increaseCartQuantity(id);
     router.push(`/cart`);
   };
-  
-  
+
+  const onBuyNow = (id: number) => {
+    const quantity = getItemQuantity(id);
+
+    // If product ID is 0 or quantity is 0, show validation message
+    if (id === 0 || quantity === 0) {
+      setShowValidationMessage(true);
+      return;
+    }
+
+    // Navigate to checkout only if quantity > 0
+    router.push(`/checkout`);
+  };
 
   return (
     <div>
@@ -66,12 +78,27 @@ const Product: React.FC<ProductProps> = ({ product }) => {
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
 
         <div className="flex flex-wrap items-end gap-10 mt-16 mb-14">
-          <div className="w-full max-w-[670px]">
-            <Image
-              className="w-full max-w-[670px] object-cover"
-              src={product.image}
-              alt={product.title}
-            />
+          <div className="w-full max-w-[670px] relative">
+            {/* Image container with watermark */}
+            <div className="relative w-full h-full">
+              {/* Image with watermark */}
+              <Image
+                className="w-full max-w-[670px] object-cover"
+                src={product.image}
+                alt={product.title}
+                onContextMenu={(e) => e.preventDefault()} // Disable right-click
+                draggable="false" // Disable image dragging
+              />
+
+              {/* Watermark logo */}
+              <div className="absolute inset-0 flex justify-center items-center opacity-30 pointer-events-none z-20">
+                <Image
+                  className="max-w-[150px] max-h-[150px]" // Adjust size of watermark logo
+                  src={logo} // Replace with your logo source
+                  alt="Watermark Logo"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="max-w-[465px]">
@@ -88,15 +115,17 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
               Size:
             </Text>
-          <select
-            className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
-            value={selectedSize}
-            onChange={(e) => setSelectedSize(e.target.value)}
-          >
-            {product.sizes.map((size) => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </select>
+            <select
+              className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+            >
+              {product.sizes.map((size) => (
+                <option key={size} value={size}>
+                  {size}
+                </option>
+              ))}
+            </select>
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
@@ -119,10 +148,23 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               </button>
             </div>
 
-              <Button   onClick={() => onAddToCart(Number(product.id))} className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium mt-10">
+            <div className="flex  tab:gap-5 gap-5 mt-10">
+              <Button
+                onClick={() => onAddToCart(Number(product.id))}
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium "
+              >
                 Add To Cart
               </Button>
-              {showValidationMessage && (
+
+              <Button
+                onClick={() => onBuyNow(Number(product.id))}
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium"
+              >
+                Buy Now
+              </Button>
+            </div>
+
+            {showValidationMessage && (
               <p className="text-gradient text-[16px] font-jakrata font-medium">
                 Please add quantity before adding to cart.
               </p>
