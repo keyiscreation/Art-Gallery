@@ -56,6 +56,19 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     router.push(`/cart`);
   };
 
+  const onBuyNow = (id: number) => {
+    const quantity = getItemQuantity(id);
+
+    // If product ID is 0 or quantity is 0, show validation message
+    if (id === 0 || quantity === 0) {
+      setShowValidationMessage(true);
+      return;
+    }
+
+    // Navigate to checkout only if quantity > 0
+    router.push(`/checkout`);
+  };
+
   return (
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
@@ -135,12 +148,22 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               </button>
             </div>
 
-            <Button
-              onClick={() => onAddToCart(Number(product.id))}
-              className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium mt-10"
-            >
-              Add To Cart
-            </Button>
+            <div className="flex  tab:gap-5 gap-5 mt-10">
+              <Button
+                onClick={() => onAddToCart(Number(product.id))}
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium "
+              >
+                Add To Cart
+              </Button>
+
+              <Button
+                onClick={() => onBuyNow(Number(product.id))}
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium"
+              >
+                Buy Now
+              </Button>
+            </div>
+
             {showValidationMessage && (
               <p className="text-gradient text-[16px] font-jakrata font-medium">
                 Please add quantity before adding to cart.

@@ -79,6 +79,8 @@ const Checkout = () => {
       title: product.title,
       price: Number(product.price), // Ensure it's a number
       quantity: getItemQuantity(product.id),
+      pathnode: product.pathnode,
+      slugtitle: product.slugtitle,
     }));
     
     console.log(updatedFormData, "formData");

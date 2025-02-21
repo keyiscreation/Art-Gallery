@@ -19,6 +19,7 @@ const ProductsData = [
     slugtitle: "infinities",
     price: "10.00",
     image: product1,
+    pathnode: "product1.png",
     sizes,
   },
   {
@@ -27,6 +28,7 @@ const ProductsData = [
     slugtitle: "egrets",
     price: "10.99",
     image: product2,
+    pathnode: "Mask group.png",
     sizes,
   },
   {
@@ -35,6 +37,7 @@ const ProductsData = [
     slugtitle: "america",
     price: "20.99",
     image: product3,
+    pathnode: "Mask group (1).png",
     sizes,
   },
   {
@@ -43,6 +46,7 @@ const ProductsData = [
     slugtitle: "stars",
     price: "20.99",
     image: product4,
+    pathnode: "Mask group (2).png",
     sizes,
   },
   {
@@ -51,6 +55,7 @@ const ProductsData = [
     slugtitle: "colorado",
     price: "20.99",
     image: product5,
+    pathnode: "Mask group (3).png",
     sizes,
   },
   {
@@ -59,6 +64,7 @@ const ProductsData = [
     slugtitle: "fox",
     price: "20.99",
     image: product6,
+    pathnode: "Mask group (4).png",
     sizes,
   },
   {
@@ -67,6 +73,7 @@ const ProductsData = [
     slugtitle: "wild",
     price: "20.99",
     image: product7,
+    pathnode: "Mask group (5).png",
     sizes,
   },
   {
@@ -75,6 +82,7 @@ const ProductsData = [
     slugtitle: "moon",
     price: "20.99",
     image: product8,
+    pathnode: "Mask group (6).png",
     sizes,
   },
   {
@@ -83,6 +91,7 @@ const ProductsData = [
     slugtitle: "sharing",
     price: "20.99",
     image: product9,
+    pathnode: "Mask group (7).png",
     sizes,
   },
   {
@@ -91,6 +100,7 @@ const ProductsData = [
     slugtitle: "morning",
     price: "20.99",
     image: product10,
+    pathnode: "Mask group (8).png",
     sizes,
   },
   {
@@ -99,6 +109,7 @@ const ProductsData = [
     slugtitle: "light",
     price: "20.99",
     image: product11,
+    pathnode: "Mask group (9).png",
     sizes,
   },
 ];

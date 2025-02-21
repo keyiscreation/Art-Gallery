@@ -23,6 +23,7 @@ const Products = () => {
       <Text as="h1" className="text-black text-center">
         STORE
       </Text>
+
       <hr className="border-[0.5px] border-black/50 w-full my-5" />
 
       {/* products */}
