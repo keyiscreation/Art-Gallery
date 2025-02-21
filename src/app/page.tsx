@@ -11,6 +11,8 @@ import ThirdSection from "@/components/Home/ThirdSection";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
+
+// Register the plugin
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
@@ -29,43 +31,32 @@ export default function Home() {
       if (card) {
         gsap.fromTo(
           card,
-          { scale: 1, boxShadow: "none" }, // Initial state (normal size, no glow)
+          { scale: 1,scrub: 2, boxShadow: "none", y: 0, x: 0 },
           {
             scale: 1,
-            boxShadow: "0px -20px 100px rgba(255, 255, 255, 0.3)", // Glow effect
+            boxShadow: "0px -20px 100px rgba(255, 255, 255, 0.3)",
+            y: 0,
+            x: 0,
+            scrub: 2,
             scrollTrigger: {
               trigger: card,
-              start: "top 80%", // When the section enters the viewport
-              end: "top 30%", // When it's in the middle
-              scrub: true,
-              toggleActions: "play reverse play reverse", // Smooth scaling in/out
-              onEnter: () => {
-                // Apply effect to the current section
+              start: "top 80%",
+              end: "top 30%",
+              scrub: 1, // Make sure this is set to 1 or higher for smooth scroll effect
+              toggleActions: "play reverse play reverse",
+              onUpdate: (self) => {
+                const progress = self.progress;
+
+                // Apply scroll-based movement to the current section
                 gsap.to(card, {
                   scale: 1,
-                  boxShadow: "0px -20px 100px rgba(255, 255, 255, 0.3)",
+                  y: 0,
                 });
 
-                // Reset previous section
+                // Move the previous section to the left and up, based on the scroll progress
                 if (cardRefs.current[index - 1]) {
                   gsap.to(cardRefs.current[index - 1], {
-                    scale: 1,
-                    boxShadow: "none",
-                  });
-                }
-              },
-              onLeaveBack: () => {
-                // Reset effect when scrolling back
-                gsap.to(card, {
-                  scale: 1,
-                  boxShadow: "none",
-                });
-
-                // Reapply effect to the previous section when scrolling up
-                if (cardRefs.current[index - 1]) {
-                  gsap.to(cardRefs.current[index - 1], {
-                    scale: 1,
-                    boxShadow: "0px -20px 100px rgba(255, 255, 255, 0.3)",
+                    y: -progress * 150, // Move previous section up
                   });
                 }
               },
@@ -80,7 +71,7 @@ export default function Home() {
     <div>
       <Navbar />
 
-      <div className="flex  justify-center relative w-full" id="what-we-do">
+      <div className="flex justify-center relative w-full" id="what-we-do">
         <div className="relative w-full">
           {cardContents.map((Component, index) => (
             <div
@@ -88,7 +79,7 @@ export default function Home() {
               ref={(el) => {
                 cardRefs.current[index] = el;
               }}
-              className="w-full min-h-screen flex items-center sticky top-0 "
+              className="w-full min-h-screen flex items-center sticky top-0"
             >
               <div className="h-full tab:h-[80%] mob:h-auto w-full mob:pb-[25px] rounded-[24px]">
                 <Component />

@@ -322,6 +322,8 @@ const Checkout = () => {
                       className="w-[66px] max-h-[66px] object-cover"
                       src={product.image}
                       alt="product"
+                      onContextMenu={(e) => e.preventDefault()} 
+                      draggable="false"  // Disable dragging
                     />
                     <div className="max-w-[106px]">
                       <Text className="text-[14px] font-medium leading-[18px] text-black">
@@ -380,7 +382,7 @@ const Checkout = () => {
                 Subtotal
               </Text>
               <Text className="text-[14px] font-medium leading-[18px] text-black">
-                ${cartProductsTotalPrice}
+              ${cartProductsTotalPrice ? cartProductsTotalPrice.toFixed(2) : '0.00'}
               </Text>
             </div>
             <div className="flex justify-between  mb-2">
@@ -406,7 +408,7 @@ const Checkout = () => {
                 Total
               </Text>
               <Text className="text-[24px] font-medium leading-[30.77px] text-black">
-                ${cartProductsTotalPrice}
+              ${cartProductsTotalPrice ? cartProductsTotalPrice.toFixed(2) : '0.00'}
               </Text>
             </div>
 
