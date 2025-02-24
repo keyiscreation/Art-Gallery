@@ -2,7 +2,7 @@
 import { NextPage } from "next/types";
 import React, { use } from "react";
 import productsData from "@/lib/constants/ProductsData";
-import Product from "@/components/Product";
+// import Product from "@/components/Product";
 import QRProduct from "@/components/QRProduct";
 
 interface ProductDescriptionProps {

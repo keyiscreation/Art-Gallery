@@ -22,7 +22,7 @@ type CartItem = {
   title: string;
   price: number;
   quantity: number;
-  qrLink: string;
+  qrLink?: string;
   
 };
 
@@ -84,7 +84,7 @@ const Checkout = () => {
       quantity: getItemQuantity(product.id),
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
-      qrLink: (product as any).qrLink, 
+      qrLink: product.qrLink,
     }));
     
     console.log(updatedFormData, "qrLink form data");

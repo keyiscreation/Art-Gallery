@@ -8,4 +8,5 @@ export type Product = {
      image: StaticImageData;
      pathnode: string; 
      sizes?: string[];
+     qrLink?: string;
 };
