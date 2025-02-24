@@ -22,6 +22,8 @@ type CartItem = {
   title: string;
   price: number;
   quantity: number;
+  qrLink: string;
+  
 };
 
 type OrderFormData = {
@@ -45,7 +47,8 @@ const Checkout = () => {
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
-
+ 
+  console.log(cartProducts,"cartdata")
   const [formData, setFormData] = useState<OrderFormData>({
     firstName: "",
     lastName: "",
@@ -81,9 +84,10 @@ const Checkout = () => {
       quantity: getItemQuantity(product.id),
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
+      qrLink: (product as any).qrLink, 
     }));
     
-    console.log(updatedFormData, "formData");
+    console.log(updatedFormData, "qrLink form data");
     try {
       const res = await axios.post("/api/order", updatedFormData);
       const data = res?.data;
