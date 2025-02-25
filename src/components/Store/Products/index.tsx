@@ -46,7 +46,7 @@ const Products = () => {
                 />
 
                 {/* Watermark logo */}
-                <div className="absolute inset-0 flex justify-center items-center opacity-80 pointer-events-none z-20">
+                <div className="absolute inset-0 flex justify-center items-end opacity-80 pointer-events-none z-20">
                   <Image
                     className="max-w-[100px] max-h-[100px]" // Adjust size of watermark logo
                     src={logo} // Replace with your logo source

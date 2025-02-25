@@ -21,10 +21,10 @@ interface ProductProps {
   };
 }
 const QRProduct: React.FC<ProductProps> = ({ product }) => {
-//   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
-//   const [showValidationMessage, setShowValidationMessage] = useState(false);
+  //   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
+  //   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
-//   const router = useRouter();
+  //   const router = useRouter();
   const {
     // cartProducts,
     // getItemQuantity,
@@ -33,9 +33,6 @@ const QRProduct: React.FC<ProductProps> = ({ product }) => {
     // removeFromCart,
     // cartProductsTotalPrice,
   } = useShoppingCart();
-
-
-
 
   return (
     <div>
@@ -55,8 +52,6 @@ const QRProduct: React.FC<ProductProps> = ({ product }) => {
                 src={product.image}
                 alt={product.title}
               />
-
-            
             </div>
           </div>
 
@@ -72,17 +67,10 @@ const QRProduct: React.FC<ProductProps> = ({ product }) => {
             </Text>
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
-              Size:
+              Size: Large
             </Text>
-     
-
-        
-
-          
           </div>
         </div>
-
-      
       </div>
     </div>
   );

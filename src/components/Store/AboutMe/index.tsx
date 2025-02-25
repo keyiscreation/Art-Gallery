@@ -18,29 +18,33 @@ const AboutMe = () => {
           </Text>
 
           <Text className="text-[#000000] text-[20px] font-futurapt font-normal leading-[25.64px]">
-            I started with photography as a way to clear my head during a tough
-            time in my life. It helped me live in the moment, and focus on what
-            really matters. Standing on a summit watching the sun fade beyond
-            the horizon, and the stars slowly emerge from the inky blackness
-            consumes you on a level that&apos;s nearly indescribable. Taking
-            those feelings and attempting to freeze them into a single still
-            frame is an incredible challenge, and an experience that I&apos;ve
-            found truly motivates me to get out and experience the world.
+            Born and raised in Iceland—a land of vast, untamed landscapes—I have
+            always been drawn not only to nature’s raw beauty but to the
+            textures of human expression hidden within the world’s urban
+            landscapes. My work is not just about photography; it is about
+            seeing what others overlook
           </Text>
 
           <Text className="text-[#000000] text-[20px] font-futurapt font-normal leading-[25.64px]">
-            When I began, I did that for me. It was my way of forcing myself to
-            look at a moment from every angle, and truly experience the moment I
-            was in, As I grew in my photography I had several people ask where
-            they could buy these prints, and while the concept was foreign, the
-            compliment is immense.
+            Through my photography, I seek not just to showcase street art but
+            to highlight the hidden narratives within the cracks of
+            civilization—where power is challenged, where identity is reclaimed,
+            where history is rewritten by those whose stories would otherwise be
+            lost.
           </Text>
           <Text className="text-[#000000] text-[20px] font-futurapt font-normal leading-[25.64px]">
-            I hope that you enjoy what you see, and above all that it encourages
-            you to get outside, see the beautiful planet we all live on, and
-            experience moments of your own. And if you feel inclined to hang one
-            of my pictures on your wall, then you were with me when I took that
-            shot, at least in spirit.
+            To document street art is to document rebellion, survival, and the
+            refusal to be erased. Walls tell the stories that institutions try
+            to silence. In every peeling stencil, in every hurried brushstroke,
+            there is an act of defiance, a demand to be remembered.
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-futurapt font-normal leading-[25.64px]">
+            Art, much like human struggle, is ephemeral. A mural that breathes
+            life into a forgotten alley today may be covered in gray paint
+            tomorrow. But in the moments before erasure, there is a truth, a
+            rawness, a testament to existence. My work is an attempt to freeze
+            those fleeting expressions—to capture the urgency of creation before
+            it is wiped away, to preserve what was never meant to be permanent.
           </Text>
         </div>
         <div className="">

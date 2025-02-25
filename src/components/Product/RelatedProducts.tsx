@@ -23,7 +23,7 @@ const RelatedProducts = () => {
         You Might Also Like
       </Text>
 
-      <div className="flex gap-10 justify-between mt-7">
+      <div className="flex tab:flex-wrap tab:justify-center gap-10 justify-between mt-7">
         {productsData.slice(5, 8).map((product) => (
           <div key={product.id} className="w-full max-w-[395px]">
             <Image

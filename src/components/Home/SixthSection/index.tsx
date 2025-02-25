@@ -15,10 +15,10 @@ const SixthSection = () => {
       />
       <div className=" min-h-screen overflow-hidden flex items-center justify-start  px-14 mob:px-5 ">
         <div className="relative z-10 w-full">
-          <Text as="h2" className="mb-3">
+          <Text as="h2" className="mb-3 font-light">
           LIMITED EDITION PRINTS
           </Text>
-          <Link href="#">
+          <Link href="/store">
             <Text className="text-accent items-center uppercase tracking-[0.7px] underline underline-offset-[3px]">
             SHOP PRINTS <span className="">→</span>{" "}
             </Text>
