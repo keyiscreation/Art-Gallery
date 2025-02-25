@@ -101,7 +101,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             </div>
           </div>
 
-          <div className="max-w-[465px]">
+          <div className="w-full max-w-[465px]">
             <Text className="text-[38px] text-[#000000] font-semibold font-futura leading-[48px]">
               {product.title}
             </Text>
@@ -148,17 +148,17 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               </button>
             </div>
 
-            <div className="flex  tab:gap-5 gap-5 mt-10">
+            <div className="flex  tab:gap-5 gap-5 mt-10 w-full">
               <Button
                 onClick={() => onAddToCart(Number(product.id))}
-                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium "
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium w-full"
               >
                 Add To Cart
               </Button>
 
               <Button
                 onClick={() => onBuyNow(Number(product.id))}
-                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium"
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-futurapt font-medium w-full"
               >
                 Buy Now
               </Button>

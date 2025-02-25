@@ -8,7 +8,6 @@ import useShoppingCart from "@/hooks/useShoppingCart";
 import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function CartPage() {
   const {
     cartProducts,
@@ -32,6 +31,21 @@ export default function CartPage() {
           <Text as="h1" className="text-black ">
             Shopping Cart
           </Text>
+
+          {cartProducts.length === 0 && (
+            <div className="text-center my-10">
+              <p className="text-lg font-medium text-gray-700">
+                No product is added to the cart.
+              </p>
+              <button
+                onClick={() => router.push("/store")} // Replace with your actual shop route
+                className="mt-4 px-4 py-2 bg-black font-futura text-white rounded  transition"
+              >
+                Go Back to Shop
+              </button>
+            </div>
+          )}
+
           {cartProducts.map((product) => (
             <Fragment key={product.id}>
               <div className="flex flex-wrap justify-between my-10">
