@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Footer from "@/components/Footer";
-import FifthSection from "@/components/Home/FifthSection";
-import ForthSection from "@/components/Home/ForthSection";
 import HeroSection from "@/components/Home/HeroSection";
 import SecondSection from "@/components/Home/SecondSection";
-import SixthSection from "@/components/Home/SixthSection";
 import ThirdSection from "@/components/Home/ThirdSection";
+import ForthSection from "@/components/Home/ForthSection";
+import FifthSection from "@/components/Home/FifthSection";
+import SixthSection from "@/components/Home/SixthSection";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

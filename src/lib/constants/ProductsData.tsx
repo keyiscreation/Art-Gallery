@@ -21,7 +21,7 @@ const ProductsData = [
     image: product1,
     pathnode: "product1.png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/infinities",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/infinities",
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const ProductsData = [
     image: product2,
     pathnode: "Mask group.png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/egrets",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/egrets",
   },
   {
     id: 3,
@@ -41,7 +41,7 @@ const ProductsData = [
     image: product3,
     pathnode: "Mask group (1).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/america",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/america",
   },
   {
     id: 4,
@@ -51,7 +51,7 @@ const ProductsData = [
     image: product4,
     pathnode: "Mask group (2).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/stars",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/stars",
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ const ProductsData = [
     image: product5,
     pathnode: "Mask group (3).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/colorado",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/colorado",
   },
   {
     id: 6,
@@ -71,7 +71,7 @@ const ProductsData = [
     image: product6,
     pathnode: "Mask group (4).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/fox",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/fox",
   },
   {
     id: 7,
@@ -81,7 +81,7 @@ const ProductsData = [
     image: product7,
     pathnode: "Mask group (5).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/wild",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/wild",
   },
   {
     id: 8,
@@ -91,7 +91,7 @@ const ProductsData = [
     image: product8,
     pathnode: "Mask group (6).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/moon",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/moon",
   },
   {
     id: 9,
@@ -101,7 +101,7 @@ const ProductsData = [
     image: product9,
     pathnode: "Mask group (7).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/sharing",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/sharing",
   },
   {
     id: 10,
@@ -111,7 +111,7 @@ const ProductsData = [
     image: product10,
     pathnode: "Mask group (8).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/morning",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/morning",
   },
   {
     id: 11,
@@ -121,7 +121,7 @@ const ProductsData = [
     image: product11,
     pathnode: "Mask group (9).png",
     sizes,
-    qrLink: "https://art-gallery-one-theta.vercel.app/products/light",
+    qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/light",
   },
 ];
 

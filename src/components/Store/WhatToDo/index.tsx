@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import Image from "next/image";
 
@@ -8,6 +9,7 @@ import print2 from "@/public/images/store/print2.png";
 import print3 from "@/public/images/store/print3.png";
 import print4 from "@/public/images/store/print4.png";
 import print5 from "@/public/images/store/print5.png";
+import logo from "@/public/logo.png";
 
 const reviews = [
   {
@@ -63,16 +65,13 @@ const WhatToDo = () => {
             We’ve all been there: days of eagerly anticipating an item we bought
             online, followed by intense devastation when we see a mangled box on
             our stoop.
-           
           </Text>
           <Text className="text-center text-[21px] leading-[26px] text-black my-2 ">
-         
             Hopefully this won’t happen with your prints, but if it does - don’t
             worry! Simply send me an email at nate@nateinthewild.com and I will
             get a new print shipped out to you{" "}
             <span className="font-bold">immediately*</span>, completely free of
             charge.
-          
           </Text>
           <Text className="text-center text-[21px] leading-[26px] text-black ">
             *”Immediately” only has an asterisk here because sometimes I
@@ -86,15 +85,25 @@ const WhatToDo = () => {
 
         <div className="flex flex-wrap justify-between gap-10 mt-20">
           {reviews.map((review) => (
-            <div key={review.id} className="w-full max-w-[508px]">
-              <Image
-                className="max-h-[331px] w-full object-cover"
-                src={review.image}
-                alt="print"
-                width={508}
-                height={331.93}
-              />
-
+            <div key={review.id} className="w-full relative max-w-[508px]">
+              <div className="relative">
+                <Image
+                  className="max-h-[331px] w-full object-cover z-0"
+                  src={review.image}
+                  alt="print"
+                  width={508}
+                  height={331.93}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
+                {/* Watermark logo */}
+                <div className="absolute inset-0 flex justify-center items-end opacity-80 pointer-events-none z-20">
+                  <Image
+                    className="max-w-[100px] max-h-[100px]" // Adjust size of watermark logo
+                    src={logo} // Replace with your logo source
+                    alt="Watermark Logo"
+                  />
+                </div>
+              </div>
               <Text className="text-[#000000] text-[19px] leading-[24px] mt-8">
                 {review.review}
               </Text>

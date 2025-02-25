@@ -1,6 +1,12 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
+import React, {
+  ChangeEvent,
+  FormEvent,
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
 import Image from "next/image";
 // import { loadStripe } from "@stripe/stripe-js";
 // import { Elements } from "@stripe/react-stripe-js";
@@ -13,6 +19,7 @@ import Text from "../ui/Text";
 import Button from "../ui/Button";
 import useShoppingCart from "@/hooks/useShoppingCart";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 // const stripePromise = loadStripe(
 //   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
@@ -23,7 +30,6 @@ type CartItem = {
   price: number;
   quantity: number;
   qrLink?: string;
-  
 };
 
 type OrderFormData = {
@@ -37,7 +43,6 @@ type OrderFormData = {
   cartValues: CartItem[];
 };
 
-
 const Checkout = () => {
   const {
     cartProducts,
@@ -47,8 +52,17 @@ const Checkout = () => {
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
- 
-  console.log(cartProducts,"cartdata")
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (cartProducts.length === 0) {
+      router.push("/cart");
+    }
+  }, [cartProducts, router]);
+
+  console.log(cartProducts, "cartdata");
+
   const [formData, setFormData] = useState<OrderFormData>({
     firstName: "",
     lastName: "",
@@ -59,7 +73,7 @@ const Checkout = () => {
     zipCode: 0,
     cartValues: [],
   });
-  
+
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (
@@ -86,7 +100,7 @@ const Checkout = () => {
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
     }));
-    
+
     console.log(updatedFormData, "qrLink form data");
     try {
       const res = await axios.post("/api/order", updatedFormData);
@@ -328,8 +342,8 @@ const Checkout = () => {
                       className="w-[66px] max-h-[66px] object-cover"
                       src={product.image}
                       alt="product"
-                      onContextMenu={(e) => e.preventDefault()} 
-                      draggable="false"  // Disable dragging
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable="false" // Disable dragging
                     />
                     <div className="max-w-[106px]">
                       <Text className="text-[14px] font-medium leading-[18px] text-black">
@@ -388,25 +402,28 @@ const Checkout = () => {
                 Subtotal
               </Text>
               <Text className="text-[14px] font-medium leading-[18px] text-black">
-              ${cartProductsTotalPrice ? cartProductsTotalPrice.toFixed(2) : '0.00'}
+                $
+                {cartProductsTotalPrice
+                  ? cartProductsTotalPrice.toFixed(2)
+                  : "0.00"}
               </Text>
             </div>
-            <div className="flex justify-between  mb-2">
+            {/* <div className="flex justify-between  mb-2">
               <Text className="text-[14px] font-medium leading-[18px] text-black">
                 Tax
               </Text>
               <Text className="text-[14px] font-medium leading-[18px] text-black">
                 $20.00
               </Text>
-            </div>
-            <div className="flex justify-between  mb-5">
+            </div> */}
+            {/* <div className="flex justify-between  mb-5">
               <Text className="text-[14px] font-medium leading-[18px] text-black">
                 Shipping
               </Text>
               <Text className="text-[14px] font-medium leading-[18px] text-black">
                 $20.00
               </Text>
-            </div>
+            </div> */}
 
             <hr className="border-[0.5px] border-black/40 w-full mt-2 mb-3" />
             <div className="flex justify-between  mb-2">
@@ -414,7 +431,10 @@ const Checkout = () => {
                 Total
               </Text>
               <Text className="text-[24px] font-medium leading-[30.77px] text-black">
-              ${cartProductsTotalPrice ? cartProductsTotalPrice.toFixed(2) : '0.00'}
+                $
+                {cartProductsTotalPrice
+                  ? cartProductsTotalPrice.toFixed(2)
+                  : "0.00"}
               </Text>
             </div>
 

@@ -8,7 +8,12 @@ const futurapt = localFont({
   src: [
     {
       path: "../../public/fonts/FuturaPT/FuturaPTLight.otf",
-      weight: "400",
+      weight: "300",
+      style: "light",
+    },
+    {
+      path: "../../public/fonts/FuturaPT/FuturaPTLight.otf",
+      weight: "300",
       style: "normal",
     },
     {
@@ -19,7 +24,7 @@ const futurapt = localFont({
     {
       path: "../../public/fonts/FuturaPT/FuturaPTBold.otf",
       weight: "700",
-      style: "normal",
+      style: "bold",
     },
   ],
   variable: "--font-futurapt",

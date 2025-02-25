@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
     // Email to admin
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
-      to: "ART GALLERY <developer@innovativemojo.com>",
+      to: "ART GALLERY <Chadilrauf@gmail.com>",
       subject: "Order Confirmation",
       html: `
         <h3>New Order Received</h3>
@@ -141,19 +141,33 @@ export async function POST(request: NextRequest) {
       attachments: [...productAttachments, ...qrCodeAttachments],
     };
 
-    // Email to user
-    const mailOptionToUser = {
-      from: "ART GALLERY <developer@innovativemojo.com>",
-      to: formdata.email,
-      subject: "Your order has been placed",
-      html: `
-        <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
-        <p>Thank you for placing your order.</p>
-        <p>Best Regards,</p>
-        <p>ART GALLERY</p>
-      `,
-    };
-
+    const userProductListHTML = formdata.cartValues
+    .map(
+      (product: Product) => `
+        <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; text-align: center;">
+          <p style="font-weight: bold; font-size: 16px;">${product.title}</p>
+          <img src="cid:${product.slugtitle}" alt="${product.title}" style="max-width: 150px; height: auto; display: block; margin: auto;">
+          <img src="cid:qr_${product.slugtitle}" alt="QR Code" style="width: 150px; display: block; margin: auto;">
+          <p><strong>Scan Your QR Code Below:</strong></p>
+        </div>
+      `
+    )
+    .join("");
+  
+  // Updated email for user
+  const mailOptionToUser = {
+    from: "ART GALLERY <developer@innovativemojo.com>",
+    to: formdata.email,
+    subject: "Your Order Confirmation",
+    html: `
+      <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
+      <p>Thank you for placing your order. Below are your order details:</p>
+      ${userProductListHTML}
+      <p>Best Regards,</p>
+      <p><strong>ART GALLERY</strong></p>
+    `,
+    attachments: [...productAttachments, ...qrCodeAttachments], // Attach images & QR codes
+  };
     await transporter.sendMail(mailOptionToYou);
     await transporter.sendMail(mailOptionToUser);
 
