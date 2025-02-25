@@ -123,7 +123,8 @@ export async function POST(request: NextRequest) {
     // Email to admin
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
-      to: "ART GALLERY <Chadilrauf@gmail.com>",
+      // to: "ART GALLERY <Chadilrauf@gmail.com>",
+      to: "ART GALLERY <developer@innovativemojo.com>",
       subject: "Order Confirmation",
       html: `
         <h3>New Order Received</h3>

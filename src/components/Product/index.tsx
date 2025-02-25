@@ -10,7 +10,8 @@ import RelatedProducts from "./RelatedProducts";
 import useShoppingCart from "@/hooks/useShoppingCart";
 import { useRouter } from "next/navigation";
 
-import logo from "@/public/logo.png";
+import logo from "@/public/watermark.png";
+// import { useAtomValue } from "@/jotai/useAtomValue";
 
 interface ProductProps {
   product: {
@@ -23,6 +24,8 @@ interface ProductProps {
   };
 }
 const Product: React.FC<ProductProps> = ({ product }) => {
+  // const [cartItems, setCartItems] = useAtomValue("cart");
+
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
@@ -36,6 +39,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     // cartProductsTotalPrice,
   } = useShoppingCart();
 
+  console.log(selectedSize, "selectedSize");
   const onAddToCart = async (id: number) => {
     const quantity = getItemQuantity(id);
 
@@ -57,15 +61,29 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   };
 
   const onBuyNow = (id: number) => {
+    // const quantity = getItemQuantity(id);
+    // if (id === 0 || quantity === 0) {
+    //   setShowValidationMessage(true);
+    //   return;
+    // }
+    // router.push(`/checkout`);
+
     const quantity = getItemQuantity(id);
 
-    // If product ID is 0 or quantity is 0, show validation message
-    if (id === 0 || quantity === 0) {
+    // Show validation message if size is not selected
+    if (!selectedSize) {
       setShowValidationMessage(true);
       return;
     }
 
-    // Navigate to checkout only if quantity > 0
+    // If quantity is already greater than 0, just navigate to the cart
+    if (quantity > 0) {
+      router.push(`/checkout`);
+      return;
+    }
+
+    // Increase the cart quantity only if item is not already in the cart
+    increaseCartQuantity(id);
     router.push(`/checkout`);
   };
 
@@ -91,12 +109,8 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               />
 
               {/* Watermark logo */}
-              <div className="absolute inset-0 flex justify-center items-end opacity-30 pointer-events-none z-20">
-                <Image
-                  className="max-w-[150px] max-h-[150px]" // Adjust size of watermark logo
-                  src={logo} // Replace with your logo source
-                  alt="Watermark Logo"
-                />
+              <div className="absolute inset-0 flex justify-center items-center  pointer-events-none z-20">
+                <Image className="w-full" src={logo} alt="Watermark Logo" />
               </div>
             </div>
           </div>
@@ -106,7 +120,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               {product.title}
             </Text>
             <Text className="text-[26px] text-[#000000] font-normal font-futurapt leading-[33.33px]">
-              From $250.00
+              Price ${product.price}
             </Text>
             <Text className="text-[18px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
               {product.title}
@@ -184,47 +198,49 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           in them, floating through infinity.
         </Text>
 
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
-          PRINT SIZES:
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
-          The four print sizes offered in this collection are specifically
-          chosen to allow for easy framing:
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
-          SMALL: <span className="font-normal"> 12&rdquo; x 18&rdquo;</span>
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
-          The four print sizes offered in this collection are specifically
-          chosen to allow for easy framing:
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
-          MEDIUM:{" "}
-          <span className="font-normal">
-            16&rdquo; x 24&rdquo; *Best Value Price/Size Ratio
-          </span>
-        </Text>
+        <div className="space-y-1">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+            PRINT SIZES:
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+            The four print sizes offered in this collection are specifically
+            chosen to allow for easy framing:
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+            SMALL: <span className="font-normal"> 12&rdquo; x 18&rdquo;</span>
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+            The four print sizes offered in this collection are specifically
+            chosen to allow for easy framing:
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+            MEDIUM:{" "}
+            <span className="font-normal">
+              16&rdquo; x 24&rdquo; *Best Value Price/Size Ratio
+            </span>
+          </Text>
 
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
-          Edition of 7 includes: A signed certificate of authenticity, with
-          edition number.
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
-          LARGE: <span className="font-normal">24”x 36</span>
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
-          Edition of 3 includes: A signed certificate of authenticity, with
-          edition number.
-        </Text>
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
-          EXTRA LARGE:{" "}
-          <span className="font-normal">40&rdquo; x 60&rdquo;</span>
-        </Text>
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+            Edition of 7 includes: A signed certificate of authenticity, with
+            edition number.
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+            LARGE: <span className="font-normal">24”x 36</span>
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+            Edition of 3 includes: A signed certificate of authenticity, with
+            edition number.
+          </Text>
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+            EXTRA LARGE:{" "}
+            <span className="font-normal">40&rdquo; x 60&rdquo;</span>
+          </Text>
 
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
-          Fully exclusive 1 of 1 edition includes: A signed certificate of
-          authenticity, with edition number.
-        </Text>
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+            Fully exclusive 1 of 1 edition includes: A signed certificate of
+            authenticity, with edition number.
+          </Text>
+        </div>
 
         {/* more info */}
         <Text className="text-[#000000] text-[20px] font-normal leading-[25px] mt-5">

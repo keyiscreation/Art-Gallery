@@ -115,11 +115,11 @@ export default function CartPage() {
                     {/* Optional Watermark Logo */}
                   </div>
 
-                  <div className="mob:hidden">
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
+                  <div className="mob:hidden" onClick={() => handleNavigation(product.slugtitle)}>
+                    <Text onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px] cursor-pointer">
                       {product.title}
                     </Text>
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
+                    <Text onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] text-[16px] leading-[20px] font-light mt-2 cursor-pointer">
                       Size: Large
                     </Text>
                   </div>
@@ -179,6 +179,7 @@ export default function CartPage() {
               <hr className="border-[0.5px] border-black/50 w-full my-5" />
             </Fragment>
           ))}
+
           <div className="flex justify-end mt-5">
             <div className="flex  w-full max-w-[363px] justify-between">
               <Text className="text-[16px] text-black font-medium ">

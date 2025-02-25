@@ -8,7 +8,7 @@ import productsData from "@/lib/constants/ProductsData";
 import { useRouter } from "next/navigation";
 
 import imghover from "@/public/images/store/Mask group (5).png";
-import logo from "@/public/logo.png";
+import logo from "@/public/watermark.png";
 
 const Products = () => {
   const router = useRouter();
@@ -46,9 +46,9 @@ const Products = () => {
                 />
 
                 {/* Watermark logo */}
-                <div className="absolute inset-0 flex justify-center items-end opacity-80 pointer-events-none z-20">
+                <div className="absolute inset-0 flex justify-center items-center  pointer-events-none z-20">
                   <Image
-                    className="max-w-[100px] max-h-[100px]" // Adjust size of watermark logo
+                    className="w-full" // Adjust size of watermark logo
                     src={logo} // Replace with your logo source
                     alt="Watermark Logo"
                   />

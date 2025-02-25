@@ -10,12 +10,19 @@ import cartbucket from "@/public/icons/bucketcart.svg";
 import Text from "../ui/Text";
 import useShoppingCart from "@/hooks/useShoppingCart";
 
+type CartProduct = {
+  id: number;
+  quantity: number;
+};
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/"); // Initial active tab set to home
   const [isSticky, setIsSticky] = useState(false);
 
   const { cartProducts } = useShoppingCart();
+  const productQuantity: CartProduct[] = JSON.parse(localStorage.getItem("cart") || "[]");
+  // Extract quantities and calculate the sum
+  const totalQuantity = productQuantity.reduce((sum, product) => sum + product.quantity, 0);
 
   // Load activeTab from local storage on component mount
   useEffect(() => {
@@ -127,9 +134,12 @@ const Navbar = () => {
                 <Link href="/cart" className="relative max-w-[29px]">
                   <Image className="" src={cartbucket} alt="cartbucket" />
                   <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
-                    <Text className="text-[10px] font-futurapt font-bold ">
+                  <Text className="text-[10px] font-futurapt font-bold ">
+                      {totalQuantity}
+                    </Text> 
+                   <Text className="text-[10px] font-futurapt font-bold hidden">
                       {cartProducts.length}
-                    </Text>
+                    </Text> 
                   </div>
                 </Link>
                 <div>
