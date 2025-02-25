@@ -328,7 +328,7 @@ const Checkout = () => {
           </div> */}
 
           {/* order details */}
-          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px]  mob:max-h-full">
+          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-full mob:max-h-full">
             <Text className="text-[22px] font-medium leading-[28px] text-black">
               Order Details
             </Text>

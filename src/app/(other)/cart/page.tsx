@@ -56,7 +56,7 @@ export default function CartPage() {
                     onClick={() => handleNavigation(product.slugtitle)}
                     alt="product"
                   /> */}
-                  <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
+                  <div className="flex gap-4 relative min-w-[30%]  mob:min-w-full">
                     <Image
                       className="w-[132px] h-[132px] object-cover cursor-pointer"
                       src={product.image}
@@ -65,71 +65,79 @@ export default function CartPage() {
                       onContextMenu={(e) => e.preventDefault()}
                       draggable="false" // Disable dragging
                     />
+                      {/* mob */}
 
+                    <div className="mob:block hidden">
+                      <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
+                        {product.title}
+                      </Text>
+                      <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
+                        Size: Large
+                      </Text>
+
+                      <div className="flex justify-between mt-10">
+                        <div className="ml-20 mob:ml-0 ">
+                          <Text className="text-[#000000] text-[16px] leading-[20px]">
+                            <span
+                              onClick={() =>
+                                decreaseCartQuantity(Number(product.id))
+                              }
+                              className="mr-2 cursor-pointer"
+                            >
+                              -
+                            </span>
+                            {getItemQuantity(Number(product.id))}
+                            <span
+                              onClick={() =>
+                                increaseCartQuantity(Number(product.id))
+                              }
+                              className="ml-2 cursor-pointer"
+                            >
+                              +
+                            </span>
+                          </Text>
+                        </div>
+
+                        <div className=" gap-5 mob:block hidden">
+                          <Text className="text-[#000000] text-[16px] leading-[20px]">
+                            {product.price}
+                          </Text>
+                          <Text
+                            onClick={() => removeFromCart(product.id)}
+                            className=" absolute top-0 right-0 text-[#000000] text-[24px] leading-[20px] font-medium cursor-pointer"
+                          >
+                            x
+                          </Text>
+                        </div>
+                      </div>
+                    </div>
+                      {/* mob */}
                     {/* Optional Watermark Logo */}
                   </div>
 
-                  <div className="">
+                  <div className="mob:hidden">
                     <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
                       {product.title}
                     </Text>
-                    <Text className="text-[#000000] text-[16px] leading-[20px] mt-2">
+                    <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
                       Size: Large
                     </Text>
-
-                    {/* mob */}
-                    <div className="flex justify-between mt-10">
-                      <div className="ml-20 mob:ml-0 mob:block hidden">
-                        <Text className="text-[#000000] text-[16px] leading-[20px]">
-                          <span
-                            onClick={() =>
-                              decreaseCartQuantity(Number(product.id))
-                            }
-                            className="mr-2 cursor-pointer"
-                          >
-                            -
-                          </span>
-                          {getItemQuantity(Number(product.id))}
-                          <span
-                            onClick={() =>
-                              increaseCartQuantity(Number(product.id))
-                            }
-                            className="ml-2 cursor-pointer"
-                          >
-                            +
-                          </span>
-                        </Text>
-                      </div>
-
-                      <div className=" gap-5 mob:block hidden">
-                        <Text className="text-[#000000] text-[16px] leading-[20px]">
-                          {product.price}
-                        </Text>
-                        <Text
-                          onClick={() => removeFromCart(product.id)}
-                          className=" absolute top-0 right-0 text-[#000000] text-[16px] leading-[20px] font-medium cursor-pointer"
-                        >
-                          x
-                        </Text>
-                      </div>
-                    </div>
-                    {/* mob */}
                   </div>
                 </div>
                 {/*  */}
 
                 <div className="ml-20 mob:ml-0 mob:hidden min-w-[100px]">
-                  <Text className="text-[#000000] text-[16px] leading-[20px]">
+                  <Text className="text-[#000000] text-[16px] leading-[20px] flex items-center">
                     <span
                       onClick={() => decreaseCartQuantity(Number(product.id))}
-                      className="mr-2 cursor-pointer"
+                      className="mr-3 cursor-pointer text-[24px] mb-1"
                     >
                       -
                     </span>
                     {getItemQuantity(product.id)}
                     <span
                       onClick={() => increaseCartQuantity(Number(product.id))}
-                      className="ml-2 cursor-pointer"
+                      className="ml-3 cursor-pointer text-[22px]"
                     >
                       +
                     </span>
@@ -145,9 +153,26 @@ export default function CartPage() {
                   </Text>
                   <Text
                     onClick={() => removeFromCart(product.id)}
-                    className="text-[#000000] text-[16px] leading-[20px] font-medium cursor-pointer"
+                    className=" cursor-pointer mt-[2px]"
                   >
-                    x
+                    <svg
+                      width="16"
+                      height="15"
+                      viewBox="0 0 16 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.43848 0.792175L14.4037 13.7576"
+                        stroke="black"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M14.4033 0.792297L1.4385 13.757"
+                        stroke="black"
+                        stroke-width="2"
+                      />
+                    </svg>
                   </Text>
                 </div>
               </div>

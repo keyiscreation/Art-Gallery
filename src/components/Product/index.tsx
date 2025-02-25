@@ -130,19 +130,19 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
             </Text>
-            <div className="border border-[#000000]/70 w-[77px] h-[65px] flex justify-center items-center">
+            <div className="border border-[#000000]/70 w-[77px] h-[65px] flex justify-between items-center">
               <button
                 onClick={() => decreaseCartQuantity(Number(product.id))}
-                className=" px-4"
+                className=" px-2 text-[24px]"
               >
                 -
               </button>
-              <Text className="text-[16px] text-[#000000] leading-[20px]">
+              <Text className="text-[16px] text-[#000000] leading-[20px] mt-1">
                 {getItemQuantity(Number(product.id))}
               </Text>
               <button
                 onClick={() => increaseCartQuantity(Number(product.id))}
-                className=" px-4"
+                className=" px-2 text-[24px]"
               >
                 +
               </button>
