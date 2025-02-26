@@ -109,8 +109,8 @@ const Navbar = () => {
 
                 <li>
                   <Link
-                    href="/"
-                    onClick={() => handleTabChange("/")}
+                    href="/contact-us"
+                    onClick={() => handleTabChange("/contact-us")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
                       activeTab === "" ? " font-medium" : "text-white"
                     }`}
@@ -195,7 +195,7 @@ const Navbar = () => {
                 </div>
                 <Drawer isOpen={isOpen} onClose={onClose}>
                   <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {["/", "/about", "/store"].map((path) => (
+                  {["/", "/about", "/store", "/contact-us"].map((path) => (
                       <a
                         href={path}
                         key={path}
@@ -211,6 +211,8 @@ const Navbar = () => {
                             ? "Home"
                             : path === "/store"
                             ? "Shop"
+                            : path === "/contact-us"
+                            ? "Contact"
                             : path.slice(1).toUpperCase()}
                         </li>
                         <hr className="w-full border border-[#FFFFFF] my-2" />

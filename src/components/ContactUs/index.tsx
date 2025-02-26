@@ -64,12 +64,12 @@ const ContactUs = () => {
 
       <hr className="border-[0.5px] border-black/50 w-full my-5 max-w-[1284px] mx-auto" />
 
-      <div className="flex tab:flex-wrap  w-full max-w-[1284px] mx-auto gap-16 mob:gap-8  items-center mt-10">
+      <div className="flex tab:flex-wrap  w-full max-w-[1284px] mx-auto gap-16 mob:gap-8  items-center mt-10 pb-20">
         <div className="w-full max-w-[740px]">
           <Image src={imgleft} alt="" width={740} height={832} />
         </div>
 
-        <div className="w-full max-w-[452px] mob:pb-20">
+        <div className="w-full max-w-[452px] ">
           <Text className="text-[38px] text-black  font-futurapt font-bold leading-[48.7px]">
             {" "}
             Say Hey!
