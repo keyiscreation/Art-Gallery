@@ -25,7 +25,6 @@ interface ProductProps {
 }
 const Product: React.FC<ProductProps> = ({ product }) => {
   // const [cartItems, setCartItems] = useAtomValue("cart");
-
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
