@@ -165,12 +165,12 @@ export default function CartPage() {
                       <path
                         d="M1.43848 0.792175L14.4037 13.7576"
                         stroke="black"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M14.4033 0.792297L1.4385 13.757"
                         stroke="black"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </svg>
                   </Text>
