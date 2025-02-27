@@ -22,8 +22,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
-  // "pk_test_cTSJAP6VIX6ChpugxrQuVYwg00B33lQZMq"
+  // process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
+  "pk_test_cTSJAP6VIX6ChpugxrQuVYwg00B33lQZMq"
 );
 
 type CartItem = {
