@@ -17,7 +17,10 @@ export default function CartPage() {
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
+
+
   const router = useRouter();
+  console.log(cartProducts, "cartProducts");
 
   const handleNavigation = (slugtitle: string) => {
     const slug = slugtitle;
@@ -65,14 +68,14 @@ export default function CartPage() {
                       onContextMenu={(e) => e.preventDefault()}
                       draggable="false" // Disable dragging
                     />
-                      {/* mob */}
+                    {/* mob */}
 
                     <div className="mob:block hidden">
                       <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
                         {product.title}
                       </Text>
                       <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
-                        Size: Large
+                        Size: {product.size}
                       </Text>
 
                       <div className="flex justify-between mt-10">
@@ -111,7 +114,7 @@ export default function CartPage() {
                         </div>
                       </div>
                     </div>
-                      {/* mob */}
+                    {/* mob */}
                     {/* Optional Watermark Logo */}
                   </div>
 
@@ -120,7 +123,7 @@ export default function CartPage() {
                       {product.title}
                     </Text>
                     <Text onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] text-[16px] leading-[20px] font-light mt-2 cursor-pointer">
-                      Size: Large
+                      Size: {product.size}
                     </Text>
                   </div>
                 </div>

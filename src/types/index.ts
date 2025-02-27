@@ -9,4 +9,5 @@ export type Product = {
      pathnode: string; 
      sizes?: string[];
      qrLink?: string;
+     licenseNumber: string;
 };

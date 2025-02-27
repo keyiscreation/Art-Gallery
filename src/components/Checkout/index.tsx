@@ -364,7 +364,7 @@ const Checkout = () => {
                         {product.title}
                       </Text>
                       <Text className="text-[12px]  leading-[15.3px] text-black">
-                        Size: Large
+                        Size: {product.size}
                       </Text>
                     </div>
                   </div>

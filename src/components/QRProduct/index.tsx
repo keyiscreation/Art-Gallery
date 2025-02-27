@@ -17,6 +17,7 @@ interface ProductProps {
     slugtitle: string;
     price: string;
     image: StaticImageData;
+    licenseNumber: string;
     sizes: string[];
   };
 }
@@ -62,12 +63,15 @@ const QRProduct: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[26px] text-[#000000] font-normal font-futurapt leading-[33.33px]">
               From $250.00
             </Text>
-            <Text className="text-[18px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
+            <Text className="text-[20px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
               {product.title}
             </Text>
 
-            <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
+            <Text className="text-[20px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
               Size: Large
+            </Text>
+            <Text className="text-[20px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
+              License Number: {product.licenseNumber}
             </Text>
           </div>
         </div>

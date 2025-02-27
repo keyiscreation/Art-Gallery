@@ -36,6 +36,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     decreaseCartQuantity,
     // removeFromCart,
     // cartProductsTotalPrice,
+    setItemSize,
   } = useShoppingCart();
 
   console.log(selectedSize, "selectedSize");
@@ -128,10 +129,15 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
               Size:
             </Text>
+            
             <select
               className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
               value={selectedSize}
-              onChange={(e) => setSelectedSize(e.target.value)}
+              onChange={(e) => {
+                const newSize = e.target.value;
+                setSelectedSize(newSize);
+                setItemSize(Number(product.id), newSize); // Call setItemSize here
+              }}
             >
               {product.sizes.map((size) => (
                 <option key={size} value={size}>
@@ -139,6 +145,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 </option>
               ))}
             </select>
+
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
@@ -159,6 +166,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               >
                 +
               </button>
+
             </div>
 
             <div className="flex  tab:gap-5 gap-5 mt-10 w-full">
@@ -251,7 +259,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           reproduction of detail. This acid- and lignin-free paper meets the
           most exacting requirements for age resistance, for photos that last
           several lifetimes. All prints include a signed Certificate of
-          Authenticity along with edition number. 
+          Authenticity along with edition number.
         </Text>
         <Text className="text-[#000000] text-[20px] font-normal leading-[25px] mt-5">
           Ships Worldwide within 5-7 business days.

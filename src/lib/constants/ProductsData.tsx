@@ -22,6 +22,7 @@ const ProductsData = [
     pathnode: "product1.png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/infinities",
+    licenseNumber: "LN-001"
   },
   {
     id: 2,
@@ -32,6 +33,7 @@ const ProductsData = [
     pathnode: "Mask group.png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/egrets",
+    licenseNumber: "LN-002"
   },
   {
     id: 3,
@@ -42,6 +44,7 @@ const ProductsData = [
     pathnode: "Mask group (1).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/america",
+    licenseNumber: "LN-003"
   },
   {
     id: 4,
@@ -52,6 +55,7 @@ const ProductsData = [
     pathnode: "Mask group (2).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/stars",
+    licenseNumber: "LN-004"
   },
   {
     id: 5,
@@ -62,6 +66,7 @@ const ProductsData = [
     pathnode: "Mask group (3).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/colorado",
+    licenseNumber: "LN-005"
   },
   {
     id: 6,
@@ -72,6 +77,7 @@ const ProductsData = [
     pathnode: "Mask group (4).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/fox",
+    licenseNumber: "LN-006"
   },
   {
     id: 7,
@@ -82,6 +88,7 @@ const ProductsData = [
     pathnode: "Mask group (5).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/wild",
+    licenseNumber: "LN-007"
   },
   {
     id: 8,
@@ -92,6 +99,7 @@ const ProductsData = [
     pathnode: "Mask group (6).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/moon",
+    licenseNumber: "LN-008"
   },
   {
     id: 9,
@@ -102,6 +110,7 @@ const ProductsData = [
     pathnode: "Mask group (7).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/sharing",
+    licenseNumber: "LN-009"
   },
   {
     id: 10,
@@ -112,6 +121,7 @@ const ProductsData = [
     pathnode: "Mask group (8).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/morning",
+    licenseNumber: "LN-010"
   },
   {
     id: 11,
@@ -122,7 +132,8 @@ const ProductsData = [
     pathnode: "Mask group (9).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/light",
-  },
+    licenseNumber: "LN-011"
+  }
 ];
 
 export default ProductsData;

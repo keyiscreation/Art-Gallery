@@ -2,12 +2,13 @@
 import { useMemo } from "react";
 
 import { useAtomValue } from "@/jotai/useAtomValue";
-import  products  from "@/lib/constants/ProductsData";
+import products from "@/lib/constants/ProductsData";
 import { Product } from "@/types";
 
 type CartItem = {
   id: string | number;
   quantity: number;
+  size?: string;
 };
 
 const useShoppingCart = () => {
@@ -68,23 +69,34 @@ const useShoppingCart = () => {
     });
   };
 
-  const cartProducts: Product[] = useMemo(() => {
-    const cartProducts: Product[] = [];
-    cartItems.forEach((item: CartItem) => {
-      const found = products.find((product) => product.id === item.id);
-      if (found) {
-        cartProducts.push(found);
-      }
+  const setItemSize = (id: number | string, size: string) => {
+    setCartItems((currItems: CartItem[]) => {
+      return currItems.map((item: CartItem) => {
+        if (item.id === id) {
+          return { ...item, size };
+        }
+        return item;
+      });
     });
-    return cartProducts;
-  }, [cartItems, products]); 
+  };
+
+  const cartProducts: (Product & { size?: string })[] = useMemo(() => {
+    return cartItems
+      .map((item: CartItem) => {
+        const foundProduct = products.find((product) => product.id === item.id);
+        if (foundProduct) {
+          return { ...foundProduct, size: item.size };
+        }
+        return null;
+      })
+      .filter(Boolean); // Remove null values
+  }, [cartItems, products]);
   
 
   const cartProductsTotalPrice = useMemo(() => {
     const totalPice = cartProducts.reduce(
       (totalPrice: number, product: Product) =>
-        (totalPrice +=
-          Number(product.price || 0) * getItemQuantity(product.id)),
+        (totalPrice += Number(product.price || 0) * getItemQuantity(product.id)),
       0
     );
 
@@ -97,6 +109,7 @@ const useShoppingCart = () => {
     increaseCartQuantity,
     decreaseCartQuantity,
     removeFromCart,
+    setItemSize,
     isOpen,
     onOpen,
     onClose,
