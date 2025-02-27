@@ -85,7 +85,7 @@ const WhatToDo = () => {
 
         <div className="flex flex-wrap justify-between gap-10 mt-20">
           {reviews.map((review) => (
-            <div key={review.id} className="w-full relative max-w-[508px]">
+            <div key={review.id} className="w-full relative max-w-[48%]">
               <div className="relative">
                 <Image
                   className="max-h-[331px] w-full object-cover z-0"

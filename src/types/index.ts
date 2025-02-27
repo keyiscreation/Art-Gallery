@@ -6,7 +6,9 @@ export type Product = {
      slugtitle: string;
      price: string;
      image: StaticImageData;
+     imageHover: StaticImageData;
      pathnode: string; 
      sizes?: string[];
      qrLink?: string;
+     licenseNumber: string;
 };

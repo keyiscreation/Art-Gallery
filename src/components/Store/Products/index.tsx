@@ -7,8 +7,8 @@ import Text from "@/components/ui/Text";
 import productsData from "@/lib/constants/ProductsData";
 import { useRouter } from "next/navigation";
 
-import imghover from "@/public/images/store/Mask group (5).png";
-import logo from "@/public/logo.png";
+// import imghover from "@/public/images/store/Mask group (5).png";
+import logo from "@/public/watermark.png";
 
 const Products = () => {
   const router = useRouter();
@@ -46,10 +46,10 @@ const Products = () => {
                 />
 
                 {/* Watermark logo */}
-                <div className="absolute inset-0 flex justify-center items-end opacity-80 pointer-events-none z-20">
+                <div className="absolute inset-0 flex justify-center items-center  pointer-events-none z-20">
                   <Image
-                    className="max-w-[100px] max-h-[100px]" // Adjust size of watermark logo
-                    src={logo} // Replace with your logo source
+                    className="w-full" 
+                    src={logo} 
                     alt="Watermark Logo"
                   />
                 </div>
@@ -57,7 +57,7 @@ const Products = () => {
                 {/* Second image (hovered image) */}
                 <Image
                   className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 hover:opacity-100"
-                  src={imghover}
+                  src={product.imageHover}
                   alt={product.title}
                   onClick={() => handleNavigation(product.slugtitle)}
                   width={401.99}

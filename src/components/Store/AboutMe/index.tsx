@@ -4,6 +4,7 @@ import Image from "next/image";
 import Text from "@/components/ui/Text";
 
 import imgr from "@/public/images/store/aboutright.png";
+import signature from "@/public/signatureblack.png";
 
 const AboutMe = () => {
   return (
@@ -46,6 +47,11 @@ const AboutMe = () => {
             those fleeting expressions—to capture the urgency of creation before
             it is wiped away, to preserve what was never meant to be permanent.
           </Text>
+          <Image
+            className="max-w-[100px] "
+            src={signature}
+            alt="Watermark Logo"
+          />
         </div>
         <div className="">
           <Image src={imgr} alt="imgr" width={562} height={836} />

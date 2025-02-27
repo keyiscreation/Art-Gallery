@@ -17,6 +17,7 @@
     "jotai": "^2.12.1",
     "next": "15.1.7",
     "nodemailer": "^6.10.0",
+    "pdfkit": "^0.16.0",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
@@ -24,12 +25,14 @@
     "react-icons": "^5.4.0",
     "react-qr-code": "^2.0.15",
     "react-toastify": "^11.0.3",
+    "stripe": "^17.7.0",
     "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.17",
+    "@types/pdfkit": "^0.13.9",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -2,7 +2,47 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "@/components/Navbar/NavbarStore";
 import Footer from "@/components/Footer/FooterStore";
+import localFont from "next/font/local";
+import "./stripe.css";
 
+
+const futurapt = localFont({
+  src: [
+    {
+      path: "../../../public/fonts/FuturaPT/FuturaPTLight.otf",
+      weight: "300",
+      style: "light",
+    },
+    {
+      path: "../../../public/fonts/FuturaPT/FuturaPTLight.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../../public/fonts/FuturaPT/FuturaPTMedium.otf",
+      weight: "500",
+      style: "medium",
+    },
+    {
+      path: "../../../public/fonts/FuturaPT/FuturaPTBold.otf",
+      weight: "700",
+      style: "bold",
+    },
+  ],
+  variable: "--font-futurapt",
+});
+const futura = localFont({
+  src: [
+   
+    {
+      path: "../../../public/fonts/Futura/Futura Medium.ttf",
+      weight: "500",
+      style: "medium",
+    },
+ 
+  ],
+  variable: "--font-futura",
+});
 export const metadata: Metadata = {
   title: "Art Gallery",
   description: "Store",
@@ -15,7 +55,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={ `${futurapt.variable} ${futura.variable}  antialiased`}>
         <Navbar />
         {children}
         <Footer />
