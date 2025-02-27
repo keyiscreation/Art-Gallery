@@ -55,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={` ${futurapt.variable} ${futura.variable} antialiased`}
+        className={` ${futurapt.variable} ${futura.variable} `}
       >
         {children}
       </body>

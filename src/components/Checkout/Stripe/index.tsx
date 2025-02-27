@@ -3,15 +3,21 @@ import CreditCardInput from "./CreditCardInput";
 import useStripePayment from "./useStripePayment";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
-
+// type CartItem = {
+//   title: string;
+//   price: number;
+//   quantity: number;
+//   qrLink?: string;
+// };
 interface FormData {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  streetAddress?: string;
-  aptNumber?: string;
-  state?: string;
-  zipCode?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  streetAddress: string;
+  aptNumber?: number;
+  state: string;
+  zipCode: number;
+  // cartValues?: CartItem[];
 }
 
 interface StripeFormProps {
@@ -24,28 +30,35 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
   const { onStripeSubmit } = useStripePayment();
   const [checked, setChecked] = useState(false);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
+    console.log(formData, "formData");
 
     try {
       // Exclude additionalInfo from validation check
       const { ...formDataWithoutAdditionalInfo } = formData;
-      const allFieldsFilled = Object.values(
+
+      const allFieldsFilled: boolean = Object.values(
         formDataWithoutAdditionalInfo
-      ).every((value) => value.trim() !== "");
+      ).every((value: string | number | undefined) =>
+        typeof value === "string"
+          ? value.trim() !== ""
+          : value !== null && value !== undefined
+      );
 
       if (!allFieldsFilled) {
         alert("Please fill all required fields.");
+        setLoading(false);
         return;
       }
 
       const res = await onStripeSubmit();
 
       if (res?.success) {
-        handleSubmit(e);
-        console.log("payment success");
-        alert("payment success");
+        await handleSubmit(e);
+        console.log("Payment success");
+        // alert("Payment successful!");
       }
     } catch (error) {
       console.error("An error occurred during submission:", error);
@@ -59,13 +72,17 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
     <div className="w-full">
       <form className="w-full" onSubmit={(e) => onSubmit(e)}>
         <CreditCardInput />
+
+        <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+        Name on card
+                  </Text>
         <input
-          className="px-3 border-[1px] bg-[#F2F2F2]  outline-none h-[45px] w-full  text-[15px] text-[#00000033] font-futurapt font-normal placehoder:text-[#000000]"
+          className="px-3 border-[1px] bg-[#F2F2F2]  outline-none h-[45px] w-full  text-[15px] text-[#000000] placeholder:text-[16px] font-normal placeholder:text-[#00000033]"
           type="text"
           placeholder="Name on card"
         />
-        <Text className="text-black text-[12px] leading-[11.54px] font-normal mt-2">
-        You&apos;ll receive receipts and notifications at this email
+        <Text className="text-black font-futurapt text-[13px] leading-[11.54px] font-light mt-2">
+          You&apos;ll receive receipts and notifications at this email
         </Text>
         {/* <div className="flex items-center mb-4">
           <input
@@ -89,7 +106,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
             onChange={() => setChecked(!checked)}
             className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
           />
-          <span className="text-gray-700 text-sm md:text-base">
+          <span className="text-black font-futurapt text-[13px] leading-[11.54px] font-light">
             Sign up to receive news and updates
           </span>
         </label>
@@ -97,10 +114,37 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
         {/* button */}
 
         <Button
+        type="submit"
           loading={loading}
           className="w-full h-[60.19px] mt-5 mb-3 bg-[#000000] max-w-full text-white "
         >
-          {loading ? "Submitting..." : " Place Order"}
+          {loading ? (
+            <span className="flex items-center">
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+              Submitting...
+            </span>
+          ) : (
+            " Place Order"
+          )}
         </Button>
 
         {/* 

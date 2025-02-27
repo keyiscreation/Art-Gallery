@@ -8,9 +8,9 @@ import React, {
   useState,
 } from "react";
 import Image from "next/image";
-// import { loadStripe } from "@stripe/stripe-js";
-// import { Elements } from "@stripe/react-stripe-js";
-// import StripeForm from "./Stripe";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import StripeForm from "./Stripe";
 
 // import { orderDataKeys } from "@/lib/constants/orderdetail";
 
@@ -21,9 +21,10 @@ import useShoppingCart from "@/hooks/useShoppingCart";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-// const stripePromise = loadStripe(
-//   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
-// );
+const stripePromise = loadStripe(
+  // process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY as string
+  "pk_test_cTSJAP6VIX6ChpugxrQuVYwg00B33lQZMq"
+);
 
 type CartItem = {
   title: string;
@@ -47,8 +48,8 @@ const Checkout = () => {
   const {
     cartProducts,
     getItemQuantity,
-    // increaseCartQuantity,
-    // decreaseCartQuantity,
+    increaseCartQuantity,
+    decreaseCartQuantity,
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
@@ -74,7 +75,7 @@ const Checkout = () => {
     cartValues: [],
   });
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -88,7 +89,7 @@ const Checkout = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
 
     const updatedFormData = { ...formData };
 
@@ -99,16 +100,17 @@ const Checkout = () => {
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
+      size: product.size,
     }));
 
-    console.log(updatedFormData, "qrLink form data");
+    // console.log(updatedFormData, "qrLink form data");
     try {
       const res = await axios.post("/api/order", updatedFormData);
       const data = res?.data;
 
       if (data && data.message === "Email Sent Successfully") {
-        alert("Email sent successfully");
-        setLoading(false);
+        alert("Order is confirmed, check your email!");
+        // setLoading(false);
       } else {
         throw new Error(data?.message || "Failed to send email");
       }
@@ -118,11 +120,16 @@ const Checkout = () => {
     }
   };
 
+  const handleNavigation = (slugtitle: string) => {
+    const slug = slugtitle;
+    router.push(`/products/${slug}`);
+  };
+
   return (
     <div className="pb-16 pt-20 px-5 bg-[#f6f6f6] mt-[-70px]">
       <div className="mx-auto w-full max-w-[1267.97px] ">
         <Text as="h1" className="text-black text-center">
-          Shopping Cart
+        Checkout
         </Text>
 
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
@@ -150,7 +157,8 @@ const Checkout = () => {
                     onChange={handleInputChange}
                     required
                     autoComplete="off"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                    placeholder="First Name"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000]  font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                   />
                 </div>
 
@@ -166,7 +174,8 @@ const Checkout = () => {
                     onChange={handleInputChange}
                     required
                     autoComplete="off"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                    placeholder="Last Name"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                   />
                 </div>
               </div>
@@ -183,7 +192,8 @@ const Checkout = () => {
                   onChange={handleInputChange}
                   required
                   autoComplete="off"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                  placeholder="Email"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000]  font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                 />
               </div>
 
@@ -199,7 +209,8 @@ const Checkout = () => {
                   onChange={handleInputChange}
                   required
                   autoComplete="off"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-futurapt font-normal placeholder:text-[#000000]"
+                  placeholder=" Street Address"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000]  font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                 />
               </div>
 
@@ -217,7 +228,8 @@ const Checkout = () => {
                     onChange={handleInputChange}
                     min="0"
                     autoComplete="off"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                    placeholder="Apt Number"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black  font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                   />
                 </div>
 
@@ -233,7 +245,8 @@ const Checkout = () => {
                     onChange={handleInputChange}
                     required
                     autoComplete="off"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                    placeholder="State"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black  font-normal placeholder:text-[#00000033]  placeholder:text-[16px] "
                   />
                 </div>
 
@@ -250,13 +263,14 @@ const Checkout = () => {
                     required
                     min="0"
                     autoComplete="off"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-futurapt font-normal placeholder:text-[#000000]"
+                    placeholder="Zip Code"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black  font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
                   />
                 </div>
               </div>
 
               {/* Submit Button */}
-              <Button
+              {/* <Button
                 type="submit"
                 className="mt-4 bg-black max-w-full text-white flex justify-center items-center"
               >
@@ -287,12 +301,12 @@ const Checkout = () => {
                 ) : (
                   "Submit"
                 )}
-              </Button>
+              </Button> */}
             </form>
 
-            {/* <Elements stripe={stripePromise}>
+            <Elements stripe={stripePromise}>
               <StripeForm formData={formData} handleSubmit={handleSubmit} />
-            </Elements> */}
+            </Elements>
           </div>
 
           {/* <div className="">
@@ -328,7 +342,8 @@ const Checkout = () => {
           </div> */}
 
           {/* order details */}
-          <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-full mob:max-h-full">
+        <div className="w-full max-w-[455.77px] relative">
+        <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-full mob:max-h-full">
             <Text className="text-[22px] font-medium leading-[28px] text-black">
               Order Details
             </Text>
@@ -336,8 +351,8 @@ const Checkout = () => {
 
             {cartProducts.map((product) => (
               <Fragment key={product.id}>
-                <div className="flex justify-between">
-                  <div className="flex gap-3">
+                <div className="flex justify-between" >
+                  <div className="flex gap-3 cursor-pointer" onClick={() => handleNavigation(product.slugtitle)}>
                     <Image
                       className="w-[66px] max-h-[66px] object-cover"
                       src={product.image}
@@ -350,7 +365,7 @@ const Checkout = () => {
                         {product.title}
                       </Text>
                       <Text className="text-[12px]  leading-[15.3px] text-black">
-                        Size: Large
+                        Size: {product.size}
                       </Text>
                     </div>
                   </div>
@@ -361,11 +376,28 @@ const Checkout = () => {
                     </Text>
 
                     <div className=" flex justify-end">
-                      <div className="bg-[#F2F2F2] p-2  max-w-[103.3px] flex justify-between gap-10 my-2">
+                      <div className="bg-[#F2F2F2] p-2  max-w-[143.3px] flex justify-between gap-5 my-2">
                         <Text className="font-medium text-black">Qty</Text>
                         <Text className="font-medium text-black">
                           {" "}
-                          {getItemQuantity(Number(product.id))}
+                            <span
+                              onClick={() =>
+                                decreaseCartQuantity(Number(product.id))
+                              }
+                              className="mr-2 cursor-pointer text-[20px]"
+                            >
+                              -
+                            </span>
+                            {getItemQuantity(Number(product.id))}
+                            <span
+                              onClick={() =>
+                                increaseCartQuantity(Number(product.id))
+                              }
+                              className="ml-2 cursor-pointer "
+                            >
+                              +
+                            </span>
+                          
                         </Text>
                       </div>
                     </div>
@@ -440,6 +472,7 @@ const Checkout = () => {
 
             <hr className="border-[0.5px] border-black w-full  " />
           </div>
+        </div>
         </div>
       </div>
     </div>

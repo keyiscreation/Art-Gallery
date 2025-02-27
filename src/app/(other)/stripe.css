@@ -1,0 +1,49 @@
+.StripeElement.StripeElement--empty,
+.StripeElement.StripeElement--focus,
+.StripeElement.StripeElement--invalid,
+.StripeElement.StripeElement--complete {
+  /* background: white; */
+  padding: 16px;
+  margin-bottom: 12px;
+  --text-opacity: 0.2; /* Adjust the opacity as needed */
+
+  border: 1px solid rgba(255, 255, 255, var(--text-opacity));
+  background-color: #F2F2F2;
+  font-size: 16px !important;
+
+  
+}
+
+.StripeElement.StripeElement--empty{
+  border: 1px solid rgba(255, 255, 255, var(--text-opacity));
+
+}
+
+.ElementsApp, .ElementsApp .InputElement {
+  color: white;
+}
+/* .StripeElement.StripeElement--focus{
+  outline:2px solid #FF7565;
+
+} */
+.StripeElement.StripeElement--focus,
+.StripeElement.StripeElement--complete {
+  border-color: none;
+  font-size: 16px !important;
+}
+
+.StripeElement.StripeElement--invalid {
+  /* border-color: red; */
+  /* outline:2px solid red; */
+  border-bottom: 1px solid red;
+  font-size: 16px !important;
+}
+
+.expiryStripe {
+  /* margin-right: 10px; */
+  flex: 1;
+}
+
+.cvcStripe {
+  flex: 1;
+}

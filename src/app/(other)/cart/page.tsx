@@ -17,7 +17,10 @@ export default function CartPage() {
     removeFromCart,
     cartProductsTotalPrice,
   } = useShoppingCart();
+
+
   const router = useRouter();
+  console.log(cartProducts, "cartProducts");
 
   const handleNavigation = (slugtitle: string) => {
     const slug = slugtitle;
@@ -65,14 +68,14 @@ export default function CartPage() {
                       onContextMenu={(e) => e.preventDefault()}
                       draggable="false" // Disable dragging
                     />
-                      {/* mob */}
+                    {/* mob */}
 
                     <div className="mob:block hidden">
                       <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
                         {product.title}
                       </Text>
                       <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
-                        Size: Large
+                        Size: {product.size}
                       </Text>
 
                       <div className="flex justify-between mt-10">
@@ -111,16 +114,16 @@ export default function CartPage() {
                         </div>
                       </div>
                     </div>
-                      {/* mob */}
+                    {/* mob */}
                     {/* Optional Watermark Logo */}
                   </div>
 
-                  <div className="mob:hidden">
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px]">
+                  <div className="mob:hidden" onClick={() => handleNavigation(product.slugtitle)}>
+                    <Text onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] text-[16px] leading-[20px] font-medium  mob:max-w-[180px] cursor-pointer">
                       {product.title}
                     </Text>
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
-                      Size: Large
+                    <Text onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] text-[16px] leading-[20px] font-light mt-2 cursor-pointer">
+                      Size: {product.size}
                     </Text>
                   </div>
                 </div>
@@ -165,12 +168,12 @@ export default function CartPage() {
                       <path
                         d="M1.43848 0.792175L14.4037 13.7576"
                         stroke="black"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                       <path
                         d="M14.4033 0.792297L1.4385 13.757"
                         stroke="black"
-                        stroke-width="2"
+                        strokeWidth="2"
                       />
                     </svg>
                   </Text>
@@ -179,6 +182,7 @@ export default function CartPage() {
               <hr className="border-[0.5px] border-black/50 w-full my-5" />
             </Fragment>
           ))}
+
           <div className="flex justify-end mt-5">
             <div className="flex  w-full max-w-[363px] justify-between">
               <Text className="text-[16px] text-black font-medium ">

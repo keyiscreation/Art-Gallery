@@ -9,12 +9,26 @@ import logo from "@/public/logo.png";
 import cartbucket from "@/public/icons/bucketcart.svg";
 import Text from "../ui/Text";
 import useShoppingCart from "@/hooks/useShoppingCart";
+import { useAtomValue } from "@/jotai/useAtomValue";
+
+type CartItem = {
+  id: number;
+  quantity: number;
+};
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/"); // Initial active tab set to home
+  const [cartItems] = useAtomValue("cart");
 
   const { cartProducts } = useShoppingCart();
+
+  const totalQuantity: number = cartItems.reduce(
+    (sum: number, item: CartItem) => sum + item.quantity,
+    0
+  );
+
+  console.log(totalQuantity, "totalQuantity");
 
   // Load activeTab from local storage on component mount
   useEffect(() => {
@@ -95,8 +109,8 @@ const Navbar = () => {
 
                 <li>
                   <Link
-                    href="/"
-                    onClick={() => handleTabChange("/")}
+                    href="/contact-us"
+                    onClick={() => handleTabChange("/contact-us")}
                     className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
                       activeTab === "" ? " font-medium" : "text-white"
                     }`}
@@ -119,6 +133,9 @@ const Navbar = () => {
                   <Image className="" src={cartbucket} alt="cartbucket" />
                   <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
                     <Text className="text-[10px] font-futurapt font-bold ">
+                      {totalQuantity}
+                    </Text>
+                    <Text className="text-[10px] font-futurapt font-bold hidden">
                       {cartProducts.length}
                     </Text>
                   </div>
@@ -178,7 +195,7 @@ const Navbar = () => {
                 </div>
                 <Drawer isOpen={isOpen} onClose={onClose}>
                   <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {["/", "/about", "/store"].map((path) => (
+                  {["/", "/about", "/store", "/contact-us"].map((path) => (
                       <a
                         href={path}
                         key={path}
@@ -194,6 +211,8 @@ const Navbar = () => {
                             ? "Home"
                             : path === "/store"
                             ? "Shop"
+                            : path === "/contact-us"
+                            ? "Contact"
                             : path.slice(1).toUpperCase()}
                         </li>
                         <hr className="w-full border border-[#FFFFFF] my-2" />
