@@ -100,15 +100,16 @@ const Checkout = () => {
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
+      size: product.size,
     }));
 
-    console.log(updatedFormData, "qrLink form data");
+    // console.log(updatedFormData, "qrLink form data");
     try {
       const res = await axios.post("/api/order", updatedFormData);
       const data = res?.data;
 
       if (data && data.message === "Email Sent Successfully") {
-        alert("Email sent successfully");
+        alert("Order is confirmed, check your email!");
         // setLoading(false);
       } else {
         throw new Error(data?.message || "Failed to send email");
@@ -128,7 +129,7 @@ const Checkout = () => {
     <div className="pb-16 pt-20 px-5 bg-[#f6f6f6] mt-[-70px]">
       <div className="mx-auto w-full max-w-[1267.97px] ">
         <Text as="h1" className="text-black text-center">
-          Shopping Cart
+        Checkout
         </Text>
 
         <hr className="border-[0.5px] border-black/50 w-full my-5" />

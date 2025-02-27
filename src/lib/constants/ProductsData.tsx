@@ -10,6 +10,13 @@ import product9 from "@/public/images/store/Mask group (7).png";
 import product10 from "@/public/images/store/Mask group (8).png";
 import product11 from "@/public/images/store/Mask group (9).png";
 
+import product1hover from "@/public/images/store/hover1.jpg";
+import product2hover from "@/public/images/store/hover2.jpg";
+import product3hover from "@/public/images/store/hover3.jpg";
+import product4hover from "@/public/images/store/hover4.jpg";
+import product5hover from "@/public/images/store/hover5.jpg";
+
+
 const sizes = ["Small", "Medium", "Large", "X-Large"];
 
 const ProductsData = [
@@ -19,6 +26,7 @@ const ProductsData = [
     slugtitle: "infinities",
     price: "10.00",
     image: product1,
+    imageHover: product1hover,
     pathnode: "product1.png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/infinities",
@@ -30,6 +38,7 @@ const ProductsData = [
     slugtitle: "egrets",
     price: "10.99",
     image: product2,
+    imageHover: product2hover,
     pathnode: "Mask group.png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/egrets",
@@ -41,6 +50,7 @@ const ProductsData = [
     slugtitle: "america",
     price: "20.99",
     image: product3,
+    imageHover: product3hover,
     pathnode: "Mask group (1).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/america",
@@ -52,6 +62,7 @@ const ProductsData = [
     slugtitle: "stars",
     price: "20.99",
     image: product4,
+    imageHover: product4hover,
     pathnode: "Mask group (2).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/stars",
@@ -63,6 +74,7 @@ const ProductsData = [
     slugtitle: "colorado",
     price: "20.99",
     image: product5,
+    imageHover: product5hover,
     pathnode: "Mask group (3).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/colorado",
@@ -74,6 +86,7 @@ const ProductsData = [
     slugtitle: "fox",
     price: "20.99",
     image: product6,
+    imageHover: product5hover,
     pathnode: "Mask group (4).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/fox",
@@ -85,6 +98,7 @@ const ProductsData = [
     slugtitle: "wild",
     price: "20.99",
     image: product7,
+    imageHover: product5hover,
     pathnode: "Mask group (5).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/wild",
@@ -96,6 +110,7 @@ const ProductsData = [
     slugtitle: "moon",
     price: "20.99",
     image: product8,
+    imageHover: product5hover,
     pathnode: "Mask group (6).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/moon",
@@ -107,6 +122,7 @@ const ProductsData = [
     slugtitle: "sharing",
     price: "20.99",
     image: product9,
+    imageHover: product5hover,
     pathnode: "Mask group (7).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/sharing",
@@ -118,6 +134,7 @@ const ProductsData = [
     slugtitle: "morning",
     price: "20.99",
     image: product10,
+    imageHover: product5hover,
     pathnode: "Mask group (8).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/morning",
@@ -129,6 +146,7 @@ const ProductsData = [
     slugtitle: "light",
     price: "20.99",
     image: product11,
+    imageHover: product5hover,
     pathnode: "Mask group (9).png",
     sizes,
     qrLink: "https://art-gallery-one-theta.vercel.app/product-detail/light",

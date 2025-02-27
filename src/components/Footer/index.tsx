@@ -17,10 +17,10 @@ const Footer = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!email) {
-      alert("Please enter a valid email.");
-      return;
-    }
+    // if (!email) {
+    //   alert("Please enter a valid email.");
+    //   return;
+    // }
 
     setLoading(true);
 
@@ -59,6 +59,7 @@ const Footer = () => {
           placeholder="E-mail Address"
           type="email"
           value={email}
+          required
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           className="px-3 border-[1px] border-[#000000] outline-none h-[60px] w-full max-w-[250px] text-[15px] text-[#000000] font-futurapt font-normal placehoder:text-[#000000] "
         />

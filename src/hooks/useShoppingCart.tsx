@@ -31,21 +31,25 @@ const useShoppingCart = () => {
     return cartItems.find((item: CartItem) => item.id === id)?.quantity || 0;
   };
 
-  const increaseCartQuantity = (id: number | string) => {
+  const increaseCartQuantity = (id: number | string, size?: string) => {
     setCartItems((currItems: CartItem[]) => {
-      if (currItems.find((item: CartItem) => item.id === id) == null) {
-        return [...currItems, { id, quantity: 1 }];
+      const existingItem = currItems.find((item: CartItem) => item.id === id);
+      
+      if (existingItem == null) {
+        // If the item is not already in the cart, create it with the selected size
+        return [...currItems, { id, quantity: 1, size }];
       } else {
+        // If the item is already in the cart, increase its quantity
         return currItems.map((item: CartItem) => {
           if (item.id === id) {
             return { ...item, quantity: item.quantity + 1 };
-          } else {
-            return item;
           }
+          return item;
         });
       }
     });
   };
+  
 
   const decreaseCartQuantity = (id: number | string) => {
     setCartItems((currItems: CartItem[]) => {

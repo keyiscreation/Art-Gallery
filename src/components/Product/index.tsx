@@ -25,7 +25,7 @@ interface ProductProps {
 }
 const Product: React.FC<ProductProps> = ({ product }) => {
   // const [cartItems, setCartItems] = useAtomValue("cart");
-  const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
+  const [selectedSize, setSelectedSize] = useState<string>("");
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
   const router = useRouter();
@@ -129,7 +129,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
               Size:
             </Text>
-            
+
             <select
               className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
               value={selectedSize}
@@ -139,12 +139,14 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 setItemSize(Number(product.id), newSize); // Call setItemSize here
               }}
             >
+              <option value="" disabled>Select Size</option> {/* Placeholder option */}
               {product.sizes.map((size) => (
                 <option key={size} value={size}>
                   {size}
                 </option>
               ))}
             </select>
+
 
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
@@ -161,7 +163,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 {getItemQuantity(Number(product.id))}
               </Text>
               <button
-                onClick={() => increaseCartQuantity(Number(product.id))}
+                onClick={() => increaseCartQuantity(Number(product.id), String(selectedSize))}
                 className=" px-2 text-[24px]"
               >
                 +
@@ -187,7 +189,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
 
             {showValidationMessage && (
               <p className="text-gradient text-[16px] font-jakrata font-medium">
-                Please add quantity before adding to cart.
+                Please select size before adding to cart.
               </p>
             )}
           </div>

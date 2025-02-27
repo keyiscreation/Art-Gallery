@@ -58,7 +58,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
       if (res?.success) {
         await handleSubmit(e);
         console.log("Payment success");
-        alert("Payment successful!");
+        // alert("Payment successful!");
       }
     } catch (error) {
       console.error("An error occurred during submission:", error);
