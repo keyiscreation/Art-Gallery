@@ -47,11 +47,7 @@ const Products = () => {
 
                 {/* Watermark logo */}
                 <div className="absolute inset-0 flex justify-center items-center  pointer-events-none z-20">
-                  <Image
-                    className="w-full" 
-                    src={logo} 
-                    alt="Watermark Logo"
-                  />
+                  <Image className="w-full" src={logo} alt="Watermark Logo" />
                 </div>
 
                 {/* Second image (hovered image) */}
