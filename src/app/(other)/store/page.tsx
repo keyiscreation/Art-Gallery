@@ -8,7 +8,7 @@ export default function Store() {
       <div className="overflow-hidden">
         <Products />
         <AboutMe />
-        <WhatToDo/>
+        <WhatToDo />
       </div>
     </>
   );
