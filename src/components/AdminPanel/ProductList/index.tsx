@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+
 import { db } from "@/firebase";
 import {
   collection,
@@ -9,8 +10,9 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-
 import Text from "@/components/ui/Text";
+import Image from "next/image";
+import axios from "axios";
 
 interface Product {
   id: string;
@@ -18,6 +20,7 @@ interface Product {
   price: number;
   sizes: string[];
   licenseNumber: string;
+  image?: string;
 }
 
 const ProductList: React.FC = () => {
@@ -27,6 +30,9 @@ const ProductList: React.FC = () => {
   const [editedName, setEditedName] = useState<string>("");
   const [editedPrice, setEditedPrice] = useState<string>("");
   const [editedSize, setEditedSize] = useState<string>("");
+  const [editedImage, setEditedImage] = useState<string>("");
+  const [editedLicenceNumber, setEditedLicenceNumber] = useState<string>("");
+  const [newImageFile, setNewImageFile] = useState<File | null>(null);
 
   // Fetch Products from Firestore
   const fetchProducts = async () => {
@@ -37,8 +43,6 @@ const ProductList: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       })) as Product[];
-
-      //   console.log(productList);
       setProducts(productList);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -52,10 +56,7 @@ const ProductList: React.FC = () => {
 
   // Delete Product
   const handleDelete = async (id: string) => {
-    const confirmDelete = confirm(
-      "Are you sure you want to delete this product?"
-    );
-    if (!confirmDelete) return;
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
       await deleteDoc(doc(db, "products", id));
@@ -70,21 +71,55 @@ const ProductList: React.FC = () => {
     setEditingProduct(product);
     setEditedName(product.name);
     setEditedPrice(product.price.toString());
-    setEditedSize(product.sizes.join(", ")); // Join the sizes array into a comma-separated string
+    setEditedSize(product.sizes.join(", "));
+    setEditedImage(product.image || "");
+    setNewImageFile(null);
+    setEditedLicenceNumber(product.licenseNumber);
   };
 
-  // Save Edited Product
+  // Upload Image to Cloudinary
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "art-gallery");
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
+        formData
+      );
+      return response.data.secure_url; // Get the uploaded image URL
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+
   // Save Edited Product
   const handleSaveEdit = async () => {
     if (!editingProduct) return;
 
+    setLoading(true);
+    let updatedImage = editedImage;
+
+    // If a new image file is selected, upload it
+    if (newImageFile) {
+      const uploadedImageUrl = await uploadImageToCloudinary(newImageFile);
+      if (uploadedImageUrl) {
+        updatedImage = uploadedImageUrl;
+      }
+    }
+
     try {
       const productRef = doc(db, "products", editingProduct.id);
       const updatedSizes = editedSize.split(",").map((s) => s.trim());
+
       await updateDoc(productRef, {
         name: editedName,
         price: Number(editedPrice),
-        sizes: updatedSizes, // Changed from "size" to "sizes"
+        sizes: updatedSizes,
+        image: updatedImage,
+        licenseNumber: editedLicenceNumber,
       });
 
       setProducts(
@@ -94,7 +129,9 @@ const ProductList: React.FC = () => {
                 ...p,
                 name: editedName,
                 price: Number(editedPrice),
-                sizes: updatedSizes, // Changed from "size" to "sizes"
+                sizes: updatedSizes,
+                image: updatedImage,
+                licenseNumber: editedLicenceNumber,
               }
             : p
         )
@@ -102,6 +139,8 @@ const ProductList: React.FC = () => {
       setEditingProduct(null);
     } catch (error) {
       console.error("Error updating product:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,10 +158,43 @@ const ProductList: React.FC = () => {
           {products.map((product) => (
             <li
               key={product.id}
-              className="border p-4 font-futurapt rounded-md shadow-sm flex justify-between items-center"
+              className="border p-4 rounded-md shadow-sm flex justify-between items-center"
             >
               {editingProduct?.id === product.id ? (
                 <div className="flex flex-col gap-2 w-full max-w-[400px] mx-auto">
+                  {/* Image Preview */}
+                  <div className="w-32 h-32 mx-auto">
+                    {newImageFile ? (
+                      <img
+                        src={URL.createObjectURL(newImageFile)}
+                        alt="New Upload"
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    ) : (
+                      <Image
+                        src={editedImage}
+                        alt={editedName}
+                        width={100}
+                        height={100}
+                        className="rounded-md object-cover"
+                      />
+                    )}
+                  </div>
+
+                  {/* Image Upload Input */}
+                  <input
+                    className="border p-2 rounded"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setNewImageFile(file);
+                      }
+                    }}
+                  />
+
+                  {/* Other Editable Fields */}
                   <input
                     className="border p-2 rounded"
                     type="text"
@@ -141,11 +213,18 @@ const ProductList: React.FC = () => {
                     value={editedSize}
                     onChange={(e) => setEditedSize(e.target.value)}
                   />
+                  <input
+                    className="border p-2 rounded"
+                    type="text"
+                    value={editedLicenceNumber}
+                    onChange={(e) => setEditedLicenceNumber(e.target.value)}
+                  />
+
                   <button
                     className="bg-green-500 text-white px-3 py-1 rounded"
                     onClick={handleSaveEdit}
                   >
-                    Save
+                    {loading ? "Saving" : "Save"}
                   </button>
                   <button
                     className="bg-gray-500 text-white px-3 py-1 rounded"
@@ -157,6 +236,16 @@ const ProductList: React.FC = () => {
               ) : (
                 <>
                   <div>
+                    {/* Product Image */}
+                    {product.image && (
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={100}
+                        height={100}
+                        className="rounded-md object-cover"
+                      />
+                    )}
                     <Text className="text-lg text-black font-semibold">
                       {product.name}
                     </Text>
@@ -166,7 +255,6 @@ const ProductList: React.FC = () => {
                     <Text className="text-gray-600">
                       Sizes: {product.sizes.join(", ")}
                     </Text>
-
                     <Text className="text-gray-600">
                       License Number: {product.licenseNumber}
                     </Text>

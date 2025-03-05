@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 // import imghover from "@/public/images/store/Mask group (5).png";
 import logo from "@/public/watermark.png";
+import SearchProduct from "../Serach";
 
 const Products = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const Products = () => {
       </Text>
 
       <hr className="border-[0.5px] border-black/50 w-full my-5" />
+      <SearchProduct />
 
       {/* products */}
       <div className="flex flex-wrap mob:justify-center mt-16 gap-[30px] justify-start mob:gap-[20px] mb-16">

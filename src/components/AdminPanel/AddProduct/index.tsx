@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from "react";
+import axios from "axios";
 import { db } from "@/firebase";
 import { collection, addDoc } from "firebase/firestore";
-// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 
@@ -12,12 +11,9 @@ interface Product {
   name: string;
   slugtitle: string;
   price: string;
-  // image: File | null;
-  // imageHover: File | null;
+  image: File | null;
   sizes: string[];
   licenseNumber: string;
-  // qrLink: string;
-  // pathnode: string;
 }
 
 const AddProduct: React.FC = () => {
@@ -25,56 +21,70 @@ const AddProduct: React.FC = () => {
     name: "",
     slugtitle: "",
     price: "",
-    // image: null,
-    // imageHover: null,
+    image: null,
     sizes: [],
     licenseNumber: "",
-    // pathnode: "",
-    // qrLink: "",
   });
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Handle input changes (text fields)
+  // Handle input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle size input (comma-separated)
-  const handleSizeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const sizesArray = e.target.value.split(",").map((size) => size.trim());
-    setProduct((prev) => ({ ...prev, sizes: sizesArray }));
+  // Handle file input changes
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProduct((prev) => ({ ...prev, image: e.target.files![0] }));
+    }
   };
 
-  // Handle file input changes
-  // const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setProduct((prev) => ({ ...prev, [e.target.name]: e.target.files![0] }));
-  //   }
-  // };
+  // Upload image to Cloudinary
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "art-gallery"); // Replace with your Cloudinary upload preset
 
-  // Upload image to Firebase Storage
-  // const uploadImage = async (file: File, folder: string) => {
-  //   return new Promise<string>((resolve, reject) => {
-  //     const storageRef = ref(storage, `${folder}/${file.name}`);
-  //     const uploadTask = uploadBytesResumable(storageRef, file);
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Replace with your Cloudinary cloud name
+        formData
+      );
 
-  //     uploadTask.on(
-  //       "state_changed",
-  //       null,
-  //       (error) => reject(error),
-  //       async () => {
-  //         try {
+      return response.data.secure_url; // Get the uploaded image URL
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+  // const uploadImageToCloudinary = async (file: File) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   formData.append("upload_preset", "art-gallery"); // Your unsigned preset name
+  //   formData.append("cloud_name", "duox5d29k"); // Your Cloudinary cloud name
 
-  //           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-  //           resolve(downloadURL);
-  //         } catch (error) {
-  //           reject(error);
-  //         }
+  //   try {
+  //     const response = await fetch(
+  //       "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
+  //       {
+  //         method: "POST",
+  //         body: formData,
   //       }
   //     );
-  //   });
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to upload image");
+  //     }
+
+  //     const data = await response.json();
+  //     // console.log("Uploaded Image URL:", data.secure_url);
+  //     return data.secure_url;
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //     return null;
+  //   }
   // };
 
   // Handle form submit
@@ -84,8 +94,8 @@ const AddProduct: React.FC = () => {
     if (
       !product.name ||
       !product.slugtitle ||
-      !product.price
-      // !product.image
+      !product.price ||
+      !product.image
     ) {
       alert("Please fill all required fields and upload an image.");
       return;
@@ -94,24 +104,21 @@ const AddProduct: React.FC = () => {
     setLoading(true);
 
     try {
-      // const imageURL = product.image
-      //   ? await uploadImage(product.image, "products")
-      //   : "";
-      // const hoverImageURL = product.imageHover
-      //   ? await uploadImage(product.imageHover, "products")
-      //   : "";
+      // Upload image to Cloudinary and get the URL
+      const imageURL = await uploadImageToCloudinary(product.image);
+      if (!imageURL) {
+        alert("Image upload failed. Please try again.");
+        return;
+      }
 
       // Save product data to Firestore
       await addDoc(collection(db, "products"), {
         name: product.name,
         slugtitle: product.slugtitle,
         price: parseFloat(product.price),
-        // image: imageURL,
-        // imageHover: hoverImageURL,
+        image: imageURL, // Store Cloudinary URL in Firestore
         sizes: product.sizes,
         licenseNumber: product.licenseNumber,
-        // pathnode: product.pathnode,
-        // qrLink: product.qrLink,
       });
 
       alert("Product added successfully!");
@@ -119,12 +126,9 @@ const AddProduct: React.FC = () => {
       //   name: "",
       //   slugtitle: "",
       //   price: "",
-      //   // image: null,
-      //   // imageHover: null,
+      //   image: null,
       //   sizes: [],
       //   licenseNumber: "",
-      //   // pathnode: "",
-      //   // qrLink: "",
       // });
     } catch (error) {
       console.error("Error adding product:", error);
@@ -161,7 +165,7 @@ const AddProduct: React.FC = () => {
               value={product.slugtitle}
               onChange={handleChange}
               className="w-full p-2 border rounded-md font-futurapt"
-              placeholder="Enter slug title (e.g., infinities)"
+              placeholder="Enter slug title"
             />
           </div>
 
@@ -183,11 +187,17 @@ const AddProduct: React.FC = () => {
               type="text"
               name="sizes"
               value={product.sizes.join(", ")}
-              onChange={handleSizeChange}
+              onChange={(e) =>
+                setProduct((prev) => ({
+                  ...prev,
+                  sizes: e.target.value.split(",").map((size) => size.trim()),
+                }))
+              }
               className="w-full p-2 border rounded-md font-futurapt"
-              placeholder="Enter sizes (comma-separated, e.g., S, M, L, XL)"
+              placeholder="Enter sizes (comma-separated)"
             />
           </div>
+
           <div>
             <label className="block font-futurapt mb-1">License Number</label>
             <input
@@ -200,7 +210,7 @@ const AddProduct: React.FC = () => {
             />
           </div>
 
-          {/* <div>
+          <div>
             <label className="block font-futurapt mb-1">Product Image</label>
             <input
               type="file"
@@ -209,22 +219,11 @@ const AddProduct: React.FC = () => {
               onChange={handleFileChange}
               className="w-full p-2 border rounded-md font-futurapt"
             />
-          </div> */}
-
-          {/* <div>
-            <label className="block font-futurapt mb-1">Hover Image</label>
-            <input
-              type="file"
-              name="imageHover"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full p-2 border rounded-md font-futurapt"
-            />
-          </div> */}
+          </div>
 
           <Button
             type="submit"
-            className="w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-[#000000]/90 text-white p-2 rounded-md "
+            className="w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-[#000000]/90 text-white p-2 rounded-md"
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Product"}

@@ -28,6 +28,8 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
+  console.log("Product title", product.title);
+
   const router = useRouter();
   const {
     // cartProducts,
@@ -103,7 +105,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               <Image
                 className="w-full max-w-[670px] object-cover"
                 src={product.image}
-                alt={product.title}
+                alt={"image"}
                 onContextMenu={(e) => e.preventDefault()} // Disable right-click
                 draggable="false" // Disable image dragging
               />
@@ -139,15 +141,16 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 setItemSize(Number(product.id), newSize); // Call setItemSize here
               }}
             >
-              <option value="" disabled>Select Size</option> {/* Placeholder option */}
+              <option value="" disabled>
+                Select Size
+              </option>{" "}
+              {/* Placeholder option */}
               {product.sizes.map((size) => (
                 <option key={size} value={size}>
                   {size}
                 </option>
               ))}
             </select>
-
-
 
             <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
@@ -163,12 +166,13 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 {getItemQuantity(Number(product.id))}
               </Text>
               <button
-                onClick={() => increaseCartQuantity(Number(product.id), String(selectedSize))}
+                onClick={() =>
+                  increaseCartQuantity(Number(product.id), String(selectedSize))
+                }
                 className=" px-2 text-[24px]"
               >
                 +
               </button>
-
             </div>
 
             <div className="flex  tab:gap-5 gap-5 mt-10 w-full">

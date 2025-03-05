@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
 
-
 const futurapt = localFont({
   src: [
     {
@@ -31,13 +30,11 @@ const futurapt = localFont({
 });
 const futura = localFont({
   src: [
-   
     {
       path: "../../public/fonts/Futura/Futura Medium.ttf",
       weight: "500",
       style: "medium",
     },
- 
   ],
   variable: "--font-futura",
 });
@@ -54,9 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={` ${futurapt.variable} ${futura.variable} `}
-      >
+      <body className={` ${futurapt.variable} ${futura.variable} `}>
         {children}
       </body>
     </html>
