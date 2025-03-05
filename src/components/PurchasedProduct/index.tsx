@@ -21,7 +21,7 @@ const PurchasedProduct: React.FC<ProductProps> = ({ product }) => {
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5 my-[100px]">
         <Text as="h1" className="text-black text-center font-futurapt">
-          Product Page
+          Purchased Product
         </Text>
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
 

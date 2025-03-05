@@ -20,7 +20,7 @@ const LogOutButton: React.FC<LogOutProps> = ({ className }) => {
       // setLoading(true)
       await signOut(auth);
       // console.log("User logged out successfully");
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       console.error("Error logging out:", err);
     } finally {

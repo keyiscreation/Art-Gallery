@@ -165,7 +165,7 @@ const ProductList: React.FC = () => {
                   {/* Image Preview */}
                   <div className="w-32 h-32 mx-auto">
                     {newImageFile ? (
-                      <img
+                      <Image
                         src={URL.createObjectURL(newImageFile)}
                         alt="New Upload"
                         className="w-full h-full object-cover rounded-md"

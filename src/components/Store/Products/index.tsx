@@ -1,22 +1,52 @@
 "use client";
-import React from "react";
-import Image from "next/image";
-
-import Text from "@/components/ui/Text";
-
-import productsData from "@/lib/constants/ProductsData";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { collection, getDocs } from "firebase/firestore";
 
-// import imghover from "@/public/images/store/Mask group (5).png";
+import { db } from "@/firebase";
+import Text from "@/components/ui/Text";
+import Spinner from "@/components/ui/Spinner";
+
 import logo from "@/public/watermark.png";
+
 import SearchProduct from "../Serach";
+interface Product {
+  id: string;
+  name: string;
+  slugtitle: string;
+  price: number;
+  image: string;
+  imageHover?: string;
+}
 
 const Products = () => {
   const router = useRouter();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const productsData: Product[] = querySnapshot.docs.map((doc) => {
+        const data = doc.data() as Omit<Product, "id">;
+        return { id: doc.id, ...data };
+      });
+      setProducts(productsData);
+    } catch (error) {
+      console.error("Error fetching products: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleNavigation = (slugtitle: string) => {
-    const slug = slugtitle;
-    router.push(`/products/${slug}`);
+    router.push(`/products/${slugtitle}`);
   };
 
   return (
@@ -30,54 +60,59 @@ const Products = () => {
 
       {/* products */}
       <div className="flex flex-wrap mob:justify-center mt-16 gap-[30px] justify-start mob:gap-[20px] mb-16">
-        {productsData.map((product) => (
-          <div key={product.id} className="w-full max-w-[401.99px]">
-            {/* Image container with hover effect */}
-            <div className="relative w-full">
-              {/* First image (default image) */}
-              <div className="relative w-full h-full">
-                {/* First image (default image) */}
-                <Image
-                  className="max-h-[313.93px] w-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out"
-                  src={product.image}
-                  alt={product.title}
-                  onClick={() => handleNavigation(product.slugtitle)}
-                  width={401.99}
-                  height={313.93}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-
-                {/* Watermark logo */}
-                <div className="absolute inset-0 flex justify-center items-center  pointer-events-none z-20">
-                  <Image className="w-full" src={logo} alt="Watermark Logo" />
-                </div>
-
-                {/* Second image (hovered image) */}
-                <Image
-                  className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 hover:opacity-100"
-                  src={product.imageHover}
-                  alt={product.title}
-                  onClick={() => handleNavigation(product.slugtitle)}
-                  width={401.99}
-                  height={313.93}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
-            </div>
-
-            {/* Product details */}
-            <div className="flex justify-between items-start mt-6">
-              <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium max-w-[169px] mob:text-[20px] mob:leading-[25.64px]">
-                {product.title}
-              </Text>
-              <div className="bg-[#EBF1E0] px-3 py-1 max-h-[44.07px] flex items-center rounded-full">
-                <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium mob:text-[20px] mob:leading-[25.64px]">
-                  ${product.price}
-                </Text>
-              </div>
-            </div>
+        {loading ? (
+          <div className="w-full flex justify-center items-center">
+            <Spinner />
           </div>
-        ))}
+        ) : (
+          products.map((product) => (
+            <div key={product.id} className="w-full max-w-[401.99px]">
+              {/* Image container with hover effect */}
+              <div className="relative w-full">
+                <div className="relative w-full h-full">
+                  {/* Default image */}
+                  <Image
+                    className="max-h-[313.93px] w-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out"
+                    src={product.image}
+                    alt={product.name}
+                    onClick={() => handleNavigation(product.slugtitle)}
+                    width={402}
+                    height={314}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+
+                  {/* Watermark logo */}
+                  <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-20">
+                    <Image className="w-full" src={logo} alt="Watermark Logo" />
+                  </div>
+
+                  {/* Hover image (if available, falls back to default image) */}
+                  <Image
+                    className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 hover:opacity-100"
+                    src={product.imageHover || product.image}
+                    alt={product.name}
+                    onClick={() => handleNavigation(product.slugtitle)}
+                    width={402}
+                    height={314}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
+                </div>
+              </div>
+
+              {/* Product details */}
+              <div className="flex justify-between items-start mt-6">
+                <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium max-w-[169px] mob:text-[20px] mob:leading-[25.64px]">
+                  {product.name}
+                </Text>
+                <div className="bg-[#EBF1E0] px-3 py-1 max-h-[44.07px] flex items-center rounded-full">
+                  <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium mob:text-[20px] mob:leading-[25.64px]">
+                    ${product.price}
+                  </Text>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

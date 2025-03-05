@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+
 import localFont from "next/font/local";
+
+import { AuthProvider } from "@/providers/AuthContext";
+
+import "./globals.css";
 
 const futurapt = localFont({
   src: [
@@ -52,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` ${futurapt.variable} ${futura.variable} `}>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

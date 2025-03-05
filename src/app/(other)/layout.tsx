@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
+// app/(other)/layout.tsx
 import Navbar from "@/components/Navbar/NavbarStore";
 import Footer from "@/components/Footer/FooterStore";
 import localFont from "next/font/local";
@@ -30,6 +29,7 @@ const futurapt = localFont({
   ],
   variable: "--font-futurapt",
 });
+
 const futura = localFont({
   src: [
     {
@@ -40,23 +40,19 @@ const futura = localFont({
   ],
   variable: "--font-futura",
 });
-export const metadata: Metadata = {
-  title: "Art Gallery",
-  description: "Store",
-};
 
-export default function RootLayout({
+export default function OtherLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${futurapt.variable} ${futura.variable}`}>
-        <Navbar />
+    <>
+      <Navbar />
+      <div className={`${futurapt.variable} ${futura.variable}`}>
         {children}
-        <Footer />
-      </body>
-    </html>
+      </div>
+      <Footer />
+    </>
   );
 }
