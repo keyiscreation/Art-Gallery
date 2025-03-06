@@ -12,6 +12,7 @@ interface Product {
   slugtitle: string;
   price: string;
   image: File | null;
+  hoverImage: File | null; // New hover image property
   sizes: string[];
   licenseNumber: string;
 }
@@ -22,22 +23,24 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     image: null,
+    hoverImage: null,
     sizes: [],
     licenseNumber: "",
   });
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Handle input changes
+  // Handle input changes for text fields
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file input changes
+  // Handle file input changes for both main image and hover image
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setProduct((prev) => ({ ...prev, image: e.target.files![0] }));
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      setProduct((prev) => ({ ...prev, [name]: files[0] }));
     }
   };
 
@@ -45,91 +48,65 @@ const AddProduct: React.FC = () => {
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "art-gallery"); // Replace with your Cloudinary upload preset
+    formData.append("upload_preset", "art-gallery"); // Cloudinary upload preset
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Replace with your Cloudinary cloud name
+        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Cloudinary cloud name
         formData
       );
-
-      return response.data.secure_url; // Get the uploaded image URL
+      return response.data.secure_url; // Return the uploaded image URL
     } catch (error) {
       console.error("Error uploading image:", error);
       return null;
     }
   };
-  // const uploadImageToCloudinary = async (file: File) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   formData.append("upload_preset", "art-gallery"); // Your unsigned preset name
-  //   formData.append("cloud_name", "duox5d29k"); // Your Cloudinary cloud name
-
-  //   try {
-  //     const response = await fetch(
-  //       "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to upload image");
-  //     }
-
-  //     const data = await response.json();
-  //     // console.log("Uploaded Image URL:", data.secure_url);
-  //     return data.secure_url;
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //     return null;
-  //   }
-  // };
 
   // Handle form submit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    // Check for required fields (hover image is optional)
     if (
       !product.name ||
       !product.slugtitle ||
       !product.price ||
       !product.image
     ) {
-      alert("Please fill all required fields and upload an image.");
+      alert("Please fill all required fields and upload the main image.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Upload image to Cloudinary and get the URL
+      // Upload main image to Cloudinary and get the URL
       const imageURL = await uploadImageToCloudinary(product.image);
       if (!imageURL) {
         alert("Image upload failed. Please try again.");
         return;
       }
 
-      // Save product data to Firestore
+      // Upload hover image if provided
+      let hoverImageURL = "";
+      if (product.hoverImage) {
+        hoverImageURL =
+          (await uploadImageToCloudinary(product.hoverImage)) || "";
+      }
+
+      // Save product data to Firestore, including both image URLs
       await addDoc(collection(db, "products"), {
         name: product.name,
         slugtitle: product.slugtitle,
         price: parseFloat(product.price),
-        image: imageURL, // Store Cloudinary URL in Firestore
+        image: imageURL,
+        imageHover: hoverImageURL,
         sizes: product.sizes,
         licenseNumber: product.licenseNumber,
       });
 
       alert("Product added successfully!");
-      // setProduct({
-      //   name: "",
-      //   slugtitle: "",
-      //   price: "",
-      //   image: null,
-      //   sizes: [],
-      //   licenseNumber: "",
-      // });
+      // Optionally reset the form state here if needed
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Error adding product!");
@@ -215,6 +192,17 @@ const AddProduct: React.FC = () => {
             <input
               type="file"
               name="image"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full p-2 border rounded-md font-futurapt"
+            />
+          </div>
+
+          <div>
+            <label className="block font-futurapt mb-1">Hover Image</label>
+            <input
+              type="file"
+              name="hoverImage"
               accept="image/*"
               onChange={handleFileChange}
               className="w-full p-2 border rounded-md font-futurapt"

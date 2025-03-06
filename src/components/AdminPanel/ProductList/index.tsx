@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { db } from "@/firebase";
 import {
   collection,
@@ -21,6 +20,7 @@ interface Product {
   sizes: string[];
   licenseNumber: string;
   image?: string;
+  hoverImage?: string; // New hover image field
 }
 
 const ProductList: React.FC = () => {
@@ -31,8 +31,10 @@ const ProductList: React.FC = () => {
   const [editedPrice, setEditedPrice] = useState<string>("");
   const [editedSize, setEditedSize] = useState<string>("");
   const [editedImage, setEditedImage] = useState<string>("");
+  const [editedHoverImage, setEditedHoverImage] = useState<string>(""); // State for hover image URL
   const [editedLicenceNumber, setEditedLicenceNumber] = useState<string>("");
   const [newImageFile, setNewImageFile] = useState<File | null>(null);
+  const [newHoverImageFile, setNewHoverImageFile] = useState<File | null>(null);
 
   // Fetch Products from Firestore
   const fetchProducts = async () => {
@@ -57,7 +59,6 @@ const ProductList: React.FC = () => {
   // Delete Product
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
-
     try {
       await deleteDoc(doc(db, "products", id));
       setProducts(products.filter((product) => product.id !== id));
@@ -73,7 +74,9 @@ const ProductList: React.FC = () => {
     setEditedPrice(product.price.toString());
     setEditedSize(product.sizes.join(", "));
     setEditedImage(product.image || "");
+    setEditedHoverImage(product.hoverImage || "");
     setNewImageFile(null);
+    setNewHoverImageFile(null);
     setEditedLicenceNumber(product.licenseNumber);
   };
 
@@ -82,7 +85,6 @@ const ProductList: React.FC = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "art-gallery");
-
     try {
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
@@ -98,15 +100,25 @@ const ProductList: React.FC = () => {
   // Save Edited Product
   const handleSaveEdit = async () => {
     if (!editingProduct) return;
-
     setLoading(true);
     let updatedImage = editedImage;
+    let updatedHoverImage = editedHoverImage;
 
-    // If a new image file is selected, upload it
+    // If a new main image file is selected, upload it
     if (newImageFile) {
       const uploadedImageUrl = await uploadImageToCloudinary(newImageFile);
       if (uploadedImageUrl) {
         updatedImage = uploadedImageUrl;
+      }
+    }
+
+    // If a new hover image file is selected, upload it
+    if (newHoverImageFile) {
+      const uploadedHoverImageUrl = await uploadImageToCloudinary(
+        newHoverImageFile
+      );
+      if (uploadedHoverImageUrl) {
+        updatedHoverImage = uploadedHoverImageUrl;
       }
     }
 
@@ -119,6 +131,7 @@ const ProductList: React.FC = () => {
         price: Number(editedPrice),
         sizes: updatedSizes,
         image: updatedImage,
+        hoverImage: updatedHoverImage,
         licenseNumber: editedLicenceNumber,
       });
 
@@ -131,6 +144,7 @@ const ProductList: React.FC = () => {
                 price: Number(editedPrice),
                 sizes: updatedSizes,
                 image: updatedImage,
+                hoverImage: updatedHoverImage,
                 licenseNumber: editedLicenceNumber,
               }
             : p
@@ -162,26 +176,8 @@ const ProductList: React.FC = () => {
             >
               {editingProduct?.id === product.id ? (
                 <div className="flex flex-col gap-2 w-full max-w-[400px] mx-auto">
-                  {/* Image Preview */}
-                  <div className="w-32 h-32 mx-auto">
-                    {newImageFile ? (
-                      <Image
-                        src={URL.createObjectURL(newImageFile)}
-                        alt="New Upload"
-                        className="w-full h-full object-cover rounded-md"
-                      />
-                    ) : (
-                      <Image
-                        src={editedImage}
-                        alt={editedName}
-                        width={100}
-                        height={100}
-                        className="rounded-md object-cover"
-                      />
-                    )}
-                  </div>
-
-                  {/* Image Upload Input */}
+                  {/* Main Image Upload Input */}
+                  <label htmlFor="">Main Image</label>
                   <input
                     className="border p-2 rounded"
                     type="file"
@@ -194,6 +190,64 @@ const ProductList: React.FC = () => {
                     }}
                   />
 
+                  {/* Main Image Preview */}
+                  <div className="w-full flex justify-center items-center mx-auto">
+                    {newImageFile ? (
+                      <Image
+                        src={URL.createObjectURL(newImageFile)}
+                        alt="New Upload"
+                        className="w-full h-full object-cover rounded-md"
+                        width={128}
+                        height={128}
+                      />
+                    ) : (
+                      <Image
+                        src={editedImage}
+                        alt={editedName}
+                        width={128}
+                        height={128}
+                        className="rounded-md object-cover"
+                      />
+                    )}
+                  </div>
+
+                  {/* Hover Image Upload Input */}
+                  <label htmlFor="">Hover Image</label>
+                  <input
+                    className="border p-2 rounded"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setNewHoverImageFile(file);
+                      }
+                    }}
+                  />
+                  {/* Hover Image Preview */}
+                  <div className="w-full flex justify-center items-center mx-auto">
+                    {newHoverImageFile ? (
+                      <Image
+                        src={URL.createObjectURL(newHoverImageFile)}
+                        alt="New Hover Upload"
+                        className="w-full h-full object-cover rounded-md"
+                        width={128}
+                        height={128}
+                      />
+                    ) : editedHoverImage ? (
+                      <Image
+                        src={editedHoverImage}
+                        alt={`${editedName} Hover`}
+                        width={128}
+                        height={128}
+                        className="rounded-md object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center rounded-md border">
+                        <Text>No Hover Image</Text>
+                      </div>
+                    )}
+                  </div>
                   {/* Other Editable Fields */}
                   <input
                     className="border p-2 rounded"
@@ -219,7 +273,6 @@ const ProductList: React.FC = () => {
                     value={editedLicenceNumber}
                     onChange={(e) => setEditedLicenceNumber(e.target.value)}
                   />
-
                   <button
                     className="bg-green-500 text-white px-3 py-1 rounded"
                     onClick={handleSaveEdit}

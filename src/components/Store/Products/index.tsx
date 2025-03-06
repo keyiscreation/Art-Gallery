@@ -11,13 +11,14 @@ import Spinner from "@/components/ui/Spinner";
 import logo from "@/public/watermark.png";
 
 import SearchProduct from "../Serach";
+
 interface Product {
   id: string;
   name: string;
   slugtitle: string;
   price: number;
   image: string;
-  imageHover?: string;
+  hoverImage?: string;
 }
 
 const Products = () => {
@@ -67,36 +68,34 @@ const Products = () => {
         ) : (
           products.map((product) => (
             <div key={product.id} className="w-full max-w-[401.99px]">
-              {/* Image container with hover effect */}
-              <div className="relative w-full">
-                <div className="relative w-full h-full">
-                  {/* Default image */}
-                  <Image
-                    className="max-h-[313.93px] w-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out"
-                    src={product.image}
-                    alt={product.name}
-                    onClick={() => handleNavigation(product.slugtitle)}
-                    width={402}
-                    height={314}
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
+              {/* Container with group class for hover effect */}
+              <div className="relative w-full group">
+                {/* Default image */}
+                <Image
+                  className="max-h-[313.93px] w-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out"
+                  src={product.image}
+                  alt={product.name}
+                  onClick={() => handleNavigation(product.slugtitle)}
+                  width={402}
+                  height={314}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
 
-                  {/* Watermark logo */}
-                  <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-20">
-                    <Image className="w-full" src={logo} alt="Watermark Logo" />
-                  </div>
-
-                  {/* Hover image (if available, falls back to default image) */}
-                  <Image
-                    className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 hover:opacity-100"
-                    src={product.imageHover || product.image}
-                    alt={product.name}
-                    onClick={() => handleNavigation(product.slugtitle)}
-                    width={402}
-                    height={314}
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
+                {/* Watermark logo */}
+                <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-20">
+                  <Image className="w-full" src={logo} alt="Watermark Logo" />
                 </div>
+
+                {/* Hover image */}
+                <Image
+                  className="absolute inset-0 w-full h-full object-cover cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 group-hover:opacity-100"
+                  src={product.hoverImage || product.image}
+                  alt={product.name}
+                  onClick={() => handleNavigation(product.slugtitle)}
+                  width={402}
+                  height={314}
+                  onContextMenu={(e) => e.preventDefault()}
+                />
               </div>
 
               {/* Product details */}
