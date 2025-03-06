@@ -13,12 +13,13 @@ interface Product {
   slugtitle: string;
   pathnode: string;
   qrLink: string;
+  licence?: string; // Added licence number field for product
 }
 
 export async function POST(request: NextRequest) {
   try {
     const formdata = await request.json();
-    console.log(formdata, "form data");
+    // console.log(formdata, "form data");
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -70,22 +71,25 @@ export async function POST(request: NextRequest) {
       })
     );
 
-    // Generate product rows with QR code images
+    // Generate product table rows with QR code images for admin email (includes download button)
+    // formdata.cartValues.forEach((product: Product) => {
+    //   console.log(product.title, product.licence);
+    // });
+
     const productRows = formdata.cartValues
       .map(
         (product: Product) => `
         <tr class="product-row">
-       <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
-         <img src="cid:${product.slugtitle}" alt="${
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
+            <img src="cid:${product.slugtitle}" alt="${
           product.title
         }" style="max-width: 80px; height: auto;">
-         <br>
-          <a href="cid:${product.slugtitle}" download="${product.title}.jpg"
-         style="display: inline-block; margin-top: 5px; padding: 5px 10px; background: #000000; color: #fff; text-decoration: none; border-radius: 5px;">
-         Download
-         </a>
-        </td>
-
+            <br>
+            <a href="cid:${product.slugtitle}" download="${product.title}.jpg"
+              style="display: inline-block; margin-top: 5px; padding: 5px 10px; background: #000000; color: #fff; text-decoration: none; border-radius: 5px;">
+              Download
+            </a>
+          </td>
           <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
             product.title
           }</td>
@@ -125,7 +129,70 @@ export async function POST(request: NextRequest) {
       </table>
     `;
 
-    // Email to admin
+    // New function to generate the product table for the user email (without download button and with licence number)
+    function generateUserProductTable(
+      cartValues: Product[],
+      grandTotal: number
+    ): string {
+      const userProductRows = cartValues
+        .map(
+          (product: Product) => `
+        <tr class="product-row">
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
+            <img src="cid:${product.slugtitle}" alt="${
+            product.title
+          }" style="max-width: 80px; height: auto;">
+          </td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+            product.title
+          }</td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+            product.quantity
+          }</td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+            product.size
+          }</td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">$${
+            product.price * product.quantity
+          }</td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+            product.licence || ""
+          }</td>
+          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
+            <img src="cid:qr_${
+              product.slugtitle
+            }" alt="QR Code" style="width: 100px;">
+          </td>
+        </tr>
+      `
+        )
+        .join("");
+
+      return `
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Image</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Title</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Quantity</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Size</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Price</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Licence Number</th>
+            <th style="border-bottom: 2px solid #000; text-align: left;">Product QR Code</th>
+          </tr>
+          ${userProductRows}
+          <tr>
+            <td colspan="6" style="text-align: right; padding: 8px;"><strong>Grand Total: $${grandTotal}</strong></td>
+          </tr>
+        </table>
+      `;
+    }
+
+    const userProductListHTML = generateUserProductTable(
+      formdata.cartValues,
+      grandTotal
+    );
+
+    // Email to admin (remains unchanged)
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
       // to: "ART GALLERY <Chadilrauf@gmail.com>",
@@ -147,23 +214,7 @@ export async function POST(request: NextRequest) {
       attachments: [...productAttachments, ...qrCodeAttachments],
     };
 
-    // const userProductListHTML = formdata.cartValues
-    //   .map(
-    //     (product: Product) => `
-    //     <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; text-align: center;">
-    //       <p style="font-weight: bold; font-size: 16px;">${product.title}</p>
-    //       <img src="cid:${product.slugtitle}" alt="${product.title}" style="max-width: 150px; height: auto; display: block; margin: auto;">
-    //       <img src="cid:qr_${product.slugtitle}" alt="QR Code" style="width: 150px; display: block; margin: auto;">
-    //       <p>Size: ${product.size}</p>
-    //       <p><strong>Scan Your QR Code Below:</strong></p>
-    //     </div>
-    //   `
-    //   )
-    //   .join("");
-
-    //  ${userProductListHTML}
-
-    // Updated email for user
+    // Updated email for user (uses new table without download btn and includes licence number)
     const mailOptionToUser = {
       from: "ART GALLERY <developer@innovativemojo.com>",
       to: formdata.email,
@@ -171,12 +222,13 @@ export async function POST(request: NextRequest) {
       html: `
       <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
       <p>Thank you for placing your order. Below are your order details:</p>
-         ${productListHTML}
+         ${userProductListHTML}
       <p>Best Regards,</p>
       <p><strong>ART GALLERY</strong></p>
     `,
       attachments: [...productAttachments, ...qrCodeAttachments],
     };
+
     await transporter.sendMail(mailOptionToYou);
     await transporter.sendMail(mailOptionToUser);
 
