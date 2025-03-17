@@ -96,8 +96,8 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 alt="Product image"
                 width={670}
                 height={523}
-                onContextMenu={(e) => e.preventDefault()} // Disable right-click
-                draggable="false" // Disable image dragging
+                onContextMenu={(e) => e.preventDefault()}
+                draggable="false"
               />
 
               {/* Watermark logo */}
