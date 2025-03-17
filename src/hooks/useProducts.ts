@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
 
+
 export interface Product {
   id: string;
   title: string; // UI expects title, so we map Firestore's "name" to "title"
