@@ -1,13 +1,13 @@
 import { StaticImageData } from "next/image";
 export type Product = {
-  id: number;
-     title: string;
-     slugtitle: string;
-     price: string;
-     image: StaticImageData;
-     imageHover: StaticImageData;
-     pathnode: string; 
-     sizes?: string[];
-     qrLink?: string;
-     licenseNumber: string;
+  id: string;
+  title: string;
+  slugtitle: string;
+  price: number;
+  image: StaticImageData;
+  imageHover: StaticImageData;
+  pathnode: string;
+  sizes?: string[];
+  qrLink?: string;
+  licenseNumber: string;
 };

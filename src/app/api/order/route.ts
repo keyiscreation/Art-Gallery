@@ -1,24 +1,19 @@
 import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
-import path from "path";
-import { extname } from "path";
-import QRCode from "qrcode"; // Import QRCode package
+import QRCode from "qrcode";
 
 interface Product {
   title: string;
-  image: string;
-  size: string;
   price: number;
   quantity: number;
   slugtitle: string;
-  pathnode: string;
+  // QR link is expected here but is yet to be added in from the admin panel.
   qrLink: string;
 }
 
 export async function POST(request: NextRequest) {
   try {
     const formdata = await request.json();
-    console.log(formdata, "form data");
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -30,75 +25,50 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Calculate grand total
     const grandTotal = formdata.cartValues.reduce(
       (total: number, product: Product) =>
         total + product.price * product.quantity,
       0
     );
 
-    // Attachments for product images
-    const productAttachments = formdata.cartValues.map((product: Product) => {
-      const fileExtension = extname(product.pathnode);
-      return {
-        filename: `${product.title}${fileExtension}`,
-        path: path.join(
-          process.cwd(),
-          "public",
-          "images",
-          "store",
-          product.pathnode
-        ),
-        cid: product.slugtitle, // Content-ID for embedding image in email
-      };
-    });
-
-    // Generate QR codes and store as attachments
+    // Generate QR code attachments for each product
+    // NOTE: QR link is yet to be added in from the admin panel, so using a default placeholder.
     const qrCodeAttachments = await Promise.all(
       formdata.cartValues.map(async (product: Product) => {
-        const qrCodeDataUrl = await QRCode.toDataURL(product.qrLink);
+        // Use the provided qrLink if available, otherwise default to a placeholder message.
+        const qrText =
+          product.qrLink ||
+          "QR link is yet to be added in from the admin panel";
+        const qrCodeDataUrl = await QRCode.toDataURL(qrText);
         const base64Data = qrCodeDataUrl.replace(
           /^data:image\/png;base64,/,
           ""
         );
-
         return {
           filename: `${product.slugtitle}.png`,
           content: base64Data,
           encoding: "base64",
-          cid: `qr_${product.slugtitle}`, // Content ID for referencing in HTML
+          cid: `qr_${product.slugtitle}`,
         };
       })
     );
 
-    // Generate product rows with QR code images
+    // Generate product table rows
     const productRows = formdata.cartValues
       .map(
         (product: Product) => `
-        <tr class="product-row">
-       <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
-         <img src="cid:${product.slugtitle}" alt="${
-          product.title
-        }" style="max-width: 80px; height: auto;">
-         <br>
-          <a href="cid:${product.slugtitle}" download="${product.title}.jpg"
-         style="display: inline-block; margin-top: 5px; padding: 5px 10px; background: #000000; color: #fff; text-decoration: none; border-radius: 5px;">
-         Download
-         </a>
-        </td>
-
-          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+        <tr>
+          <td style="padding: 8px; border: 1px solid #ccc;">${
             product.title
           }</td>
-          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
+          <td style="padding: 8px; border: 1px solid #ccc;">${
             product.quantity
           }</td>
-          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">${
-            product.size
-          }</td>
-          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">$${
+          <td style="padding: 8px; border: 1px solid #ccc;">$${(
             product.price * product.quantity
-          }</td>
-          <td style="border-bottom: 1px solid #ccc; padding: 8px; text-align: left;">
+          ).toFixed(2)}</td>
+          <td style="padding: 8px; border: 1px solid #ccc;">
             <img src="cid:qr_${
               product.slugtitle
             }" alt="QR Code" style="width: 100px;">
@@ -110,25 +80,31 @@ export async function POST(request: NextRequest) {
 
     const productListHTML = `
       <table style="width: 100%; border-collapse: collapse;">
-        <tr>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Image</th>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Title</th>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Quantity</th>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Size</th>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Price</th>
-          <th style="border-bottom: 2px solid #000; text-align: left;">Product QR Code</th>
-        </tr>
-        ${productRows}
-        <tr>
-          <td colspan="4" style="text-align: right; padding: 8px;"><strong>Grand Total: $${grandTotal}</strong></td>
-        </tr>
+        <thead>
+          <tr>
+            <th style="padding: 8px; border: 1px solid #ccc;">Title</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Quantity</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">Price</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">QR Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${productRows}
+          <tr>
+            <td colspan="3" style="padding: 8px; text-align: right; border: 1px solid #ccc;">
+              <strong>Grand Total:</strong>
+            </td>
+            <td style="padding: 8px; border: 1px solid #ccc;">
+              $${grandTotal.toFixed(2)}
+            </td>
+          </tr>
+        </tbody>
       </table>
     `;
 
-    // Email to admin
+    // Email options for admin
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
-      // to: "ART GALLERY <Chadilrauf@gmail.com>",
       to: "ART GALLERY <developer@innovativemojo.com>",
       subject: "Order Confirmation",
       html: `
@@ -141,42 +117,27 @@ export async function POST(request: NextRequest) {
           <li>State: ${formdata.state}</li>
           <li>Zip Code: ${formdata.zipCode}</li>
         </ul>
-        <div style="text-align: center; font-size: 20px; padding: 10px;">Order Details</div>
+        <h4>Order Details</h4>
         ${productListHTML}
       `,
-      attachments: [...productAttachments, ...qrCodeAttachments],
+      attachments: qrCodeAttachments,
     };
 
-    // const userProductListHTML = formdata.cartValues
-    //   .map(
-    //     (product: Product) => `
-    //     <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; text-align: center;">
-    //       <p style="font-weight: bold; font-size: 16px;">${product.title}</p>
-    //       <img src="cid:${product.slugtitle}" alt="${product.title}" style="max-width: 150px; height: auto; display: block; margin: auto;">
-    //       <img src="cid:qr_${product.slugtitle}" alt="QR Code" style="width: 150px; display: block; margin: auto;">
-    //       <p>Size: ${product.size}</p>
-    //       <p><strong>Scan Your QR Code Below:</strong></p>
-    //     </div>
-    //   `
-    //   )
-    //   .join("");
-
-    //  ${userProductListHTML}
-
-    // Updated email for user
+    // Email options for user
     const mailOptionToUser = {
       from: "ART GALLERY <developer@innovativemojo.com>",
       to: formdata.email,
       subject: "Your Order Confirmation",
       html: `
-      <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
-      <p>Thank you for placing your order. Below are your order details:</p>
-         ${productListHTML}
-      <p>Best Regards,</p>
-      <p><strong>ART GALLERY</strong></p>
-    `,
-      attachments: [...productAttachments, ...qrCodeAttachments],
+        <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
+        <p>Thank you for placing your order. Below are your order details:</p>
+        ${productListHTML}
+        <p>Best Regards,</p>
+        <p><strong>ART GALLERY</strong></p>
+      `,
+      attachments: qrCodeAttachments,
     };
+
     await transporter.sendMail(mailOptionToYou);
     await transporter.sendMail(mailOptionToUser);
 
