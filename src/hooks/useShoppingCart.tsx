@@ -2,7 +2,8 @@
 import { useMemo } from "react";
 
 import { useAtomValue } from "@/jotai/useAtomValue";
-import products from "@/lib/constants/ProductsData";
+// import products from "@/lib/constants/ProductsData";
+import useProducts from "./useProducts";
 import { Product } from "@/types";
 
 type CartItem = {
@@ -34,7 +35,7 @@ const useShoppingCart = () => {
   const increaseCartQuantity = (id: number | string, size?: string) => {
     setCartItems((currItems: CartItem[]) => {
       const existingItem = currItems.find((item: CartItem) => item.id === id);
-      
+
       if (existingItem == null) {
         // If the item is not already in the cart, create it with the selected size
         return [...currItems, { id, quantity: 1, size }];
@@ -49,7 +50,6 @@ const useShoppingCart = () => {
       }
     });
   };
-  
 
   const decreaseCartQuantity = (id: number | string) => {
     setCartItems((currItems: CartItem[]) => {
@@ -84,28 +84,32 @@ const useShoppingCart = () => {
     });
   };
 
+  const firestoreProducts = useProducts();
+
   const cartProducts: (Product & { size?: string })[] = useMemo(() => {
     return cartItems
       .map((item: CartItem) => {
-        const foundProduct = products.find((product) => product.id === item.id);
+        const foundProduct = firestoreProducts.find(
+          (product) => product.id === item.id
+        );
         if (foundProduct) {
           return { ...foundProduct, size: item.size };
         }
         return null;
       })
       .filter(Boolean); // Remove null values
-  }, [cartItems, products]);
-  
+  }, [cartItems, firestoreProducts]);
 
   const cartProductsTotalPrice = useMemo(() => {
     const totalPice = cartProducts.reduce(
       (totalPrice: number, product: Product) =>
-        (totalPrice += Number(product.price || 0) * getItemQuantity(product.id)),
+        (totalPrice +=
+          Number(product.price || 0) * getItemQuantity(product.id)),
       0
     );
 
     return totalPice;
-  }, [cartItems]);
+  }, [firestoreProducts]);
 
   return {
     getItemQuantity,

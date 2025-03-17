@@ -11,17 +11,21 @@ interface ProductProps {
     slugtitle: string;
     price: number;
     image?: string;
+    licenseNumber?: string;
     sizes: string[];
   };
 }
 
 const PurchasedProduct: React.FC<ProductProps> = ({ product }) => {
-  console.log(product.name);
+  console.log(product.licenseNumber);
   return (
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5 my-[100px]">
         <Text as="h1" className="text-black text-center font-futurapt">
           Purchased Product
+        </Text>
+        <Text as="h2" className="text-black text-[40px] text-center">
+          License Number: {product.licenseNumber}
         </Text>
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
 
@@ -64,10 +68,6 @@ const PurchasedProduct: React.FC<ProductProps> = ({ product }) => {
             <Text className="text-[18px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
               {product.name}
             </Text>
-
-            {/* <Text className="text-[16px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
-              Size:
-            </Text> */}
           </div>
         </div>
 
