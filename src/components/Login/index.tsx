@@ -25,7 +25,7 @@ const Login = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      console.log("login successful");
+      // console.log("login successful");
       router.push("/admin-panel");
     } catch (error: unknown) {
       if (error instanceof Error) {

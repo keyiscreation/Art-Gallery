@@ -5,7 +5,7 @@ interface CartItem {
   price: number;
   quantity: number;
   pathnode: string;
-  slugtitle: string; // assumed product SKU
+  slugtitle: string;
   qrLink?: string;
   size: string;
   licence?: string;
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   try {
     // Parse and log incoming order data from the checkout form
     const formData: OrderFormData = await request.json();
-    console.log("Received formData:", formData);
+    // console.log("Received formData:", formData);
 
     if (!formData.cartValues || formData.cartValues.length === 0) {
       return NextResponse.json(
@@ -114,10 +114,10 @@ export async function POST(request: Request) {
       })),
     };
 
-    console.log(
-      "Embryonic Payload:",
-      JSON.stringify(embryonicPayload, null, 2)
-    );
+    // console.log(
+    //   "Embryonic Payload:",
+    //   JSON.stringify(embryonicPayload, null, 2)
+    // );
 
     // Create embryonic order
     const embryonicResponse = await fetch(
@@ -134,10 +134,10 @@ export async function POST(request: Request) {
     );
 
     const embryonicResponseText = await embryonicResponse.text();
-    console.log(
-      "Raw embryonic order response from CreativeHub:",
-      embryonicResponseText
-    );
+    // console.log(
+    //   "Raw embryonic order response from CreativeHub:",
+    //   embryonicResponseText
+    // );
 
     let embryonicData;
     try {
@@ -200,10 +200,10 @@ export async function POST(request: Request) {
     );
 
     const confirmResponseText = await confirmResponse.text();
-    console.log(
-      "Raw confirmed order response from CreativeHub:",
-      confirmResponseText
-    );
+    // console.log(
+    //   "Raw confirmed order response from CreativeHub:",
+    //   confirmResponseText
+    // );
 
     let confirmData;
     try {
@@ -238,59 +238,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-// test_cd8f716b-c03a-49b2-bfa4-079846a22d23
-
-// import { NextRequest, NextResponse } from "next/server";
-
-// const PRODIGI_API_URL = "https://api.sandbox.prodigi.com/v4.0/Orders";
-// const API_KEY = "61a1cf57-ff23-4175-94ca-83d58fc17ce1"; // Placed directly
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     if (!API_KEY) {
-//       return NextResponse.json(
-//         { error: "Prodigi API key is missing" },
-//         { status: 500 }
-//       );
-//     }
-
-//     const orderData = await req.json();
-//     if (!orderData) {
-//       return NextResponse.json(
-//         { error: "Order data is required" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const response = await fetch(PRODIGI_API_URL, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${API_KEY}`,
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//       },
-//       body: JSON.stringify(orderData),
-//     });
-
-//     const responseData = await response.json();
-
-//     if (!response.ok) {
-//       return NextResponse.json(
-//         { error: responseData },
-//         { status: response.status }
-//       );
-//     }
-
-//     return NextResponse.json(
-//       { success: true, data: responseData },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Prodigi API Error:", error);
-//     return NextResponse.json(
-//       { error: "Internal Server Error" },
-//       { status: 500 }
-//     );
-//   }
-// }
