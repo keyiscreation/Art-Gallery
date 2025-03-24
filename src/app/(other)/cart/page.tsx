@@ -18,7 +18,7 @@ export default function CartPage() {
   } = useShoppingCart();
 
   const router = useRouter();
-  console.log("totalprice", cartProductsTotalPrice);
+  // console.log("totalprice", cartProductsTotalPrice);
 
   const handleNavigation = (slugtitle: string) => {
     router.push(`/products/${slugtitle}`);

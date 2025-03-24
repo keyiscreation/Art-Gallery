@@ -1,11 +1,30 @@
+// pages/api/order-step-one.ts
+
 import { NextResponse } from "next/server";
+import admin from "firebase-admin";
+
+// Initialize Firebase Admin if not already done (for local testing, values are hardcoded in env vars)
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: "art-gallery-f4b4f",
+      clientEmail:
+        "firebase-adminsdk-fbsvc@art-gallery-f4b4f.iam.gserviceaccount.com",
+      privateKey:
+        "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCdx17amGUtGCOq\n0X+NSVRlviRoFJam3MepGu1/tfLqbJoqukkCF2+aFYYnYmN0g5W8j6Vrv3jrCcr6\nql9Nw5qz+AfPsI+AcVehuhc+NxSLqdWtpg/B3nMrId6OwujAw6jIvYOmysZ0PZB1\npxvAIuWuZpcX6QYjrmGbZymey3HkdcKVRUS+zX4LC3EDVldj/g+8V0Lqh/33ipSh\nig1HiONriVymql6qC0bY3WDKxqvCMPqKoYfkO5M9C6XkFpKbbSdnC75bsqVZGXmS\ndsOFdbTFRkkenum4HM+988e+9Y66dnbtmEE7NIZpZ0WvQCXjomSkug4h8WUQYcOj\nJ+MaeUg5AgMBAAECggEABATvrCbksOzj/7Z9htZe4Yah+8rGebK3HV4zvaSfbwxc\nMwly0axSKf0xYTB28yFk/5wzLRcAGBC0TIVpjxwUBVCktkw7o5x/jH2mmO2jRtmJ\nOXa5AQnPKkKfHkjlz/9L/e0h/O4+dviYhP7ATLk226X+ZFwJzX/kOaa7nzF0kcrJ\n4/W5kAUfytWcKUh4c2HMw6ox6sbbbDnz0JxTxQUJh45l2SO0qrHzEVxzRcG+secy\nQ8XUtVHmFd9+vfffFCnb9IXQSTt3ccs9na5nixxLQSwx9/nBpBYmwadwcXSio5JN\nU4VdYkDvEVMOCKhRsiK0pq1JnpNV3NV+4h6qeoNpwQKBgQDdfww20EJe9DC3aeLG\nLxq9RRqs+GcsM5q3UnQvO6tX0ejxzw7iij3e+vNqsz4UPwGHXlKarzBVeKSNqjeR\nn/IU4TtDYX88RfdRECOa2O9NMAFueMPyT6xLY3UbRf+W0sCQIY3Mh/Fkpz0dHTfb\nqwLM/IXffFO0FsYCUUYe1Sg/qQKBgQC2W1x47NP8hIHJ8kqW+rvkOF+wGDDjsXqN\nt1WZJNALPaJZR3XLCFLY6C9TrIADIkqkUrSETMuLFdBEi/eH6mSXBqelD9wOfOi/\nGarpRAyY4wULE7A+WfsVSfsX+sAhvCvVzbLCp7aMD0aMSP0eX4KRPBvovsVDKHmu\nNh60OCVeEQKBgQClexzh+tgLXv7imR5PGLQugel7Hx7d3DQUEGszOq45r18NAbhK\nMiQlanHf3shbkfMPcr3eSVKgGMFAAdMAXnIbfWasYbQQkOlES/192+N1VI9NPLaQ\nW0wLCuRcGwDoas5pIFhzXYFQxM2Y6dJosKwn/+X44Ucb/gOziYsM0A4A+QKBgDpo\nUtsMh+2Gh4emSkvHbWzwvX1KkkYrr2Q6x3jwuI4RJLHR2KG6Pcbpv1belnXqgtvU\n/aquajdXOkjqR9NJuQRChmmxBbvCOE4VK4/hUuOZOyFMIhQmf+xWsM0CbI2hlqy5\nYLtGOorrzZ3bNu+Giex4wzut9sLG8QpinTz+CsHxAoGBALFgG1c803Dov//H8fjq\nqOlmzeCRs1un+jmurPSDreCX4wHOeq7oA7tBR+o+HFSdcjoHOJnpCuYY9nRgAqOw\nyRe0pTWa5+ttTcumdEoyBxI9DoSdTu9FJPzl6R7eEtJaytCxHgNFKx7fcJnsEQkQ\n37EQeCM+9xHy7h3JZd4d4YXS\n-----END PRIVATE KEY-----\n",
+    }),
+    databaseURL: "https://art-gallery-f4b4f.firebaseio.com",
+  });
+}
+
+const db = admin.firestore();
 
 interface CartItem {
   title: string;
   price: number;
   quantity: number;
   pathnode: string;
-  slugtitle: string; // assumed product SKU
+  slugtitle: string;
   qrLink?: string;
   size: string;
   licence?: string;
@@ -22,12 +41,32 @@ interface OrderFormData {
   cartValues: CartItem[];
 }
 
+interface DeliveryOption {
+  Id: number;
+  DeliveryChargeExcludingSalesTax: number;
+  DeliveryChargeSalesTax: number;
+}
+
+// Hardcoded mappings for known products
+const hardcodedMappings: Record<
+  string,
+  { productId: number; printOptionId: number }
+> = {
+  america: { productId: 37042, printOptionId: 5872 },
+  stars: { productId: 37054, printOptionId: 5878 },
+  fox: { productId: 37052, printOptionId: 5879 },
+  egrets: { productId: 37056, printOptionId: 5880 },
+  morning: { productId: 37048, printOptionId: 5881 },
+  light: { productId: 37047, printOptionId: 5882 },
+  colorado: { productId: 37053, printOptionId: 5883 },
+  moon: { productId: 37050, printOptionId: 5884 },
+  wild: { productId: 37051, printOptionId: 5885 },
+};
+
 export async function POST(request: Request) {
   try {
-    // Parse and log incoming order data from the checkout form
+    // Parse incoming order data
     const formData: OrderFormData = await request.json();
-    console.log("Received formData:", formData);
-
     if (!formData.cartValues || formData.cartValues.length === 0) {
       return NextResponse.json(
         { success: false, error: "No items in cart" },
@@ -35,10 +74,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create an external reference for internal tracking
+    // Create an external reference for tracking the order
     const externalReference = `order_${Date.now()}`;
 
-    // Build the shipping address as required by CreativeHub's model.
+    // Build the shipping address per CreativeHub's format
     const shippingAddress = {
       FirstName: formData.firstName,
       LastName: formData.lastName,
@@ -47,14 +86,64 @@ export async function POST(request: Request) {
       Town: formData.state,
       County: "",
       PostCode: formData.zipCode ? String(formData.zipCode) : "",
-      CountryId: 1, // Example: 1 represents USA (update as needed)
+      CountryId: 1,
       CountryCode: "US",
       CountryName: "United States",
       PhoneNumber: "",
     };
 
-    // Build the embryonic order payload.
-    // Update the mapping for ProductId and PrintOptionId based on your product data.
+    // Build the OrderItems array:
+    // - If the item's slugtitle exists in hardcodedMappings, use those values.
+    // - Otherwise, fetch the product details from Firestore.
+    const orderItems = await Promise.all(
+      formData.cartValues.map(async (item) => {
+        if (hardcodedMappings[item.slugtitle]) {
+          const mapping = hardcodedMappings[item.slugtitle];
+          return {
+            Id: 0,
+            ProductId: mapping.productId,
+            PrintOptionId: mapping.printOptionId,
+            Quantity: item.quantity,
+            ExternalReference: externalReference,
+            ExternalSku: item.slugtitle,
+            Licence: item.licence || "",
+          };
+        } else {
+          // Fetch product details from Firestore for new products
+          const productSnapshot = await db
+            .collection("products")
+            .where("slugtitle", "==", item.slugtitle)
+            .limit(1)
+            .get();
+          let productId: number | null = null;
+          let printOptionId: number | null = null;
+          let licenseNumber: string = "";
+          if (!productSnapshot.empty) {
+            const productData = productSnapshot.docs[0].data();
+            // Expect licenseNumber in Firestore to be in format "37042-5872"
+            licenseNumber = productData.licenseNumber || "";
+            if (licenseNumber) {
+              const parts = licenseNumber.split("-");
+              if (parts.length === 2) {
+                productId = parseInt(parts[0], 10);
+                printOptionId = parseInt(parts[1], 10);
+              }
+            }
+          }
+          return {
+            Id: 0,
+            ProductId: productId,
+            PrintOptionId: printOptionId,
+            Quantity: item.quantity,
+            ExternalReference: externalReference,
+            ExternalSku: item.slugtitle,
+            Licence: licenseNumber,
+          };
+        }
+      })
+    );
+
+    // Build the embryonic order payload to send to CreativeHub
     const embryonicPayload = {
       Id: 0,
       ExternalReference: externalReference,
@@ -63,63 +152,10 @@ export async function POST(request: Request) {
       Email: formData.email,
       MessageToLab: "",
       ShippingAddress: shippingAddress,
-      OrderItems: formData.cartValues.map((item) => ({
-        Id: 0,
-        // Example mapping based on the item slug; update these with your actual numeric IDs
-        ProductId:
-          item.slugtitle === "america"
-            ? 37042
-            : item.slugtitle === "stars"
-            ? 37054
-            : item.slugtitle === "fox"
-            ? 37052
-            : item.slugtitle === "egrets"
-            ? 37056
-            : item.slugtitle === "morning"
-            ? 37048
-            : item.slugtitle === "light"
-            ? 37047
-            : item.slugtitle === "colorado"
-            ? 37053
-            : item.slugtitle === "moon"
-            ? 37050
-            : item.slugtitle === "wild"
-            ? 37051
-            : null, // Replace null with a default value if needed
-
-        PrintOptionId:
-          item.slugtitle === "america"
-            ? 5872
-            : item.slugtitle === "stars"
-            ? 5878
-            : item.slugtitle === "fox"
-            ? 5879
-            : item.slugtitle === "egrets"
-            ? 5880
-            : item.slugtitle === "morning"
-            ? 5881
-            : item.slugtitle === "light"
-            ? 5882
-            : item.slugtitle === "colorado"
-            ? 5883
-            : item.slugtitle === "moon"
-            ? 5884
-            : item.slugtitle === "wild"
-            ? 5885
-            : null, // Replace null with a default value if needed
-
-        Quantity: item.quantity,
-        ExternalReference: externalReference,
-        ExternalSku: item.slugtitle,
-      })),
+      OrderItems: orderItems,
     };
 
-    console.log(
-      "Embryonic Payload:",
-      JSON.stringify(embryonicPayload, null, 2)
-    );
-
-    // Create embryonic order
+    // Send embryonic order payload to CreativeHub
     const embryonicResponse = await fetch(
       "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
       {
@@ -134,16 +170,11 @@ export async function POST(request: Request) {
     );
 
     const embryonicResponseText = await embryonicResponse.text();
-    console.log(
-      "Raw embryonic order response from CreativeHub:",
-      embryonicResponseText
-    );
-
     let embryonicData;
     try {
       embryonicData = JSON.parse(embryonicResponseText);
     } catch (err) {
-      console.error("Failed to parse embryonic order response JSON:", err);
+      console.log(err);
       return NextResponse.json(
         {
           success: false,
@@ -154,17 +185,15 @@ export async function POST(request: Request) {
     }
 
     if (!embryonicResponse.ok) {
-      console.error("CreativeHub embryonic order API error:", embryonicData);
       return NextResponse.json(
         { success: false, error: embryonicData },
         { status: embryonicResponse.status }
       );
     }
 
-    // Use OrderId or Id from the embryonic order response
+    // Retrieve embryonic order ID
     const embryonicOrderId = embryonicData.OrderId || embryonicData.Id;
     if (!embryonicOrderId) {
-      console.error("Embryonic order creation did not return an OrderId/Id");
       return NextResponse.json(
         {
           success: false,
@@ -174,62 +203,38 @@ export async function POST(request: Request) {
       );
     }
 
-    // IMPORTANT: Use a valid DeliveryOptionId.
-    // The embryonic response shows available options, e.g., Id 22 ("International Courier") and 2438 ("First Class Tracked Mail").
-    // Here, we use 22 as an example. You can choose based on your business logic.
-    const confirmPayload = {
-      OrderId: embryonicOrderId,
-      DeliveryOptionId: 22, // Using 22 from the embryonic response's DeliveryOptions
-      // Use the corresponding delivery charges from the chosen option (if needed).
-      DeliveryChargeExcludingSalesTax: 36.83,
-      DeliveryChargeSalesTax: 0.0,
-      ExternalReference: externalReference,
-    };
-
-    const confirmResponse = await fetch(
-      "https://api.sandbox.tps-test.io/api/v1/orders/confirmed",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
-        },
-        body: JSON.stringify(confirmPayload),
-      }
-    );
-
-    const confirmResponseText = await confirmResponse.text();
-    console.log(
-      "Raw confirmed order response from CreativeHub:",
-      confirmResponseText
-    );
-
-    let confirmData;
-    try {
-      confirmData = JSON.parse(confirmResponseText);
-    } catch (err) {
-      console.error("Failed to parse confirmed order response JSON:", err);
+    // Select desired delivery option (example: option with Id 22)
+    const deliveryOption: DeliveryOption | undefined =
+      embryonicData.DeliveryOptions.find(
+        (option: DeliveryOption) => option.Id === 22
+      );
+    if (!deliveryOption) {
       return NextResponse.json(
-        { success: false, error: "Invalid JSON response from confirmed order" },
-        { status: confirmResponse.status }
+        { success: false, error: "Required delivery option not available" },
+        { status: 400 }
       );
     }
 
-    if (!confirmResponse.ok) {
-      console.error("CreativeHub confirmed order API error:", confirmData);
-      return NextResponse.json(
-        { success: false, error: confirmData },
-        { status: confirmResponse.status }
-      );
-    }
+    // Extract dynamic shipping charges
+    const shippingCharge = deliveryOption.DeliveryChargeExcludingSalesTax;
+    const salesTax = deliveryOption.DeliveryChargeSalesTax;
+    const totalExtraCharge = shippingCharge + salesTax;
 
+    // Return embryonic order details and extra charges to the client
     return NextResponse.json(
-      { success: true, data: confirmData },
+      {
+        success: true,
+        embryonicOrderId,
+        deliveryOptionId: deliveryOption.Id,
+        shippingCharge,
+        salesTax,
+        totalExtraCharge,
+        externalReference,
+      },
       { status: 200 }
     );
   } catch (error: unknown) {
-    console.error("Error processing order to CreativeHub:", error);
+    console.error("Error processing embryonic order:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
@@ -238,59 +243,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
-// test_cd8f716b-c03a-49b2-bfa4-079846a22d23
-
-// import { NextRequest, NextResponse } from "next/server";
-
-// const PRODIGI_API_URL = "https://api.sandbox.prodigi.com/v4.0/Orders";
-// const API_KEY = "61a1cf57-ff23-4175-94ca-83d58fc17ce1"; // Placed directly
-
-// export async function POST(req: NextRequest) {
-//   try {
-//     if (!API_KEY) {
-//       return NextResponse.json(
-//         { error: "Prodigi API key is missing" },
-//         { status: 500 }
-//       );
-//     }
-
-//     const orderData = await req.json();
-//     if (!orderData) {
-//       return NextResponse.json(
-//         { error: "Order data is required" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const response = await fetch(PRODIGI_API_URL, {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${API_KEY}`,
-//         "Content-Type": "application/json",
-//         Accept: "application/json",
-//       },
-//       body: JSON.stringify(orderData),
-//     });
-
-//     const responseData = await response.json();
-
-//     if (!response.ok) {
-//       return NextResponse.json(
-//         { error: responseData },
-//         { status: response.status }
-//       );
-//     }
-
-//     return NextResponse.json(
-//       { success: true, data: responseData },
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error("Prodigi API Error:", error);
-//     return NextResponse.json(
-//       { error: "Internal Server Error" },
-//       { status: 500 }
-//     );
-//   }
-// }

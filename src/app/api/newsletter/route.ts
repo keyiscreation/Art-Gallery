@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 export async function POST(request: NextRequest) {
   try {
     const formdata = await request.json();
-    console.log(formdata, "form data");
+    // console.log(formdata, "form data");
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
       },
     });
 
-  
     // Email to admin
     const mailOptionToYou = {
       from: "developer@innovativemojo.com",
@@ -31,17 +30,16 @@ export async function POST(request: NextRequest) {
       `,
     };
 
-
-  // Updated email for user
-  const mailOptionToUser = {
-    from: "ART GALLERY <developer@innovativemojo.com>",
-    to: formdata.email,
-    subject: "Your Newsletter Confirmation",
-    html: `
+    // Updated email for user
+    const mailOptionToUser = {
+      from: "ART GALLERY <developer@innovativemojo.com>",
+      to: formdata.email,
+      subject: "Your Newsletter Confirmation",
+      html: `
       <p>Best Regards,</p>
       <p><strong>ART GALLERY</strong></p>
     `,
-  };
+    };
     await transporter.sendMail(mailOptionToYou);
     await transporter.sendMail(mailOptionToUser);
 

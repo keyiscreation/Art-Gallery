@@ -17,7 +17,7 @@ interface ProductProps {
 }
 
 const PurchasedProduct: React.FC<ProductProps> = ({ product }) => {
-  console.log(product.licenseNumber);
+  // console.log(product.licenseNumber);
   return (
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5 my-[100px]">

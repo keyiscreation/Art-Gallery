@@ -17,8 +17,8 @@ const ProductDetailPage: NextPage<ProductDescriptionProps> = ({ params }) => {
     (product) => product.slugtitle === slug
   );
 
-  console.log(slug, "slugtitle");
-  console.log(currentProduct, "currentProduct");
+  // console.log(slug, "slugtitle");
+  // console.log(currentProduct, "currentProduct");
 
   if (!currentProduct) {
     return <div className="text-center text-red-500">Product not found!</div>;
