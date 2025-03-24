@@ -1,5 +1,3 @@
-// pages/api/order-step-two.ts
-
 import { NextResponse } from "next/server";
 
 interface ConfirmOrderPayload {
@@ -41,8 +39,6 @@ export async function POST(request: Request) {
       ExternalReference: externalReference,
     };
 
-    console.log("Confirm Payload:", confirmPayload);
-
     // Call CreativeHub's confirmed order endpoint
     const confirmResponse = await fetch(
       "https://api.sandbox.tps-test.io/api/v1/orders/confirmed",
@@ -58,10 +54,6 @@ export async function POST(request: Request) {
     );
 
     const confirmResponseText = await confirmResponse.text();
-    console.log(
-      "Raw confirmed order response from CreativeHub:",
-      confirmResponseText
-    );
 
     let confirmData;
     try {
@@ -82,8 +74,27 @@ export async function POST(request: Request) {
       );
     }
 
+    // Extract the correct value for PrintCostExcludingSalesTax and other charges
+    const printCostExcludingSalesTax =
+      confirmData.PrintCostExcludingSalesTax || 0;
+
+    const deliveryChargeExcludingSalesTax =
+      confirmData.DeliveryOption?.DeliveryChargeExcludingSalesTax || 0;
+
+    // Calculate total charge
+    const totalCharge =
+      deliveryChargeExcludingSalesTax + printCostExcludingSalesTax;
+
+    // Send the response back with the correct values to the client
     return NextResponse.json(
-      { success: true, data: confirmData },
+      {
+        success: true,
+        data: {
+          DeliveryChargeExcludingSalesTax: deliveryChargeExcludingSalesTax,
+          PrintCostExcludingSalesTax: printCostExcludingSalesTax,
+          TotalCharge: totalCharge, // Sum of both charges
+        },
+      },
       { status: 200 }
     );
   } catch (error: unknown) {

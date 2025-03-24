@@ -33,7 +33,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    // console.log(formData, "formData");
+    console.log(formData, "formData");
 
     try {
       // Exclude additionalInfo from validation check
@@ -57,7 +57,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
 
       if (res?.success) {
         await handleSubmit(e);
-        // console.log("Payment success");
+        console.log("Payment success");
         // alert("Payment successful!");
       }
     } catch (error) {
