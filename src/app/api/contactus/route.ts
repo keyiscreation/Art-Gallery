@@ -1,11 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
 import nodemailer from "nodemailer";
 
-
 export async function POST(request: NextRequest) {
   try {
     const formdata = await request.json();
-    console.log(formdata, "form data");
+    // console.log(formdata, "form data");
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -16,10 +15,6 @@ export async function POST(request: NextRequest) {
         pass: "tjjs zgqd koej xpvf",
       },
     });
-
-   
-  
-  
 
     // Email to admin
     const mailOptionToYou = {
@@ -39,19 +34,18 @@ export async function POST(request: NextRequest) {
       `,
     };
 
-   
-  // Updated email for user
-  const mailOptionToUser = {
-    from: "ART GALLERY <developer@innovativemojo.com>",
-    to: formdata.email,
-    subject: "Form Submission",
-    html: `
+    // Updated email for user
+    const mailOptionToUser = {
+      from: "ART GALLERY <developer@innovativemojo.com>",
+      to: formdata.email,
+      subject: "Form Submission",
+      html: `
       <h3>Dear ${formdata.firstName} ${formdata.lastName},</h3>
       <p>Thank you for contacting us, We will get back to you soon.</p>
       <p>Best Regards,</p>
       <p><strong>ART GALLERY</strong></p>
     `,
-  };
+    };
     await transporter.sendMail(mailOptionToYou);
     await transporter.sendMail(mailOptionToUser);
 

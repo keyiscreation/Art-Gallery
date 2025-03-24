@@ -25,7 +25,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
-  console.log("Product title", product.title);
+  // console.log("Product title", product.title);
 
   const router = useRouter();
   const {
@@ -35,7 +35,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     setItemSize,
   } = useShoppingCart();
 
-  console.log(selectedSize, "selectedSize");
+  // console.log(selectedSize, "selectedSize");
 
   const onAddToCart = () => {
     const quantity = getItemQuantity(product.id);

@@ -16,6 +16,7 @@ const AboutMe = () => {
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
         <div className="flex justify-between">
+          
           <Text as="h1" className="text-black text-center mob:text-[24px] mob:leading-[30.77px] mob:mb-5">
             ABOUT ME
           </Text>
