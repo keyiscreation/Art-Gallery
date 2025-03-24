@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  ChangeEvent,
-  FormEvent,
-  Fragment,
-  // useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -24,6 +18,10 @@ type CartItem = {
   price: number;
   quantity: number;
   qrLink?: string;
+  pathnode: string;
+  slugtitle: string;
+  size: string;
+  licenseNumber?: string;
 };
 
 type OrderFormData = {
@@ -49,14 +47,6 @@ const Checkout = () => {
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (cartProducts.length === 0) {
-  //     router.push("/cart");
-  //   }
-  // }, [cartProducts, router]);
-
-  // console.log(cartProducts, "cartdata");
-
   const [formData, setFormData] = useState<OrderFormData>({
     firstName: "",
     lastName: "",
@@ -68,7 +58,6 @@ const Checkout = () => {
     cartValues: [],
   });
 
-  // Updated input handler to convert number inputs accordingly.
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -82,8 +71,8 @@ const Checkout = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Prepare final order data with cart details
     const updatedFormData = { ...formData };
-
     updatedFormData["cartValues"] = cartProducts.map((product) => ({
       title: product.title,
       price: Number(product.price),
@@ -91,37 +80,68 @@ const Checkout = () => {
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
-      size: product.size,
-      licence: product.licenseNumber,
+      size: product.size || "",
+      licenseNumber: product.licenseNumber,
     }));
 
-    // Optional: Log the final form data before sending
     console.log("Final formData to send:", updatedFormData);
 
     try {
-      const emailres = await axios.post("/api/order", updatedFormData);
-      const emaildata = emailres?.data;
+      // STEP 1: Call embryonic order API to get extra charges from CreativeHub
+      const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
+      const {
+        embryonicOrderId,
+        deliveryOptionId,
+        shippingCharge, // e.g., value from mystore.fulfilmentorders.delivery
+        productCharge, // e.g., value from mystore.fulfilmentorders.products
+        externalReference,
+      } = stepOneRes.data;
 
-      // CreativeHub API route to forward the order details
-      const creativeHubRes = await axios.post(
-        "/api/sync-order",
-        updatedFormData
+      // Convert to numbers, defaulting to 0 if needed
+      const effectiveShippingCharge = Number(shippingCharge) || 0;
+      const effectiveProductCharge = Number(productCharge) || 0;
+      const totalExtraCharge = effectiveShippingCharge + effectiveProductCharge;
+
+      // Prompt the user with total extra charges
+      const userConfirmed = window.confirm(
+        `You will be charged £${totalExtraCharge.toFixed(
+          2
+        )} for printing and shipping. Do you agree?`
       );
-      const creativeHubData = creativeHubRes?.data;
 
-      if (
-        emaildata &&
-        emaildata.message === "Email Sent Successfully" &&
-        creativeHubData &&
-        creativeHubData.success
-      ) {
-        alert("Order is confirmed, check your email!");
-      } else {
-        throw new Error(emaildata?.message || "Failed to send email");
+      if (!userConfirmed) {
+        alert("Order cancelled.");
+        return;
       }
+
+      // STEP 2: Confirm the order
+      const confirmPayload = {
+        embryonicOrderId,
+        deliveryOptionId,
+        externalReference,
+        shippingCharge: effectiveShippingCharge,
+        productCharge: effectiveProductCharge,
+        salesTax: 0, // Set as needed
+      };
+
+      const stepTwoRes = await axios.post("/api/fetching-cost", confirmPayload);
+      if (!stepTwoRes.data.success) {
+        throw new Error("Order confirmation failed");
+      }
+
+      // OPTIONAL: Payment has already been captured; if using authorization, capture payment here.
+
+      // STEP 3: Call email API to send confirmation emails.
+      const emailRes = await axios.post("/api/order", updatedFormData);
+      if (emailRes.data.message === "Email Sent Successfully") {
+        alert("Order confirmed and email sent!");
+      } else {
+        throw new Error("Email sending failed");
+      }
+      // Optionally clear the cart or navigate to an order confirmation page.
     } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Email sent Error");
+      console.error("Error processing order:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -131,23 +151,24 @@ const Checkout = () => {
 
   return (
     <div className="pb-16 pt-20 px-5 bg-[#f6f6f6] mt-[-70px]">
-      <div className="mx-auto w-full max-w-[1267.97px] ">
+      <div className="mx-auto w-full max-w-[1267.97px]">
         <Text as="h1" className="text-black text-center">
           Checkout
         </Text>
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
-
         <div className="flex flex-wrap justify-center gap-16 mob:gap-2 mt-20 mb-5">
           {/* Details Form */}
           <div className="w-full max-w-[555px] border border-[#000000]/20 px-[25px] py-[25px] mb-10 bg-[#FFFFFF]">
             <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
               <div className="flex gap-[16px] mb-3">
-                <Text className="text-[22px] text-[#000000] font-futuraBT font-normal">
+                <Text
+                  as="h1"
+                  className="text-[22px] text-[#000000] font-futuraBT font-normal"
+                >
                   Add New Address
                 </Text>
               </div>
               <div className="flex mob:block w-full gap-5 justify-between mb-2">
-                {/* First Name */}
                 <div className="w-full max-w-[272.22px] mob:max-w-full">
                   <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                     First Name
@@ -160,10 +181,9 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="First Name"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
-                {/* Last Name */}
                 <div className="w-full max-w-[272.22px] mob:max-w-full">
                   <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                     Last Name
@@ -176,11 +196,10 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="Last Name"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
               </div>
-              {/* Email */}
               <div className="mb-2">
                 <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                   Email
@@ -193,10 +212,9 @@ const Checkout = () => {
                   required
                   autoComplete="off"
                   placeholder="Email"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                 />
               </div>
-              {/* Street Address */}
               <div className="mb-2">
                 <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                   Street Address
@@ -209,12 +227,10 @@ const Checkout = () => {
                   required
                   autoComplete="off"
                   placeholder="Street Address"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-[#000000] font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                 />
               </div>
-              {/* Apt, State, Zip */}
               <div className="flex mob:block w-full gap-5 justify-between mb-5">
-                {/* Apt Number */}
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
                   <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                     Apt Number
@@ -227,10 +243,9 @@ const Checkout = () => {
                     min="0"
                     autoComplete="off"
                     placeholder="Apt Number"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
-                {/* State */}
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
                   <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                     State
@@ -243,10 +258,9 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="State"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
-                {/* Zip Code */}
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
                   <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
                     Zip Code
@@ -260,11 +274,10 @@ const Checkout = () => {
                     min="0"
                     autoComplete="off"
                     placeholder="Zip Code"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px] text-black font-normal placeholder:text-[#00000033] placeholder:text-[16px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
               </div>
-              {/* The submit button is integrated within the StripeForm component */}
             </form>
             <Elements stripe={stripePromise}>
               <StripeForm formData={formData} handleSubmit={handleSubmit} />
@@ -272,8 +285,11 @@ const Checkout = () => {
           </div>
           {/* Order Details Section */}
           <div className="w-full max-w-[455.77px] relative">
-            <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px] max-h-full mob:max-h-full">
-              <Text className="text-[22px] font-medium leading-[28px] text-black">
+            <div className="p-[34px] border border-[#000000]/30 bg-white w-full max-w-[455.77px]">
+              <Text
+                as="h1"
+                className="text-[22px] font-medium leading-[28px] text-black"
+              >
                 Order Details
               </Text>
               <hr className="border-[0.5px] border-black/40 w-full mt-2 mb-5" />
@@ -332,7 +348,7 @@ const Checkout = () => {
                       </div>
                       <Text
                         onClick={() => removeFromCart(product.id)}
-                        className="text-[12px] font-medium leading-[18px] text-[#FF0000] text-end underline underline-offset-2 cursor-pointer"
+                        className="text-[12px] font-medium leading-[18px] text-[#FF0000] text-end underline cursor-pointer"
                       >
                         Remove
                       </Text>
@@ -347,9 +363,9 @@ const Checkout = () => {
                 <input
                   placeholder="E-mail Address"
                   type="text"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full max-w-[284px] text-[15px] text-[#000000] font-futurapt font-normal"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full max-w-[284px] text-[15px] text-black"
                 />
-                <Button className="max-w-[83px] h-[45px] bg-transparent border border-[#000000]/30 text-[15px] text-[#000000] font-medium font-futurapt hover:opacity-100">
+                <Button className="max-w-[83px] h-[45px] bg-transparent border border-[#000000]/30 text-[15px] text-black font-medium hover:opacity-100">
                   Apply
                 </Button>
               </form>

@@ -6,23 +6,38 @@ interface ConfirmOrderPayload {
   embryonicOrderId: number;
   deliveryOptionId: number;
   externalReference: string;
+  shippingCharge: number | string; // may be string
+  productCharge: number | string; // may be string
+  salesTax: number | string;
 }
 
 export async function POST(request: Request) {
   try {
+    // Parse payload, including fulfillment charges
     const {
       embryonicOrderId,
       deliveryOptionId,
       externalReference,
+      shippingCharge,
+      productCharge,
+      salesTax,
     }: ConfirmOrderPayload = await request.json();
+
+    // Convert values to numbers (fallback to 0 if invalid)
+    const effectiveShippingCharge = Number(shippingCharge) || 0;
+    const effectiveProductCharge = Number(productCharge) || 0;
+    const effectiveSalesTax = Number(salesTax) || 0;
+
+    // Sum the charges
+    const totalFulfillmentCharge =
+      effectiveShippingCharge + effectiveProductCharge;
 
     // Build the confirmation payload for CreativeHub
     const confirmPayload = {
       OrderId: embryonicOrderId,
       DeliveryOptionId: deliveryOptionId,
-      // Optionally, include dynamic charge values if required by CreativeHub:
-      // DeliveryChargeExcludingSalesTax: dynamicShippingCharge,
-      // DeliveryChargeSalesTax: dynamicSalesTax,
+      DeliveryChargeExcludingSalesTax: totalFulfillmentCharge,
+      DeliveryChargeSalesTax: effectiveSalesTax,
       ExternalReference: externalReference,
     };
 
@@ -36,7 +51,7 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey ${process.env.CREATIVEHUB_API_KEY}`,
+          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
         },
         body: JSON.stringify(confirmPayload),
       }
