@@ -20,7 +20,7 @@ interface Product {
   sizes: string[];
   licenseNumber: string;
   image?: string;
-  hoverImage?: string; // New hover image field
+  hoverImage?: string;
 }
 
 const ProductList: React.FC = () => {
@@ -31,7 +31,7 @@ const ProductList: React.FC = () => {
   const [editedPrice, setEditedPrice] = useState<string>("");
   const [editedSize, setEditedSize] = useState<string>("");
   const [editedImage, setEditedImage] = useState<string>("");
-  const [editedHoverImage, setEditedHoverImage] = useState<string>(""); // State for hover image URL
+  const [editedHoverImage, setEditedHoverImage] = useState<string>("");
   const [editedLicenceNumber, setEditedLicenceNumber] = useState<string>("");
   const [newImageFile, setNewImageFile] = useState<File | null>(null);
   const [newHoverImageFile, setNewHoverImageFile] = useState<File | null>(null);
@@ -158,6 +158,11 @@ const ProductList: React.FC = () => {
     }
   };
 
+  // Handle size selection from dropdown
+  const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setEditedSize(e.target.value);
+  };
+
   return (
     <div className="max-w-[1268px] w-full mx-auto bg-white p-6 rounded-lg shadow-md mb-[100px]">
       <Text as="h1" className="text-black mb-4 text-center">
@@ -248,7 +253,8 @@ const ProductList: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  {/* Other Editable Fields */}
+
+                  {/* Editable Fields */}
                   <input
                     className="border p-2 rounded"
                     type="text"
@@ -261,18 +267,30 @@ const ProductList: React.FC = () => {
                     value={editedPrice}
                     onChange={(e) => setEditedPrice(e.target.value)}
                   />
-                  <input
-                    className="border p-2 rounded"
-                    type="text"
+
+                  {/* Sizes Dropdown */}
+                  <label className="block font-futurapt mt-2 mb-1">Sizes</label>
+                  <select
+                    className="w-full p-2 border rounded-md font-futurapt bg-transparent"
                     value={editedSize}
-                    onChange={(e) => setEditedSize(e.target.value)}
-                  />
+                    onChange={handleSizeChange}
+                  >
+                    <option value="Small">Small</option>
+                    <option value="Small, Medium">Small, Medium</option>
+                    <option value="Medium, Large">Medium, Large</option>
+                    <option value="Small, Medium, Large">
+                      Small, Medium, Large
+                    </option>
+                  </select>
+
                   <input
                     className="border p-2 rounded"
                     type="text"
                     value={editedLicenceNumber}
                     onChange={(e) => setEditedLicenceNumber(e.target.value)}
                   />
+
+                  {/* Save or Cancel Buttons */}
                   <button
                     className="bg-green-500 text-white px-3 py-1 rounded"
                     onClick={handleSaveEdit}
