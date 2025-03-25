@@ -22,7 +22,6 @@ interface Product {
   image?: string;
   hoverImage?: string;
 }
-
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
