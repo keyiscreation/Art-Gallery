@@ -10,6 +10,7 @@ import ProductList from "./ProductList";
 import UploadAboutData from "./About/UploadData";
 import LogOutButton from "../Logutbutton";
 import AboutDataDisplay from "./About/DisplayAndEdit";
+import UploadHomeData from "./HomePage/UploadHomeData";
 
 const AdminPanel = () => {
   const [addProduct, setaddProduct] = useState(false);
@@ -71,7 +72,11 @@ const AdminPanel = () => {
           </>
         )}
 
-        {homePage && <>Home Page content</>}
+        {homePage && (
+          <>
+            <UploadHomeData />
+          </>
+        )}
       </div>
     </ProtectedRoute>
   );
