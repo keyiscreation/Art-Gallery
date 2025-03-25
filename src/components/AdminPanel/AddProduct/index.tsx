@@ -132,7 +132,7 @@ const AddProduct: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex justify-center items-center h-full my-[100px]">
+    <div className="w-full flex justify-center items-center h-full my-[100px] px-5">
       <div className="p-8 rounded-[12px] w-full max-w-[1268px] shadow-md">
         <Text as="h1" className="text-black mb-4 text-center">
           Add Product
