@@ -84,27 +84,36 @@ const Checkout = () => {
       licenseNumber: product.licenseNumber,
     }));
 
-    console.log("Final formData to send:", updatedFormData);
-
     try {
-      // STEP 1: Call embryonic order API to get extra charges from CreativeHub
+      // STEP 1: Sync order (this does not fetch cost)
       const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
-      const {
+      const { embryonicOrderId, deliveryOptionId, externalReference } =
+        stepOneRes.data;
+
+      console.log("Step one response:", stepOneRes.data);
+
+      // STEP 2: Fetch the total cost from /api/fetching-cost
+      const stepTwoRes = await axios.post("/api/fetching-cost", {
         embryonicOrderId,
         deliveryOptionId,
-        shippingCharge, // e.g., value from mystore.fulfilmentorders.delivery
-        productCharge, // e.g., value from mystore.fulfilmentorders.products
         externalReference,
-      } = stepOneRes.data;
+        shippingCharge: 0, // Placeholder, since API recalculates it
+        productCharge: 0, // Placeholder, since API recalculates it
+        salesTax: 0, // Placeholder
+      });
 
-      // Convert to numbers, defaulting to 0 if needed
-      const effectiveShippingCharge = Number(shippingCharge) || 0;
-      const effectiveProductCharge = Number(productCharge) || 0;
-      const totalExtraCharge = effectiveShippingCharge + effectiveProductCharge;
+      if (!stepTwoRes.data.success) {
+        throw new Error("Failed to fetch total cost");
+      }
 
-      // Prompt the user with total extra charges
+      // ✅ Extract correct total charge from /api/fetching-cost response
+      const { TotalCharge } = stepTwoRes.data.data;
+
+      console.log("TotalCharge from fetching-cost API:", TotalCharge);
+
+      // Show popup with the correct TotalCharge
       const userConfirmed = window.confirm(
-        `You will be charged £${totalExtraCharge.toFixed(
+        `You will be charged £${TotalCharge.toFixed(
           2
         )} for printing and shipping. Do you agree?`
       );
@@ -114,31 +123,13 @@ const Checkout = () => {
         return;
       }
 
-      // STEP 2: Confirm the order
-      const confirmPayload = {
-        embryonicOrderId,
-        deliveryOptionId,
-        externalReference,
-        shippingCharge: effectiveShippingCharge,
-        productCharge: effectiveProductCharge,
-        salesTax: 0, // Set as needed
-      };
-
-      const stepTwoRes = await axios.post("/api/fetching-cost", confirmPayload);
-      if (!stepTwoRes.data.success) {
-        throw new Error("Order confirmation failed");
-      }
-
-      // OPTIONAL: Payment has already been captured; if using authorization, capture payment here.
-
-      // STEP 3: Call email API to send confirmation emails.
+      // STEP 3: Send confirmation email
       const emailRes = await axios.post("/api/order", updatedFormData);
       if (emailRes.data.message === "Email Sent Successfully") {
         alert("Order confirmed and email sent!");
       } else {
         throw new Error("Email sending failed");
       }
-      // Optionally clear the cart or navigate to an order confirmation page.
     } catch (error) {
       console.error("Error processing order:", error);
       alert("An error occurred. Please try again.");
