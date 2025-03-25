@@ -12,6 +12,7 @@ interface Product {
   slugtitle: string;
   price: string;
   image: File | null;
+  hoverImage: File | null;
   sizes: string[];
   licenseNumber: string;
 }
@@ -22,6 +23,7 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     image: null,
+    hoverImage: null,
     sizes: [],
     licenseNumber: "",
   });
@@ -34,10 +36,13 @@ const AddProduct: React.FC = () => {
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file input changes
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  // Handle file input changes for the main image
+  const handleFileChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    field: "image" | "hoverImage"
+  ) => {
     if (e.target.files && e.target.files[0]) {
-      setProduct((prev) => ({ ...prev, image: e.target.files![0] }));
+      setProduct((prev) => ({ ...prev, [field]: e.target.files![0] }));
     }
   };
 
@@ -59,33 +64,6 @@ const AddProduct: React.FC = () => {
       return null;
     }
   };
-  // const uploadImageToCloudinary = async (file: File) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   formData.append("upload_preset", "art-gallery"); // Your unsigned preset name
-  //   formData.append("cloud_name", "duox5d29k"); // Your Cloudinary cloud name
-
-  //   try {
-  //     const response = await fetch(
-  //       "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to upload image");
-  //     }
-
-  //     const data = await response.json();
-  //     // console.log("Uploaded Image URL:", data.secure_url);
-  //     return data.secure_url;
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //     return null;
-  //   }
-  // };
 
   // Handle form submit
   const handleSubmit = async (e: FormEvent) => {
@@ -95,18 +73,21 @@ const AddProduct: React.FC = () => {
       !product.name ||
       !product.slugtitle ||
       !product.price ||
-      !product.image
+      !product.image ||
+      !product.hoverImage // Ensure hover image is selected
     ) {
-      alert("Please fill all required fields and upload an image.");
+      alert("Please fill all required fields and upload both images.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Upload image to Cloudinary and get the URL
+      // Upload both images to Cloudinary and get the URLs
       const imageURL = await uploadImageToCloudinary(product.image);
-      if (!imageURL) {
+      const hoverImageURL = await uploadImageToCloudinary(product.hoverImage);
+
+      if (!imageURL || !hoverImageURL) {
         alert("Image upload failed. Please try again.");
         return;
       }
@@ -116,20 +97,23 @@ const AddProduct: React.FC = () => {
         name: product.name,
         slugtitle: product.slugtitle,
         price: parseFloat(product.price),
-        image: imageURL, // Store Cloudinary URL in Firestore
+        image: imageURL, // Store Cloudinary URL for the main image
+        hoverImage: hoverImageURL, // Store Cloudinary URL for the hover image
         sizes: product.sizes,
         licenseNumber: product.licenseNumber,
       });
 
       alert("Product added successfully!");
-      // setProduct({
-      //   name: "",
-      //   slugtitle: "",
-      //   price: "",
-      //   image: null,
-      //   sizes: [],
-      //   licenseNumber: "",
-      // });
+      // Reset form fields after successful submission
+      setProduct({
+        name: "",
+        slugtitle: "",
+        price: "",
+        image: null,
+        hoverImage: null, // Reset hover image field
+        sizes: [],
+        licenseNumber: "",
+      });
     } catch (error) {
       console.error("Error adding product:", error);
       alert("Error adding product!");
@@ -138,8 +122,17 @@ const AddProduct: React.FC = () => {
     }
   };
 
+  // Handle size selection from dropdown
+  const handleSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedSize = e.target.value.split(", ");
+    setProduct((prev) => ({
+      ...prev,
+      sizes: selectedSize,
+    }));
+  };
+
   return (
-    <div className="w-full flex justify-center items-center h-full my-[100px]">
+    <div className="w-full flex justify-center items-center h-full my-[100px] px-5">
       <div className="p-8 rounded-[12px] w-full max-w-[1268px] shadow-md">
         <Text as="h1" className="text-black mb-4 text-center">
           Add Product
@@ -183,19 +176,17 @@ const AddProduct: React.FC = () => {
 
           <div>
             <label className="block font-futurapt mb-1">Sizes</label>
-            <input
-              type="text"
+            <select
               name="sizes"
               value={product.sizes.join(", ")}
-              onChange={(e) =>
-                setProduct((prev) => ({
-                  ...prev,
-                  sizes: e.target.value.split(",").map((size) => size.trim()),
-                }))
-              }
-              className="w-full p-2 border rounded-md font-futurapt"
-              placeholder="Enter sizes (comma-separated)"
-            />
+              onChange={handleSizeChange}
+              className="w-full p-2 border rounded-md font-futurapt bg-transparent"
+            >
+              <option value="Small">Small</option>
+              <option value="Small, Medium">Small, Medium</option>
+              <option value="Medium, Large">Medium, Large</option>
+              <option value="Small, Medium, Large">Small, Medium, Large</option>
+            </select>
           </div>
 
           <div>
@@ -216,7 +207,18 @@ const AddProduct: React.FC = () => {
               type="file"
               name="image"
               accept="image/*"
-              onChange={handleFileChange}
+              onChange={(e) => handleFileChange(e, "image")}
+              className="w-full p-2 border rounded-md font-futurapt"
+            />
+          </div>
+
+          <div>
+            <label className="block font-futurapt mb-1">Hover Image</label>
+            <input
+              type="file"
+              name="hoverImage"
+              accept="image/*"
+              onChange={(e) => handleFileChange(e, "hoverImage")}
               className="w-full p-2 border rounded-md font-futurapt"
             />
           </div>
