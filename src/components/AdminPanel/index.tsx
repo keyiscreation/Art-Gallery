@@ -11,6 +11,7 @@ import UploadAboutData from "./About/UploadData";
 import LogOutButton from "../Logutbutton";
 import AboutDataDisplay from "./About/DisplayAndEdit";
 import UploadHomeData from "./HomePage/UploadHomeData";
+import HomePageEditor from "./HomePage/DisplayAndEdit";
 
 const AdminPanel = () => {
   const [addProduct, setaddProduct] = useState(false);
@@ -75,6 +76,7 @@ const AdminPanel = () => {
         {homePage && (
           <>
             <UploadHomeData />
+            <HomePageEditor />
           </>
         )}
       </div>

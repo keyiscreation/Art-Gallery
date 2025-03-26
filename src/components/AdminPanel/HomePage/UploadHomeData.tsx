@@ -132,7 +132,7 @@ const UploadHomeData = () => {
     <div className="rounded-[12px] w-full max-w-[1268px] my-[100px] px-5">
       <div className="shadow-md p-8 rounded-[12px]">
         <Text className="text-center text-[57px] text-black font-medium">
-          Upload About Data
+          Upload Home Data
         </Text>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
