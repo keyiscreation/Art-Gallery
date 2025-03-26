@@ -5,13 +5,12 @@ import Image from "next/image";
 import Text from "@/components/ui/Text";
 import Link from "next/link";
 import useHomeData from "@/hooks/UseHomeData";
-import Spinner from "@/components/ui/Spinner";
 
 const ThirdSection = () => {
   const homedata = useHomeData();
 
   if (!homedata) {
-    return <Spinner />;
+    return;
   }
   return (
     <div className="relative ">

@@ -5,13 +5,12 @@ import Link from "next/link";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 import useHomeData from "@/hooks/UseHomeData";
-import Spinner from "@/components/ui/Spinner";
 
 const SecondSection = () => {
   const homedata = useHomeData();
 
   if (!homedata) {
-    return <Spinner />;
+    return;
   }
 
   return (

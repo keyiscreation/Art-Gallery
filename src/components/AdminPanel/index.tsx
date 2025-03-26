@@ -12,11 +12,14 @@ import LogOutButton from "../Logutbutton";
 import AboutDataDisplay from "./About/DisplayAndEdit";
 import UploadHomeData from "./HomePage/UploadHomeData";
 import HomePageEditor from "./HomePage/DisplayAndEdit";
+import UploadNavbarData from "./Navbar/UploadData";
+import NavbarDataManager from "./Navbar/DisplayandEdit";
 
 const AdminPanel = () => {
   const [addProduct, setaddProduct] = useState(false);
   const [homePage, sethomePage] = useState(true);
   const [aboutPage, setaboutPage] = useState(false);
+  const [navbarData, setNavbarData] = useState(false);
   return (
     <ProtectedRoute>
       <div className="flex justify-center items-center flex-col">
@@ -33,6 +36,7 @@ const AdminPanel = () => {
               sethomePage(true);
               setaddProduct(false);
               setaboutPage(false);
+              setNavbarData(false);
             }}
           >
             Home Page
@@ -43,6 +47,7 @@ const AdminPanel = () => {
               sethomePage(false);
               setaddProduct(false);
               setaboutPage(true);
+              setNavbarData(false);
             }}
           >
             About Page
@@ -53,9 +58,21 @@ const AdminPanel = () => {
               sethomePage(false);
               setaddProduct(true);
               setaboutPage(false);
+              setNavbarData(false);
             }}
           >
             Product Page
+          </Text>
+          <Text
+            className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
+            onClick={() => {
+              sethomePage(false);
+              setaddProduct(false);
+              setaboutPage(false);
+              setNavbarData(true);
+            }}
+          >
+            Navbar
           </Text>
         </div>
 
@@ -77,6 +94,13 @@ const AdminPanel = () => {
           <>
             <UploadHomeData />
             <HomePageEditor />
+          </>
+        )}
+
+        {navbarData && (
+          <>
+            <UploadNavbarData />
+            <NavbarDataManager />
           </>
         )}
       </div>

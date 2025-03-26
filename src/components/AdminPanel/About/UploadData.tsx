@@ -168,8 +168,7 @@ const UploadAboutData = () => {
 
           <button
             type="submit"
-            className="flex justify-center items-center text-[18px] font-normal leading-[23.08px] hover:opacity-85 transition duration-500 ease-in-out w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-[#000000]/90 text-white p-2 rounded-md
-"
+            className="flex justify-center items-center text-[18px] font-normal leading-[23.08px] hover:opacity-85 transition duration-500 ease-in-out w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-[#000000]/90 text-white p-2 rounded-md"
             disabled={loading}
           >
             {loading ? "Uploading..." : "Upload Data"}

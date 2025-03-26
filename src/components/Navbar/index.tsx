@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
+import { db } from "@/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 import Drawer from "@/components/ui/Drawer";
-import logo from "@/public/logo.png";
+// import logo from "@/public/logo.png";
 import cartbucket from "@/public/icons/bucketcart.svg";
 import Text from "../ui/Text";
 import useShoppingCart from "@/hooks/useShoppingCart";
@@ -15,11 +17,25 @@ type CartItem = {
   id: number;
   quantity: number;
 };
+// Type for Navbar Links
+type NavbarLink = {
+  name: string;
+  url: string;
+};
+
+// Type for Navbar Data
+type NavbarDataType = {
+  id: string;
+  logoUrl: string;
+  links: NavbarLink[];
+};
 
 const Navbar = () => {
+  const [navbarData, setNavbarData] = useState<NavbarDataType[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("/"); // Initial active tab set to home
+  const [activeTab, setActiveTab] = useState("/");
   const [isSticky, setIsSticky] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string>("");
 
   const [cartItems] = useAtomValue("cart");
   const { cartProducts } = useShoppingCart();
@@ -73,6 +89,42 @@ const Navbar = () => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const fetchNavbarData = async () => {
+      const querySnapshot = await getDocs(collection(db, "navbarData"));
+      const fetchedData: NavbarDataType[] = [];
+      querySnapshot.forEach((docSnap) => {
+        fetchedData.push({
+          id: docSnap.id,
+          ...docSnap.data(),
+        } as NavbarDataType);
+      });
+      setNavbarData(fetchedData);
+    };
+
+    fetchNavbarData();
+  }, []);
+
+  useEffect(() => {
+    // Fetch logo data from Firestore (assuming the logo data is in the `navbarData` collection)
+    const fetchLogoData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "navbarData"));
+        querySnapshot.forEach((docSnap) => {
+          // Assuming the logo is stored in a `logoUrl` field in Firestore
+          const fetchedLogoUrl = docSnap.data().logoUrl;
+          setLogoUrl(fetchedLogoUrl); // Set the fetched logo URL to state
+        });
+      } catch (error) {
+        console.error("Error fetching logo:", error);
+      }
+    };
+
+    fetchLogoData();
+  }, []);
+
+  // console.log(navbarData);
+
   return (
     <div
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
@@ -84,55 +136,37 @@ const Navbar = () => {
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
             <div className="flex justify-between items-center w-full mob:px-5 pb-4">
               {/* dekstop navbar */}
-              <Link
-                href="/"
-                className="flex mob:justify-start xl:hidden max-w-[146.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
-              >
-                <Image
-                  src={logo}
-                  alt="Flowbite Logo"
-                  priority
-                  // className="w-[140px] h-[114px]"
-                  // width={138}
-                  // height={114}
-                />
-              </Link>
+              {logoUrl && (
+                <>
+                  <Link
+                    href="/"
+                    className="flex mob:justify-start xl:hidden max-w-[146.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
+                  >
+                    <Image
+                      src={logoUrl}
+                      alt="Logo"
+                      priority
+                      width={138}
+                      height={114}
+                    />
+                  </Link>
+                </>
+              )}
 
               <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[32px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
-                <li>
-                  <Link
-                    href="/store"
-                    onClick={() => handleTabChange("")}
-                    className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "" ? " font-medium" : "text-white"
-                    }`}
-                  >
-                    SHOP
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/about"
-                    onClick={() => handleTabChange("/about")}
-                    className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "/about" ? " font-medium" : "text-white"
-                    }`}
-                  >
-                    ABOUT
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href="/contact-us"
-                    onClick={() => handleTabChange("/contact-us")}
-                    className={`block text-[14px] font-futurapt font-normal leading-[17.95px] text-white ${
-                      activeTab === "/contact-us" ? " font-medium" : "text-white"
-                    }`}
-                  >
-                    CONTACT
-                  </Link>
-                </li>
+                {navbarData[0]?.links.map((link, index) => (
+                  <li key={`${link.url}-${index}`}>
+                    <Link
+                      href={link.url}
+                      onClick={() => handleTabChange(link.url)}
+                      className={`block text-[16px] font-futurapt font-normal leading-[17.95px] text-white ${
+                        activeTab === link.url ? " font-medium" : "text-white"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
               </ul>
 
               <div className="flex items-center gap-[32px] xl:hidden">
@@ -191,36 +225,34 @@ const Navbar = () => {
                       </svg>
                     </button>
                   </div>
-                  <Image
-                    src={logo}
-                    alt="Flowbite Logo"
-                    priority
-                    className="h-[70px] w-[70px]"
-                    // width={90}
-                    // height={114}
-                  />
+                  {logoUrl && (
+                    <a href="/">
+                      <Image
+                        src={logoUrl}
+                        alt="Logo"
+                        priority
+                        className="h-[70px] w-[70px]"
+                        width={138}
+                        height={114}
+                      />
+                    </a>
+                  )}
                 </div>
                 <Drawer isOpen={isOpen} onClose={onClose}>
                   <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {["/", "/about", "/store", "/contact-us"].map((path) => (
+                    {navbarData[0]?.links.map((link, index) => (
                       <a
-                        href={path}
-                        key={path}
-                        onClick={() => handleTabChange(path)}
-                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white  ${
-                          activeTab === path
+                        href={link.url}
+                        key={`${link.url}-${index}`}
+                        onClick={() => handleTabChange(link.url)}
+                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${
+                          activeTab === link.url
                             ? "text-white font-medium"
                             : "text-white"
                         }`}
                       >
                         <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
-                          {path === "/"
-                            ? "Home"
-                            : path === "/store"
-                            ? "Shop"
-                            : path === "/contact-us"
-                            ? "Contact"
-                            : path.slice(1).toUpperCase()}
+                          {link.name.toUpperCase()}
                         </li>
                         <hr className="w-full border border-[#FFFFFF] my-2" />
                       </a>

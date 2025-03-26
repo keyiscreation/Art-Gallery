@@ -11,7 +11,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 
 import { auth } from "@/firebase";
 
-import Spinner from "@/components/ui/Spinner";
+// import Spinner from "@/components/ui/Spinner";
 
 interface AuthContextType {
   user: User | null;
@@ -22,19 +22,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false);
+      // setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated: !!user }}>
-      {loading ? <Spinner /> : children}
+      {children}
     </AuthContext.Provider>
   );
 };
