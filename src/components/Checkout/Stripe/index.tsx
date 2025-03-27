@@ -3,12 +3,9 @@ import CreditCardInput from "./CreditCardInput";
 import useStripePayment from "./useStripePayment";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
-// type CartItem = {
-//   title: string;
-//   price: number;
-//   quantity: number;
-//   qrLink?: string;
-// };
+import useShoppingCart from "@/hooks/useShoppingCart"; // Import useShoppingCart to access cartProducts
+import axios from "axios";
+
 interface FormData {
   firstName: string;
   lastName: string;
@@ -17,23 +14,46 @@ interface FormData {
   aptNumber?: number;
   state: string;
   zipCode: number;
-  // cartValues?: CartItem[];
+  cartValues?: {
+    title: string;
+    price: number;
+    quantity: number;
+    pathnode?: string;
+    slugtitle?: string;
+    qrLink?: string;
+    size?: string;
+    licenseNumber?: string;
+  }[];
 }
-
 interface StripeFormProps {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   formData: FormData;
 }
 
-const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
+const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
   const [loading, setLoading] = useState(false);
   const { onStripeSubmit } = useStripePayment();
   const [checked, setChecked] = useState(false);
+  const { cartProducts, getItemQuantity } = useShoppingCart(); // Get cartProducts and getItemQuantity
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    console.log(formData, "formData");
+
+    // Prepare final order data with cart details
+    const updatedFormData = { ...formData };
+
+    // Ensure cartValues is properly typed and added to the formData
+    updatedFormData.cartValues = cartProducts.map((product) => ({
+      title: product.title,
+      price: Number(product.price),
+      quantity: getItemQuantity(product.id),
+      pathnode: product.pathnode,
+      slugtitle: product.slugtitle,
+      qrLink: product.qrLink,
+      size: product.size || "",
+      licenseNumber: product.licenseNumber,
+    }));
 
     try {
       // Exclude additionalInfo from validation check
@@ -41,7 +61,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
 
       const allFieldsFilled: boolean = Object.values(
         formDataWithoutAdditionalInfo
-      ).every((value: string | number | undefined) =>
+      ).every((value: string | number | undefined | object) =>
         typeof value === "string"
           ? value.trim() !== ""
           : value !== null && value !== undefined
@@ -53,15 +73,61 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
         return;
       }
 
-      const res = await onStripeSubmit();
+      // STEP 1: Sync order (this does not fetch cost)
+      const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
+      const { embryonicOrderId, deliveryOptionId, externalReference } =
+        stepOneRes.data;
 
-      if (res?.success) {
-        await handleSubmit(e);
-        console.log("Payment success");
-        // alert("Payment successful!");
+      // console.log("Step one response:", stepOneRes.data);
+
+      // STEP 2: Fetch the total cost from /api/fetching-cost
+      const stepTwoRes = await axios.post("/api/fetching-cost", {
+        embryonicOrderId,
+        deliveryOptionId,
+        externalReference,
+        shippingCharge: 0, // Placeholder, since API recalculates it
+        productCharge: 0, // Placeholder, since API recalculates it
+        salesTax: 0, // Placeholder
+      });
+
+      if (!stepTwoRes.data.success) {
+        throw new Error("Failed to fetch total cost");
+      }
+
+      // ✅ Extract correct total charge from /api/fetching-cost response
+      const { TotalCharge } = stepTwoRes.data.data;
+
+      // console.log("TotalCharge from fetching-cost API:", TotalCharge);
+
+      // Show popup with the correct TotalCharge
+      const userConfirmed = window.confirm(
+        `You will be charged £${TotalCharge.toFixed(
+          2
+        )} for printing and shipping. Do you agree?`
+      );
+
+      if (!userConfirmed) {
+        alert("Order cancelled.");
+        setLoading(false);
+        return;
+      }
+
+      // STEP 3: Process Stripe Payment after order steps
+      const paymentRes = await onStripeSubmit();
+
+      if (paymentRes?.success) {
+        // STEP 4: Send confirmation email after payment is successful
+        const emailRes = await axios.post("/api/order", updatedFormData);
+        if (emailRes.data.message === "Email Sent Successfully") {
+          alert("Order confirmed and email sent!");
+        } else {
+          throw new Error("Email sending failed");
+        }
+      } else {
+        alert("Payment failed. Please try again.");
       }
     } catch (error) {
-      console.error("An error occurred during submission:", error);
+      console.error("Error processing order:", error);
       alert("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -84,20 +150,6 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
         <Text className="text-black font-futurapt text-[13px] leading-[11.54px] font-light mt-2">
           You&apos;ll receive receipts and notifications at this email
         </Text>
-        {/* <div className="flex items-center mb-4">
-          <input
-            id="default-checkbox"
-            type="checkbox"
-            value=""
-            className="w-4 h-4 text-blue-600 bg-gray-100  border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label
-            htmlFor="default-checkbox"
-            className="text-[16px] ml-4 text-[#000] leading-[20.16px] font-normal font-jakrata"
-          >
-            Use shipping address as billing address
-          </label>
-        </div> */}
 
         <label className="flex items-center space-x-3 cursor-pointer mt-12">
           <input
@@ -111,8 +163,7 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
           </span>
         </label>
 
-        {/* button */}
-
+        {/* Button */}
         <Button
           type="submit"
           loading={loading}
@@ -146,15 +197,6 @@ const Stripe: React.FC<StripeFormProps> = ({ handleSubmit, formData }) => {
             " Place Order"
           )}
         </Button>
-
-        {/* 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full uppercase my-14  h-[59px] rounded-[150px] bg-[#FFFFFF] text-[#121212] tracking-[2px] text-[15px] leading-[18.9px] font-semibold font-jakrata"
-        >
-        {loading ? "Submitting..." : "Pay Now"}
-        </button> */}
       </form>
     </div>
   );
