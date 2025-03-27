@@ -1,5 +1,4 @@
 "use client";
-
 import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
@@ -90,7 +89,7 @@ const Checkout = () => {
       const { embryonicOrderId, deliveryOptionId, externalReference } =
         stepOneRes.data;
 
-      console.log("Step one response:", stepOneRes.data);
+      // console.log("Step one response:", stepOneRes.data);
 
       // STEP 2: Fetch the total cost from /api/fetching-cost
       const stepTwoRes = await axios.post("/api/fetching-cost", {
@@ -109,7 +108,7 @@ const Checkout = () => {
       // ✅ Extract correct total charge from /api/fetching-cost response
       const { TotalCharge } = stepTwoRes.data.data;
 
-      console.log("TotalCharge from fetching-cost API:", TotalCharge);
+      // console.log("TotalCharge from fetching-cost API:", TotalCharge);
 
       // Show popup with the correct TotalCharge
       const userConfirmed = window.confirm(
