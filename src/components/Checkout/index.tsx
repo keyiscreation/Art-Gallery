@@ -1,5 +1,4 @@
 "use client";
-
 import React, { ChangeEvent, FormEvent, Fragment, useState } from "react";
 import Image from "next/image";
 import { loadStripe } from "@stripe/stripe-js";
