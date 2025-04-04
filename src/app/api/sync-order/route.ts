@@ -48,20 +48,20 @@ interface DeliveryOption {
 }
 
 // Hardcoded mappings for known products
-const hardcodedMappings: Record<
-  string,
-  { productId: number; printOptionId: number }
-> = {
-  america: { productId: 37042, printOptionId: 5872 },
-  stars: { productId: 37054, printOptionId: 5878 },
-  fox: { productId: 37052, printOptionId: 5879 },
-  egrets: { productId: 37056, printOptionId: 5880 },
-  morning: { productId: 37048, printOptionId: 5881 },
-  light: { productId: 37047, printOptionId: 5882 },
-  colorado: { productId: 37053, printOptionId: 5883 },
-  moon: { productId: 37050, printOptionId: 5884 },
-  wild: { productId: 37051, printOptionId: 5885 },
-};
+// const hardcodedMappings: Record<
+//   string,
+//   { productId: number; printOptionId: number }
+// > = {
+//   america: { productId: 37042, printOptionId: 5872 },
+//   stars: { productId: 37054, printOptionId: 5878 },
+//   fox: { productId: 37052, printOptionId: 5879 },
+//   egrets: { productId: 37056, printOptionId: 5880 },
+//   morning: { productId: 37048, printOptionId: 5881 },
+//   light: { productId: 37047, printOptionId: 5882 },
+//   colorado: { productId: 37053, printOptionId: 5883 },
+//   moon: { productId: 37050, printOptionId: 5884 },
+//   wild: { productId: 37051, printOptionId: 5885 },
+// };
 
 export async function POST(request: Request) {
   try {
@@ -191,14 +191,30 @@ export async function POST(request: Request) {
     };
 
     // Send embryonic order payload to CreativeHub
+
+    //Testing Account
+    // const embryonicResponse = await fetch(
+    //   "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //       Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+    //     },
+    //     body: JSON.stringify(embryonicPayload),
+    //   }
+    // );
+
+    //Production Account
     const embryonicResponse = await fetch(
-      "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+      "https://api.creativehub.io/api/v1/orders/embryonic",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
         },
         body: JSON.stringify(embryonicPayload),
       }
