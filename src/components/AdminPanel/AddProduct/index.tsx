@@ -6,6 +6,7 @@ import { collection, addDoc } from "firebase/firestore";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 
+
 interface Product {
   name: string;
   slugtitle: string;

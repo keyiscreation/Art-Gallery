@@ -48,20 +48,20 @@ interface DeliveryOption {
 }
 
 // Hardcoded mappings for known products
-const hardcodedMappings: Record<
-  string,
-  { productId: number; printOptionId: number }
-> = {
-  america: { productId: 37042, printOptionId: 5872 },
-  stars: { productId: 37054, printOptionId: 5878 },
-  fox: { productId: 37052, printOptionId: 5879 },
-  egrets: { productId: 37056, printOptionId: 5880 },
-  morning: { productId: 37048, printOptionId: 5881 },
-  light: { productId: 37047, printOptionId: 5882 },
-  colorado: { productId: 37053, printOptionId: 5883 },
-  moon: { productId: 37050, printOptionId: 5884 },
-  wild: { productId: 37051, printOptionId: 5885 },
-};
+// const hardcodedMappings: Record<
+//   string,
+//   { productId: number; printOptionId: number }
+// > = {
+//   america: { productId: 37042, printOptionId: 5872 },
+//   stars: { productId: 37054, printOptionId: 5878 },
+//   fox: { productId: 37052, printOptionId: 5879 },
+//   egrets: { productId: 37056, printOptionId: 5880 },
+//   morning: { productId: 37048, printOptionId: 5881 },
+//   light: { productId: 37047, printOptionId: 5882 },
+//   colorado: { productId: 37053, printOptionId: 5883 },
+//   moon: { productId: 37050, printOptionId: 5884 },
+//   wild: { productId: 37051, printOptionId: 5885 },
+// };
 
 export async function POST(request: Request) {
   try {
@@ -95,51 +95,86 @@ export async function POST(request: Request) {
     // Build the OrderItems array:
     // - If the item's slugtitle exists in hardcodedMappings, use those values.
     // - Otherwise, fetch the product details from Firestore.
+    // const orderItems = await Promise.all(
+    //   formData.cartValues.map(async (item) => {
+    //     if (hardcodedMappings[item.slugtitle]) {
+    //       const mapping = hardcodedMappings[item.slugtitle];
+    //       return {
+    //         Id: 0,
+    //         ProductId: mapping.productId,
+    //         PrintOptionId: mapping.printOptionId,
+    //         Quantity: item.quantity,
+    //         ExternalReference: externalReference,
+    //         ExternalSku: item.slugtitle,
+    //         Licence: item.licence || "",
+    //       };
+    //     } else {
+    //       // Fetch product details from Firestore for new products
+    //       const productSnapshot = await db
+    //         .collection("products")
+    //         .where("slugtitle", "==", item.slugtitle)
+    //         .limit(1)
+    //         .get();
+    //       let productId: number | null = null;
+    //       let printOptionId: number | null = null;
+    //       let licenseNumber: string = "";
+    //       if (!productSnapshot.empty) {
+    //         const productData = productSnapshot.docs[0].data();
+    //         // Expect licenseNumber in Firestore to be in format "37042-5872"
+    //         licenseNumber = productData.licenseNumber || "";
+    //         if (licenseNumber) {
+    //           const parts = licenseNumber.split("-");
+    //           if (parts.length === 2) {
+    //             productId = parseInt(parts[0], 10);
+    //             printOptionId = parseInt(parts[1], 10);
+    //           }
+    //         }
+    //       }
+    //       return {
+    //         Id: 0,
+    //         ProductId: productId,
+    //         PrintOptionId: printOptionId,
+    //         Quantity: item.quantity,
+    //         ExternalReference: externalReference,
+    //         ExternalSku: item.slugtitle,
+    //         Licence: licenseNumber,
+    //       };
+    //     }
+    //   })
+    // );
+
     const orderItems = await Promise.all(
       formData.cartValues.map(async (item) => {
-        if (hardcodedMappings[item.slugtitle]) {
-          const mapping = hardcodedMappings[item.slugtitle];
-          return {
-            Id: 0,
-            ProductId: mapping.productId,
-            PrintOptionId: mapping.printOptionId,
-            Quantity: item.quantity,
-            ExternalReference: externalReference,
-            ExternalSku: item.slugtitle,
-            Licence: item.licence || "",
-          };
-        } else {
-          // Fetch product details from Firestore for new products
-          const productSnapshot = await db
-            .collection("products")
-            .where("slugtitle", "==", item.slugtitle)
-            .limit(1)
-            .get();
-          let productId: number | null = null;
-          let printOptionId: number | null = null;
-          let licenseNumber: string = "";
-          if (!productSnapshot.empty) {
-            const productData = productSnapshot.docs[0].data();
-            // Expect licenseNumber in Firestore to be in format "37042-5872"
-            licenseNumber = productData.licenseNumber || "";
-            if (licenseNumber) {
-              const parts = licenseNumber.split("-");
-              if (parts.length === 2) {
-                productId = parseInt(parts[0], 10);
-                printOptionId = parseInt(parts[1], 10);
-              }
+        // Always fetch product details from Firestore
+        const productSnapshot = await db
+          .collection("products")
+          .where("slugtitle", "==", item.slugtitle)
+          .limit(1)
+          .get();
+        let productId: number | null = null;
+        let printOptionId: number | null = null;
+        let licenseNumber: string = "";
+        if (!productSnapshot.empty) {
+          const productData = productSnapshot.docs[0].data();
+          // Expect licenseNumber in Firestore to be in format "37042-5872"
+          licenseNumber = productData.licenseNumber || "";
+          if (licenseNumber) {
+            const parts = licenseNumber.split("-");
+            if (parts.length === 2) {
+              productId = parseInt(parts[0], 10);
+              printOptionId = parseInt(parts[1], 10);
             }
           }
-          return {
-            Id: 0,
-            ProductId: productId,
-            PrintOptionId: printOptionId,
-            Quantity: item.quantity,
-            ExternalReference: externalReference,
-            ExternalSku: item.slugtitle,
-            Licence: licenseNumber,
-          };
         }
+        return {
+          Id: 0,
+          ProductId: productId,
+          PrintOptionId: printOptionId,
+          Quantity: item.quantity,
+          ExternalReference: externalReference,
+          ExternalSku: item.slugtitle,
+          Licence: licenseNumber,
+        };
       })
     );
 
@@ -156,14 +191,30 @@ export async function POST(request: Request) {
     };
 
     // Send embryonic order payload to CreativeHub
+
+    //Testing Account
+    // const embryonicResponse = await fetch(
+    //   "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //       Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+    //     },
+    //     body: JSON.stringify(embryonicPayload),
+    //   }
+    // );
+
+    //Production Account
     const embryonicResponse = await fetch(
-      "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+      "https://api.creativehub.io/api/v1/orders/embryonic",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
         },
         body: JSON.stringify(embryonicPayload),
       }
