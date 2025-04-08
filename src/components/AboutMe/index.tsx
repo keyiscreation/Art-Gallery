@@ -20,6 +20,7 @@ type AboutDataType = {
   socialLinks: Record<string, string>;
   images: Record<string, string>;
 };
+
 const AboutMe = () => {
   const [aboutData, setAboutData] = useState<AboutDataType | null>(null);
   useEffect(() => {

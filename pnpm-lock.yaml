@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@paypal/react-paypal-js':
+        specifier: ^8.8.2
+        version: 8.8.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@stripe/react-stripe-js':
         specifier: ^3.1.1
         version: 3.1.1(@stripe/stripe-js@5.6.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -622,6 +625,18 @@ packages:
   '@opentelemetry/api@1.9.0':
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
     engines: {node: '>=8.0.0'}
+
+  '@paypal/paypal-js@8.2.0':
+    resolution: {integrity: sha512-hLg5wNORW3WiyMiRNJOm6cN2IqjPlClpxd971bEdm0LNpbbejQZYtesb0/0arTnySSbGcxg7MxjkZ/N5Z5qBNQ==}
+
+  '@paypal/react-paypal-js@8.8.2':
+    resolution: {integrity: sha512-ffSOb6o2pgdbZVpUgpGuvRApkUfo9D+9KKjZ44if79yjhiYCVXOu2XOCR1+aC1RfuUzwEDV4S3+OA1x0OSeCVw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+      react-dom: ^16.8.0 || ^17 || ^18 || ^19
+
+  '@paypal/sdk-constants@1.0.153':
+    resolution: {integrity: sha512-wrPXK9ckwYBOOLyHfsGGtYjf9vOQgPSOh08DEeGRr/KBamQgvHYEG2soSMPlJuLfker32n1x5wvnWCcYP+ea9w==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -1542,6 +1557,9 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
+  hi-base32@0.5.1:
+    resolution: {integrity: sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==}
+
   html-entities@2.5.3:
     resolution: {integrity: sha512-D3AfvN7SjhTgBSA8L1BN4FpPzuEd06uy4lHwSoRWr0lndi9BKaNzPLKGOWZ2ocSGguozr08TTb2jhCLHaemruw==}
 
@@ -2128,6 +2146,9 @@ packages:
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
+
+  promise-polyfill@8.3.0:
+    resolution: {integrity: sha512-H5oELycFml5yto/atYqmjyigJoAo3+OXwolYiH7OfQuYlAqhxNvTfiNMbV9hsC6Yp83yE5r2KTVmtrG6R9i6Pg==}
 
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
@@ -3244,6 +3265,21 @@ snapshots:
   '@opentelemetry/api@1.9.0':
     optional: true
 
+  '@paypal/paypal-js@8.2.0':
+    dependencies:
+      promise-polyfill: 8.3.0
+
+  '@paypal/react-paypal-js@8.8.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@paypal/paypal-js': 8.2.0
+      '@paypal/sdk-constants': 1.0.153
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@paypal/sdk-constants@1.0.153':
+    dependencies:
+      hi-base32: 0.5.1
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -3984,7 +4020,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0)(eslint@9.20.1(jiti@1.21.7)))(eslint@9.20.1(jiti@1.21.7)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0)(eslint@9.20.1(jiti@1.21.7)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -4006,7 +4042,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.20.1(jiti@1.21.7)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0(eslint-plugin-import@2.31.0)(eslint@9.20.1(jiti@1.21.7)))(eslint@9.20.1(jiti@1.21.7))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.24.0(eslint@9.20.1(jiti@1.21.7))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.8.0)(eslint@9.20.1(jiti@1.21.7))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -4462,6 +4498,8 @@ snapshots:
   hasown@2.0.2:
     dependencies:
       function-bind: 1.1.2
+
+  hi-base32@0.5.1: {}
 
   html-entities@2.5.3:
     optional: true
@@ -5052,6 +5090,8 @@ snapshots:
       source-map-js: 1.2.1
 
   prelude-ls@1.2.1: {}
+
+  promise-polyfill@8.3.0: {}
 
   prop-types@15.8.1:
     dependencies:

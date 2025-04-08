@@ -10,8 +10,7 @@ import useShoppingCart from "@/hooks/useShoppingCart";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const stripePromise = loadStripe("pk_test_cTSJAP6VIX6ChpugxrQuVYwg00B33lQZMq");
-
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 type CartItem = {
   title: string;
   price: number;
