@@ -193,32 +193,32 @@ export async function POST(request: Request) {
     // Send embryonic order payload to CreativeHub
 
     //Testing Account
-    // const embryonicResponse = await fetch(
-    //   "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //       Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
-    //     },
-    //     body: JSON.stringify(embryonicPayload),
-    //   }
-    // );
-
-    //Production Account
     const embryonicResponse = await fetch(
-      "https://api.creativehub.io/api/v1/orders/embryonic",
+      "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
+          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
         },
         body: JSON.stringify(embryonicPayload),
       }
     );
+
+    //Production Account
+    // const embryonicResponse = await fetch(
+    //   "https://api.creativehub.io/api/v1/orders/embryonic",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //       Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
+    //     },
+    //     body: JSON.stringify(embryonicPayload),
+    //   }
+    // );
 
     const embryonicResponseText = await embryonicResponse.text();
     let embryonicData;

@@ -3,7 +3,7 @@ import CreditCardInput from "./CreditCardInput";
 import useStripePayment from "./useStripePayment";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
-import useShoppingCart from "@/hooks/useShoppingCart"; // Import useShoppingCart to access cartProducts
+import useShoppingCart from "@/hooks/useShoppingCart";
 import axios from "axios";
 
 interface FormData {
@@ -34,7 +34,24 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
   const [loading, setLoading] = useState(false);
   const { onStripeSubmit } = useStripePayment();
   const [checked, setChecked] = useState(false);
+  // const [totalCharge, settotalCharge] = useState<number>(0);
+  const [finalAmount, setfinalAmount] = useState<number>(0);
+  const { cartProductsTotalPrice } = useShoppingCart();
   const { cartProducts, getItemQuantity } = useShoppingCart(); // Get cartProducts and getItemQuantity
+
+  // Function to fetch the GBP to USD exchange rate
+  // const getExchangeRate = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://v6.exchangerate-api.com/v6/YOUR_API_KEY/latest/GBP`
+  //     ); // Replace 'YOUR_API_KEY' with your actual API key
+  //     const exchangeRate = response.data.conversion_rates.USD;
+  //     return exchangeRate;
+  //   } catch (error) {
+  //     console.error("Error fetching exchange rate", error);
+  //     return 0; // Default fallback rate if the API call fails
+  //   }
+  // };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -87,7 +104,7 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
         externalReference,
         shippingCharge: 0, // Placeholder, since API recalculates it
         productCharge: 0, // Placeholder, since API recalculates it
-        salesTax: 0, // Placeholder
+        salesTax: 0, // Placehol
       });
 
       if (!stepTwoRes.data.success) {
@@ -97,13 +114,15 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       // ✅ Extract correct total charge from /api/fetching-cost response
       const { TotalCharge } = stepTwoRes.data.data;
 
-      // console.log("TotalCharge from fetching-cost API:", TotalCharge);
+      // const exchangeRate = await getExchangeRate();
+      // const totalChargeInUSD = TotalCharge * exchangeRate;
+      setfinalAmount(TotalCharge + cartProductsTotalPrice);
+      // console.log(finalAmount);
+      // console.log(TotalCharge);
 
       // Show popup with the correct TotalCharge
       const userConfirmed = window.confirm(
-        `You will be charged £${TotalCharge.toFixed(
-          2
-        )} for printing and shipping. Do you agree?`
+        `You will be charged £${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
       );
 
       if (!userConfirmed) {
@@ -113,7 +132,7 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       }
 
       // STEP 3: Process Stripe Payment after order steps
-      const paymentRes = await onStripeSubmit();
+      const paymentRes = await onStripeSubmit(finalAmount);
 
       if (paymentRes?.success) {
         // STEP 4: Send confirmation email after payment is successful

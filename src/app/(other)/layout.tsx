@@ -1,6 +1,7 @@
 // app/(other)/layout.tsx
 import Navbar from "@/components/Navbar/NavbarStore";
 import Footer from "@/components/Footer/FooterStore";
+import PayPalProvider from "@/providers/PaypalProvider";
 import localFont from "next/font/local";
 import "./stripe.css";
 
@@ -48,11 +49,13 @@ export default function OtherLayout({
 }) {
   return (
     <>
-      <Navbar />
-      <div className={`${futurapt.variable} ${futura.variable}`}>
-        {children}
-      </div>
-      <Footer />
+      <PayPalProvider>
+        <Navbar />
+        <div className={`${futurapt.variable} ${futura.variable}`}>
+          {children}
+        </div>
+        <Footer />
+      </PayPalProvider>
     </>
   );
 }

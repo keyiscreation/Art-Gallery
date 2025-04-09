@@ -9,6 +9,7 @@ import Button from "../ui/Button";
 import useShoppingCart from "@/hooks/useShoppingCart";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import PayPalButtons from "../Paypal/PaypalButton";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 type CartItem = {
@@ -106,6 +107,11 @@ const Checkout = () => {
 
       // ✅ Extract correct total charge from /api/fetching-cost response
       const { TotalCharge } = stepTwoRes.data.data;
+
+      // const totalValue = TotalCharge + cartProductsTotalPrice;
+
+      // console.log("total value sums", totalValue);
+      // console.log("okayyyy");
 
       // console.log("TotalCharge from fetching-cost API:", TotalCharge);
 
@@ -385,6 +391,7 @@ const Checkout = () => {
             </div>
           </div>
         </div>
+        <PayPalButtons />
       </div>
     </div>
   );

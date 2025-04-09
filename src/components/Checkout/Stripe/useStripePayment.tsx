@@ -6,16 +6,16 @@ import {
 import axios from "axios";
 //   import useToast from "@/hooks/useToast";
 
-import useShoppingCart from "@/hooks/useShoppingCart";
+// import useShoppingCart from "@/hooks/useShoppingCart";
 
 const useStripePayment = () => {
   const stripe = useStripe();
   const elements = useElements();
   // const toast = useToast();
 
-  const { cartProductsTotalPrice } = useShoppingCart();
+  // const { cartProductsTotalPrice } = useShoppingCart();
 
-  const onStripeSubmit = async () => {
+  const onStripeSubmit = async (finalAmount: number) => {
     if (!stripe || !elements) {
       //! Stripe.js has not yet loaded. // Make sure to disable form submission until Stripe.js has loaded.
       // console.log("Stripe has not yet loaded");
@@ -35,17 +35,22 @@ const useStripePayment = () => {
     //! getting paymentMethod ID
     const paymentMethodID = createPaymentMethodResult?.paymentMethod?.id;
 
-    const paymentRes = await createPayment(paymentMethodID);
+    const paymentRes = await createPayment(paymentMethodID, finalAmount);
 
     return paymentRes;
   };
 
-  const createPayment = async (paymentMethodID: string) => {
+  const createPayment = async (
+    paymentMethodID: string,
+    finalAmount: number
+  ) => {
     try {
       const { metadata } = getMetaDataAndBillingDetails();
 
+      // console.log(`Amount to be deducted from user card: ${finalAmount}`);
+
       const res = await axios.post("/api/stripe", {
-        amount: cartProductsTotalPrice,
+        amount: finalAmount,
         metadata,
       });
 
