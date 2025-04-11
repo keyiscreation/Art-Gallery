@@ -156,8 +156,16 @@ export async function POST(request: Request) {
         let licenseNumber: string = "";
         if (!productSnapshot.empty) {
           const productData = productSnapshot.docs[0].data();
-          // Expect licenseNumber in Firestore to be in format "37042-5872"
-          licenseNumber = productData.licenseNumber || "";
+          // Check if licenseNumber exists in sizes object or as top-level
+
+          if (productData.sizes && typeof productData.sizes === "object") {
+            const sizeData = productData.sizes[item.size];
+            if (sizeData && sizeData.licenseNumber) {
+              licenseNumber = sizeData.licenseNumber;
+            }
+          } else if (productData.licenseNumber) {
+            licenseNumber = productData.licenseNumber;
+          }
           if (licenseNumber) {
             const parts = licenseNumber.split("-");
             if (parts.length === 2) {
@@ -165,6 +173,15 @@ export async function POST(request: Request) {
               printOptionId = parseInt(parts[1], 10);
             }
           }
+
+          // licenseNumber = productData.licenseNumber || "";
+          // if (licenseNumber) {
+          //   const parts = licenseNumber.split("-");
+          //   if (parts.length === 2) {
+          //     productId = parseInt(parts[0], 10);
+          //     printOptionId = parseInt(parts[1], 10);
+          //   }
+          // }
         }
         return {
           Id: 0,

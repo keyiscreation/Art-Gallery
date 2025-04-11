@@ -28,7 +28,7 @@ const useShoppingCart = () => {
     [cartItems]
   );
 
-  const getItemQuantity = (id: number | string) => {
+  const getItemQuantity = (id: number | string, size?: string) => {
     return cartItems.find((item: CartItem) => item.id === id)?.quantity || 0;
   };
 
@@ -51,7 +51,7 @@ const useShoppingCart = () => {
     });
   };
 
-  const decreaseCartQuantity = (id: number | string) => {
+  const decreaseCartQuantity = (id: number | string, size?: string) => {
     setCartItems((currItems: CartItem[]) => {
       if (currItems.find((item) => item.id === id)?.quantity === 1) {
         return currItems.filter((item: CartItem) => item.id !== id);
@@ -67,7 +67,7 @@ const useShoppingCart = () => {
     });
   };
 
-  const removeFromCart = (id: number | string) => {
+  const removeFromCart = (id: number | string, size?: string) => {
     setCartItems((currItems: CartItem[]) => {
       return currItems.filter((item: CartItem) => item.id !== id);
     });

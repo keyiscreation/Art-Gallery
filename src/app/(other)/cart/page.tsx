@@ -49,8 +49,9 @@ export default function CartPage() {
           // Determine the image to show.
           const imageUrl =
             product.size &&
-            product.sizes &&
-            (product.sizes as Record<string, { image: string }>)[product.size]
+            typeof product.sizes === "object" &&
+            product.sizes !== null &&
+            product.size in product.sizes
               ? (product.sizes as Record<string, { image: string }>)[
                   product.size
                 ].image
