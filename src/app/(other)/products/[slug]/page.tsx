@@ -9,18 +9,23 @@ interface ProductDescriptionProps {
   params: Promise<{ slug: string }>;
 }
 
+interface SizeDetail {
+  image: string;
+  hoverImage: string;
+  licenseNumber: string;
+}
+
 interface FirestoreProduct {
   id: string;
   title: string;
   slugtitle: string;
   price: number;
   image: string;
-  sizes: string[];
+  sizes: Record<string, SizeDetail>;
 }
 
 const ProductDetailPage: NextPage<ProductDescriptionProps> = ({ params }) => {
   const { slug } = use(params);
-
   const [currentProduct, setCurrentProduct] = useState<FirestoreProduct | null>(
     null
   );
@@ -29,7 +34,6 @@ const ProductDetailPage: NextPage<ProductDescriptionProps> = ({ params }) => {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        // Create a Firestore query to find the product by slugtitle
         const q = query(
           collection(db, "products"),
           where("slugtitle", "==", slug)
@@ -37,21 +41,27 @@ const ProductDetailPage: NextPage<ProductDescriptionProps> = ({ params }) => {
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
-          // Assuming the slug is unique, take the first document found.
           const doc = querySnapshot.docs[0];
           const docData = doc.data();
 
-          // Transform Firestore data to match the Product component's props.
+          const sizes = docData.sizes || {};
+
+          // Extract image fallback from sizes if top-level image doesn't exist
+          const firstSizeKey = Object.keys(sizes)[0];
+          const fallbackImage =
+            sizes[firstSizeKey]?.image || "/placeholder.jpg";
+
           const productData: FirestoreProduct = {
-            id: doc.id, // Firestore document ID (string)
-            title: docData.name, // Rename "name" to "title"
+            id: doc.id,
+            title: docData.name,
             slugtitle: docData.slugtitle,
             price: docData.price,
-            image: docData.image,
-            sizes: docData.sizes,
+            image: docData.image || fallbackImage,
+            sizes: sizes,
           };
 
           setCurrentProduct(productData);
+          console.log("product data", productData);
         } else {
           setCurrentProduct(null);
         }

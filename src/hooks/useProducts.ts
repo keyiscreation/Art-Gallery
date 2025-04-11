@@ -3,14 +3,19 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
 
+export interface SizeDetail {
+  image: string;
+  hoverImage?: string;
+  licenseNumber: string;
+}
 
 export interface Product {
   id: string;
-  title: string; // UI expects title, so we map Firestore's "name" to "title"
+  title: string; // Mapped from Firestore's "name"
   slugtitle: string;
-  price: number; // Price is a number as stored in Firestore
+  price: number;
   image: string;
-  sizes: string[];
+  sizes?: Record<string, SizeDetail>;
   licenseNumber: string;
   imageHover?: string;
 }
@@ -26,11 +31,11 @@ const useProducts = (): Product[] => {
           const data = doc.data();
           return {
             id: doc.id,
-            title: data.name, // Map Firestore's "name" to "title"
+            title: data.name,
             slugtitle: data.slugtitle,
             price: data.price,
             image: data.image,
-            sizes: data.sizes,
+            sizes: data.sizes, // Ensure your document uses a map of sizes if applicable
             licenseNumber: data.licenseNumber,
             imageHover: data.imageHover,
           };

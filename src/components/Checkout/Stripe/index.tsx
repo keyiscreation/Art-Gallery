@@ -40,18 +40,19 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
   const { cartProducts, getItemQuantity } = useShoppingCart(); // Get cartProducts and getItemQuantity
 
   // Function to fetch the GBP to USD exchange rate
-  // const getExchangeRate = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `https://v6.exchangerate-api.com/v6/YOUR_API_KEY/latest/GBP`
-  //     ); // Replace 'YOUR_API_KEY' with your actual API key
-  //     const exchangeRate = response.data.conversion_rates.USD;
-  //     return exchangeRate;
-  //   } catch (error) {
-  //     console.error("Error fetching exchange rate", error);
-  //     return 0; // Default fallback rate if the API call fails
-  //   }
-  // };
+  const getExchangeRate = async () => {
+    try {
+      const response = await axios.get(
+        `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/USD`
+      );
+      const gbpRate = response.data.conversion_rates.GBP;
+      const usdPerGbp = 1 / gbpRate; // Correct: 1 GBP = ? USD
+      return usdPerGbp;
+    } catch (error) {
+      console.error("Error fetching exchange rate", error);
+      return 0;
+    }
+  };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -114,15 +115,19 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       // ✅ Extract correct total charge from /api/fetching-cost response
       const { TotalCharge } = stepTwoRes.data.data;
 
-      // const exchangeRate = await getExchangeRate();
-      // const totalChargeInUSD = TotalCharge * exchangeRate;
-      setfinalAmount(TotalCharge + cartProductsTotalPrice);
-      // console.log(finalAmount);
-      // console.log(TotalCharge);
+      const exchangeRate = await getExchangeRate();
+      const totalChargeInUSD = cartProductsTotalPrice * exchangeRate;
 
+      // console.log("Total Charge", TotalCharge);
+      // console.log("total Charge In USD", totalChargeInUSD);
+
+      const amountToCharge = TotalCharge + cartProductsTotalPrice;
+      // setfinalAmount(amountToCharge);
+      // console.log(finalAmount);
+      // console.log("amount To Charge", amountToCharge);
       // Show popup with the correct TotalCharge
       const userConfirmed = window.confirm(
-        `You will be charged £${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
+        `You will be charged $${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
       );
 
       if (!userConfirmed) {
@@ -132,7 +137,7 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       }
 
       // STEP 3: Process Stripe Payment after order steps
-      const paymentRes = await onStripeSubmit(finalAmount);
+      const paymentRes = await onStripeSubmit(amountToCharge);
 
       if (paymentRes?.success) {
         // STEP 4: Send confirmation email after payment is successful

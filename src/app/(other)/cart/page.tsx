@@ -1,10 +1,10 @@
 "use client";
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 import useShoppingCart from "@/hooks/useShoppingCart";
-import { Fragment } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CartPage() {
@@ -18,8 +18,8 @@ export default function CartPage() {
   } = useShoppingCart();
 
   const router = useRouter();
-  // console.log("totalprice", cartProductsTotalPrice);
 
+  // Navigate to product detail page.
   const handleNavigation = (slugtitle: string) => {
     router.push(`/products/${slugtitle}`);
   };
@@ -45,130 +45,155 @@ export default function CartPage() {
           </div>
         )}
 
-        {cartProducts.map((product) => (
-          <Fragment key={product.id}>
-            <div className="flex flex-wrap justify-between my-10">
-              <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
-                <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
-                  <Image
-                    className="w-[132px] h-[132px] object-cover cursor-pointer"
-                    src={product.image}
-                    onClick={() => handleNavigation(product.slugtitle)}
-                    alt="product"
-                    width={140}
-                    height={140}
-                    onContextMenu={(e) => e.preventDefault()}
-                    draggable="false"
-                  />
-                  <div className="mob:block hidden">
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-medium mob:max-w-[180px]">
-                      {product.title}
-                    </Text>
-                    <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
-                      Size: {product.size}
-                    </Text>
+        {cartProducts.map((product) => {
+          // Determine the image to show.
+          const imageUrl =
+            product.size &&
+            product.sizes &&
+            (product.sizes as Record<string, { image: string }>)[product.size]
+              ? (product.sizes as Record<string, { image: string }>)[
+                  product.size
+                ].image
+              : product.image;
 
-                    <div className="flex justify-between mt-10">
-                      <div className="ml-20 mob:ml-0">
-                        <Text className="text-[#000000] text-[16px] leading-[20px]">
-                          <span
-                            onClick={() => decreaseCartQuantity(product.id)}
-                            className="mr-2 cursor-pointer"
+          return (
+            <Fragment key={product.id + product.size}>
+              <div className="flex flex-wrap justify-between my-10">
+                <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
+                  <div className="flex gap-4 relative min-w-[30%] mob:min-w-full">
+                    <Image
+                      className="w-[132px] h-[132px] object-cover cursor-pointer"
+                      src={imageUrl}
+                      onClick={() => handleNavigation(product.slugtitle)}
+                      alt="product"
+                      width={140}
+                      height={140}
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable="false"
+                    />
+                    <div className="mob:block hidden">
+                      <Text className="text-[#000000] text-[16px] leading-[20px] font-medium mob:max-w-[180px]">
+                        {product.title}
+                      </Text>
+                      <Text className="text-[#000000] text-[16px] leading-[20px] font-light mt-2">
+                        Size: {product.size ? product.size : "Default"}
+                      </Text>
+
+                      <div className="flex justify-between mt-10">
+                        <div className="ml-20 mob:ml-0">
+                          <Text className="text-[#000000] text-[16px] leading-[20px]">
+                            <span
+                              onClick={() =>
+                                decreaseCartQuantity(product.id, product.size)
+                              }
+                              className="mr-2 cursor-pointer text-[24px] mb-1"
+                            >
+                              -
+                            </span>
+                            {getItemQuantity(product.id, product.size)}
+                            <span
+                              onClick={() =>
+                                increaseCartQuantity(product.id, product.size)
+                              }
+                              className="ml-2 cursor-pointer text-[24px]"
+                            >
+                              +
+                            </span>
+                          </Text>
+                        </div>
+                        <div className="gap-5 mob:block hidden">
+                          <Text className="text-[#000000] text-[16px] leading-[20px]">
+                            ${product.price}
+                          </Text>
+                          <Text
+                            onClick={() =>
+                              removeFromCart(product.id, product.size)
+                            }
+                            className="absolute top-0 right-0 text-[#000000] text-[24px] leading-[20px] font-medium cursor-pointer"
                           >
-                            -
-                          </span>
-                          {getItemQuantity(product.id)}
-                          <span
-                            onClick={() => increaseCartQuantity(product.id)}
-                            className="ml-2 cursor-pointer"
-                          >
-                            +
-                          </span>
-                        </Text>
-                      </div>
-                      <div className="gap-5 mob:block hidden">
-                        <Text className="text-[#000000] text-[16px] leading-[20px]">
-                          {product.price}
-                        </Text>
-                        <Text
-                          onClick={() => removeFromCart(product.id)}
-                          className="absolute top-0 right-0 text-[#000000] text-[24px] leading-[20px] font-medium cursor-pointer"
-                        >
-                          x
-                        </Text>
+                            x
+                          </Text>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  className="mob:hidden"
-                  onClick={() => handleNavigation(product.slugtitle)}
-                >
-                  <Text
+                  <div
+                    className="mob:hidden"
                     onClick={() => handleNavigation(product.slugtitle)}
-                    className="text-[#000000] text-[16px] leading-[20px] font-medium mob:max-w-[180px] cursor-pointer"
                   >
-                    {product.title}
+                    <Text
+                      onClick={() => handleNavigation(product.slugtitle)}
+                      className="text-[#000000] text-[16px] leading-[20px] font-medium mob:max-w-[180px] cursor-pointer"
+                    >
+                      {product.title}
+                    </Text>
+                    <Text
+                      onClick={() => handleNavigation(product.slugtitle)}
+                      className="text-[#000000] text-[16px] leading-[20px] font-light mt-2 cursor-pointer"
+                    >
+                      Size: {product.size ? product.size : "Default"}
+                    </Text>
+                  </div>
+                </div>
+
+                <div className="ml-20 mob:ml-0 mob:hidden min-w-[100px]">
+                  <Text className="text-[#000000] text-[16px] leading-[20px] flex items-center">
+                    <span
+                      onClick={() =>
+                        decreaseCartQuantity(product.id, product.size)
+                      }
+                      className="mr-3 cursor-pointer text-[24px] mb-1"
+                    >
+                      -
+                    </span>
+                    {getItemQuantity(product.id, product.size)}
+                    <span
+                      onClick={() =>
+                        increaseCartQuantity(product.id, product.size)
+                      }
+                      className="ml-3 cursor-pointer text-[22px]"
+                    >
+                      +
+                    </span>
+                  </Text>
+                </div>
+
+                <div className="flex gap-5 mob:hidden">
+                  <Text className="text-[#000000] text-[16px] leading-[20px]">
+                    $
+                    {(
+                      product.price * getItemQuantity(product.id, product.size)
+                    ).toFixed(2)}
                   </Text>
                   <Text
-                    onClick={() => handleNavigation(product.slugtitle)}
-                    className="text-[#000000] text-[16px] leading-[20px] font-light mt-2 cursor-pointer"
+                    onClick={() => removeFromCart(product.id, product.size)}
+                    className="cursor-pointer mt-[2px]"
                   >
-                    Size: {product.size}
+                    <svg
+                      width="16"
+                      height="15"
+                      viewBox="0 0 16 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.43848 0.792175L14.4037 13.7576"
+                        stroke="black"
+                        strokeWidth="2"
+                      />
+                      <path
+                        d="M14.4033 0.792297L1.4385 13.757"
+                        stroke="black"
+                        strokeWidth="2"
+                      />
+                    </svg>
                   </Text>
                 </div>
               </div>
-
-              <div className="ml-20 mob:ml-0 mob:hidden min-w-[100px]">
-                <Text className="text-[#000000] text-[16px] leading-[20px] flex items-center">
-                  <span
-                    onClick={() => decreaseCartQuantity(product.id)}
-                    className="mr-3 cursor-pointer text-[24px] mb-1"
-                  >
-                    -
-                  </span>
-                  {getItemQuantity(product.id)}
-                  <span
-                    onClick={() => increaseCartQuantity(product.id)}
-                    className="ml-3 cursor-pointer text-[22px]"
-                  >
-                    +
-                  </span>
-                </Text>
-              </div>
-
-              <div className="flex gap-5 mob:hidden">
-                <Text className="text-[#000000] text-[16px] leading-[20px]">
-                  ${(product.price * getItemQuantity(product.id)).toFixed(2)}
-                </Text>
-                <Text
-                  onClick={() => removeFromCart(product.id)}
-                  className="cursor-pointer mt-[2px]"
-                >
-                  <svg
-                    width="16"
-                    height="15"
-                    viewBox="0 0 16 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M1.43848 0.792175L14.4037 13.7576"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M14.4033 0.792297L1.4385 13.757"
-                      stroke="black"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </Text>
-              </div>
-            </div>
-            <hr className="border-[0.5px] border-black/50 w-full my-5" />
-          </Fragment>
-        ))}
+              <hr className="border-[0.5px] border-black/50 w-full my-5" />
+            </Fragment>
+          );
+        })}
 
         <div className="flex justify-end mt-5">
           <div className="flex w-full max-w-[363px] justify-between">

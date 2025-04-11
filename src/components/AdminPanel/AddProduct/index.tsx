@@ -6,15 +6,19 @@ import { collection, addDoc } from "firebase/firestore";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 
+interface SizeData {
+  image: File | null;
+  hoverImage: File | null;
+  licenseNumber: string;
+}
 
 interface Product {
   name: string;
   slugtitle: string;
   price: string;
-  image: File | null;
-  hoverImage: File | null;
-  sizes: string[];
-  licenseNumber: string;
+  sizes: {
+    [key: string]: SizeData;
+  };
 }
 
 const AddProduct: React.FC = () => {
@@ -22,121 +26,173 @@ const AddProduct: React.FC = () => {
     name: "",
     slugtitle: "",
     price: "",
-    image: null,
-    hoverImage: null,
-    sizes: [],
-    licenseNumber: "",
+    sizes: {
+      Normal: {
+        image: null,
+        hoverImage: null,
+        licenseNumber: "",
+      },
+    },
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [newSizeName, setNewSizeName] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file input changes for the main image
+  const handleSizeChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    sizeKey: string
+  ) => {
+    const { name, value } = e.target;
+    setProduct((prev) => ({
+      ...prev,
+      sizes: {
+        ...prev.sizes,
+        [sizeKey]: {
+          ...prev.sizes[sizeKey],
+          [name]: value,
+        },
+      },
+    }));
+  };
+
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
-    field: "image" | "hoverImage"
+    sizeKey: string,
+    type: "image" | "hoverImage"
   ) => {
     if (e.target.files && e.target.files[0]) {
-      setProduct((prev) => ({ ...prev, [field]: e.target.files![0] }));
+      const file = e.target.files[0];
+      setProduct((prev) => ({
+        ...prev,
+        sizes: {
+          ...prev.sizes,
+          [sizeKey]: {
+            ...prev.sizes[sizeKey],
+            [type]: file,
+          },
+        },
+      }));
     }
   };
 
-  // Upload image to Cloudinary
+  const handleAddSize = () => {
+    const trimmed = newSizeName.trim();
+    if (!trimmed) {
+      alert("Please enter a size name.");
+      return;
+    }
+    if (product.sizes[trimmed]) {
+      alert("Size already exists.");
+      return;
+    }
+
+    setProduct((prev) => ({
+      ...prev,
+      sizes: {
+        ...prev.sizes,
+        [trimmed]: {
+          image: null,
+          hoverImage: null,
+          licenseNumber: "",
+        },
+      },
+    }));
+    setNewSizeName("");
+  };
+
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "art-gallery"); // Replace with your Cloudinary upload preset
+    formData.append("upload_preset", "art-gallery"); // Your preset
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Replace with your Cloudinary cloud name
+        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Your cloud name
         formData
       );
-
-      return response.data.secure_url; // Get the uploaded image URL
-    } catch (error) {
-      console.error("Error uploading image:", error);
+      return response.data.secure_url;
+    } catch (err) {
+      console.error("Image upload error:", err);
       return null;
     }
   };
 
-  // Handle form submit
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (
-      !product.name ||
-      !product.slugtitle ||
-      !product.price ||
-      !product.image ||
-      !product.hoverImage // Ensure hover image is selected
-    ) {
-      alert("Please fill all required fields and upload both images.");
+    if (!product.name || !product.slugtitle || !product.price) {
+      alert("Please fill out product name, slug, and price.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Upload both images to Cloudinary and get the URLs
-      const imageURL = await uploadImageToCloudinary(product.image);
-      const hoverImageURL = await uploadImageToCloudinary(product.hoverImage);
+      const updatedSizes: any = {};
 
-      if (!imageURL || !hoverImageURL) {
-        alert("Image upload failed. Please try again.");
-        return;
+      for (const [size, data] of Object.entries(product.sizes)) {
+        if (!data.image || !data.hoverImage || !data.licenseNumber) {
+          alert(`Please complete all fields for size: ${size}`);
+          setLoading(false);
+          return;
+        }
+
+        const imageURL = await uploadImageToCloudinary(data.image);
+        const hoverImageURL = await uploadImageToCloudinary(data.hoverImage);
+
+        if (!imageURL || !hoverImageURL) {
+          alert(`Image upload failed for size: ${size}`);
+          setLoading(false);
+          return;
+        }
+
+        updatedSizes[size] = {
+          image: imageURL,
+          hoverImage: hoverImageURL,
+          licenseNumber: data.licenseNumber,
+        };
       }
 
-      // Save product data to Firestore
       await addDoc(collection(db, "products"), {
         name: product.name,
         slugtitle: product.slugtitle,
         price: parseFloat(product.price),
-        image: imageURL, // Store Cloudinary URL for the main image
-        hoverImage: hoverImageURL, // Store Cloudinary URL for the hover image
-        sizes: product.sizes,
-        licenseNumber: product.licenseNumber,
+        sizes: updatedSizes,
       });
 
-      alert("Product added successfully!");
-      // Reset form fields after successful submission
+      alert("Product added!");
       setProduct({
         name: "",
         slugtitle: "",
         price: "",
-        image: null,
-        hoverImage: null, // Reset hover image field
-        sizes: [],
-        licenseNumber: "",
+        sizes: {
+          Normal: {
+            image: null,
+            hoverImage: null,
+            licenseNumber: "",
+          },
+        },
       });
-    } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Error adding product!");
+    } catch (err) {
+      console.error("Product submit error:", err);
+      alert("Error adding product.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle size selection from dropdown
-  const handleSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedSize = e.target.value.split(", ");
-    setProduct((prev) => ({
-      ...prev,
-      sizes: selectedSize,
-    }));
-  };
-
   return (
-    <div className="w-full flex justify-center items-center h-full my-[100px] px-5">
+    <div className="w-full flex justify-center items-center my-[100px] px-5">
       <div className="p-8 rounded-[12px] w-full max-w-[1268px] shadow-md">
         <Text as="h1" className="text-black mb-4 text-center">
           Add Product
         </Text>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block font-futurapt mb-1">Name</label>
@@ -174,58 +230,73 @@ const AddProduct: React.FC = () => {
             />
           </div>
 
-          <div>
-            <label className="block font-futurapt mb-1">Sizes</label>
-            <select
-              name="sizes"
-              value={product.sizes.join(", ")}
-              onChange={handleSizeChange}
-              className="w-full p-2 border rounded-md font-futurapt bg-transparent"
-            >
-              <option value="Small">Small</option>
-              <option value="Small, Medium">Small, Medium</option>
-              <option value="Medium, Large">Medium, Large</option>
-              <option value="Small, Medium, Large">Small, Medium, Large</option>
-            </select>
-          </div>
+          <div className="pt-4 border-t mt-6">
+            <Text as="h2" className="text-lg font-bold mb-3">
+              Sizes
+            </Text>
 
-          <div>
-            <label className="block font-futurapt mb-1">License Number</label>
-            <input
-              type="text"
-              name="licenseNumber"
-              value={product.licenseNumber}
-              onChange={handleChange}
-              className="w-full p-2 border rounded-md font-futurapt"
-              placeholder="Enter License Number"
-            />
-          </div>
+            {Object.entries(product.sizes).map(([size, data], index) => (
+              <div key={size} className="mb-6 border p-4 rounded-md">
+                <h3 className="font-semibold text-md mb-2">{size} Size</h3>
 
-          <div>
-            <label className="block font-futurapt mb-1">Product Image</label>
-            <input
-              type="file"
-              name="image"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, "image")}
-              className="w-full p-2 border rounded-md font-futurapt"
-            />
-          </div>
+                <div className="mb-2">
+                  <label className="block mb-1 font-futurapt">
+                    License Number
+                  </label>
+                  <input
+                    type="text"
+                    name="licenseNumber"
+                    value={data.licenseNumber}
+                    onChange={(e) => handleSizeChange(e, size)}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
 
-          <div>
-            <label className="block font-futurapt mb-1">Hover Image</label>
-            <input
-              type="file"
-              name="hoverImage"
-              accept="image/*"
-              onChange={(e) => handleFileChange(e, "hoverImage")}
-              className="w-full p-2 border rounded-md font-futurapt"
-            />
+                <div className="mb-2">
+                  <label className="block mb-1 font-futurapt">Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(e, size, "image")}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+
+                <div>
+                  <label className="block mb-1 font-futurapt">
+                    Hover Image
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileChange(e, size, "hoverImage")}
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+              </div>
+            ))}
+
+            <div className="flex gap-4 items-center mt-4">
+              <input
+                type="text"
+                placeholder="Enter new size name"
+                value={newSizeName}
+                onChange={(e) => setNewSizeName(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+              <button
+                type="button"
+                onClick={handleAddSize}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md"
+              >
+                Add Size
+              </button>
+            </div>
           </div>
 
           <Button
             type="submit"
-            className="w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-[#000000]/90 text-white p-2 rounded-md"
+            className="w-full max-w-[300px] h-[50px] mx-auto bg-black hover:bg-black/80 text-white rounded-md"
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Product"}

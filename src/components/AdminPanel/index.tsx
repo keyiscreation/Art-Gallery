@@ -21,90 +21,88 @@ const AdminPanel = () => {
   const [aboutPage, setaboutPage] = useState(false);
   const [navbarData, setNavbarData] = useState(false);
   return (
-    <ProtectedRoute>
-      <div className="flex justify-center items-center flex-col">
-        <div className="flex w-full justify-between max-w-[1268px] mt-[100px]">
-          <Text as="h1" className="text-black">
-            Admin Panel
-          </Text>
-          <LogOutButton />
-        </div>
-        <div className="flex w-full justify-between max-w-[1268px] mt-[100px] bg-slate-500 rounded-[10px]">
-          <Text
-            className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
-            onClick={() => {
-              sethomePage(true);
-              setaddProduct(false);
-              setaboutPage(false);
-              setNavbarData(false);
-            }}
-          >
-            Home Page
-          </Text>
-          <Text
-            className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
-            onClick={() => {
-              sethomePage(false);
-              setaddProduct(false);
-              setaboutPage(true);
-              setNavbarData(false);
-            }}
-          >
-            About Page
-          </Text>
-          <Text
-            className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
-            onClick={() => {
-              sethomePage(false);
-              setaddProduct(true);
-              setaboutPage(false);
-              setNavbarData(false);
-            }}
-          >
-            Product Page
-          </Text>
-          <Text
-            className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
-            onClick={() => {
-              sethomePage(false);
-              setaddProduct(false);
-              setaboutPage(false);
-              setNavbarData(true);
-            }}
-          >
-            Navbar
-          </Text>
-        </div>
-
-        {addProduct && (
-          <>
-            <AddProduct />
-            <ProductList />
-          </>
-        )}
-
-        {aboutPage && (
-          <>
-            <UploadAboutData />
-            <AboutDataDisplay />
-          </>
-        )}
-
-        {homePage && (
-          <>
-            <UploadHomeData />
-            <HomePageEditor />
-          </>
-        )}
-
-        {navbarData && (
-          <>
-            <UploadNavbarData />
-            <NavbarDataManager />
-          </>
-        )}
+    <div className="flex justify-center items-center flex-col">
+      <div className="flex w-full justify-between max-w-[1268px] mt-[100px]">
+        <Text as="h1" className="text-black">
+          Admin Panel
+        </Text>
+        <LogOutButton />
       </div>
-    </ProtectedRoute>
+      <div className="flex w-full justify-between max-w-[1268px] mt-[100px] bg-slate-500 rounded-[10px]">
+        <Text
+          className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
+          onClick={() => {
+            sethomePage(true);
+            setaddProduct(false);
+            setaboutPage(false);
+            setNavbarData(false);
+          }}
+        >
+          Home Page
+        </Text>
+        <Text
+          className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
+          onClick={() => {
+            sethomePage(false);
+            setaddProduct(false);
+            setaboutPage(true);
+            setNavbarData(false);
+          }}
+        >
+          About Page
+        </Text>
+        <Text
+          className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
+          onClick={() => {
+            sethomePage(false);
+            setaddProduct(true);
+            setaboutPage(false);
+            setNavbarData(false);
+          }}
+        >
+          Product Page
+        </Text>
+        <Text
+          className=" text-[20px] bg-black p-3 rounded-[10px] cursor-pointer"
+          onClick={() => {
+            sethomePage(false);
+            setaddProduct(false);
+            setaboutPage(false);
+            setNavbarData(true);
+          }}
+        >
+          Navbar
+        </Text>
+      </div>
+
+      {addProduct && (
+        <>
+          <AddProduct />
+          <ProductList />
+        </>
+      )}
+
+      {aboutPage && (
+        <>
+          <UploadAboutData />
+          <AboutDataDisplay />
+        </>
+      )}
+
+      {homePage && (
+        <>
+          <UploadHomeData />
+          <HomePageEditor />
+        </>
+      )}
+
+      {navbarData && (
+        <>
+          <UploadNavbarData />
+          <NavbarDataManager />
+        </>
+      )}
+    </div>
   );
 };
 

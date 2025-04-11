@@ -1,32 +1,36 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import Text from "../ui/Text";
 import Button from "../ui/Button";
 import RelatedProducts from "./RelatedProducts";
 import useShoppingCart from "@/hooks/useShoppingCart";
-import { useRouter } from "next/navigation";
 
 import logo from "@/public/watermark.png";
 
+interface SizeDetail {
+  image: string;
+  hoverImage: string;
+  licenseNumber: string;
+}
+
+interface ProductData {
+  id: string; // Updated to string as provided by Firestore
+  title: string;
+  slugtitle: string;
+  price: number;
+  image: string; // Fallback or default image URL from Firestore
+  sizes?: Record<string, SizeDetail>;
+}
+
 interface ProductProps {
-  product: {
-    id: string; // Updated to string as provided by Firestore
-    title: string;
-    slugtitle: string;
-    price: number;
-    image: string; // Image URL from Firestore
-    sizes: string[];
-  };
+  product: ProductData;
 }
 
 const Product: React.FC<ProductProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [showValidationMessage, setShowValidationMessage] = useState(false);
-
-  // console.log("Product title", product.title);
-
   const router = useRouter();
   const {
     getItemQuantity,
@@ -35,44 +39,51 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     setItemSize,
   } = useShoppingCart();
 
-  // console.log(selectedSize, "selectedSize");
+  // When the component loads (or product.sizes changes), set the default size.
+  useEffect(() => {
+    if (product.sizes && !selectedSize) {
+      const availableSizes = Object.keys(product.sizes);
+      const defaultSize = product.sizes["Normal"]
+        ? "Normal"
+        : availableSizes[0];
+      setSelectedSize(defaultSize);
+      setItemSize(product.id, defaultSize);
+    }
+  }, [product.sizes, product.id, setItemSize, selectedSize]);
+
+  // Determine if dropdown should be displayed.
+  // Show dropdown if there are multiple sizes or if the single available size is not "Normal".
+  const availableSizes = product.sizes ? Object.keys(product.sizes) : [];
+  const showDropdown =
+    product.sizes &&
+    (availableSizes.length > 1 || availableSizes[0] !== "Normal");
+
+  // Determine the current image URL based on the selected size.
+  let currentImage = product.image;
+  if (product.sizes) {
+    const defaultSize = product.sizes["Normal"] ? "Normal" : availableSizes[0];
+    currentImage =
+      product.sizes[selectedSize || defaultSize]?.image || product.image;
+  }
 
   const onAddToCart = () => {
     const quantity = getItemQuantity(product.id);
-
-    // Show validation message if size is not selected
-    if (!selectedSize) {
-      setShowValidationMessage(true);
-      return;
-    }
-
-    // If quantity is already greater than 0, navigate to the cart
+    // If the product is already in the cart, navigate directly to the cart.
     if (quantity > 0) {
       router.push(`/cart`);
       return;
     }
-
-    // Increase the cart quantity only if item is not already in the cart
+    // Increase the cart quantity and add the selected size
     increaseCartQuantity(product.id, selectedSize);
     router.push(`/cart`);
   };
 
   const onBuyNow = () => {
     const quantity = getItemQuantity(product.id);
-
-    // Show validation message if size is not selected
-    if (!selectedSize) {
-      setShowValidationMessage(true);
-      return;
-    }
-
-    // If quantity is already greater than 0, navigate to checkout
     if (quantity > 0) {
       router.push(`/checkout`);
       return;
     }
-
-    // Increase the cart quantity only if item is not already in the cart
     increaseCartQuantity(product.id, selectedSize);
     router.push(`/checkout`);
   };
@@ -89,10 +100,10 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           <div className="w-full max-w-[670px] relative">
             {/* Image container with watermark */}
             <div className="relative w-full h-full">
-              {/* Product Image */}
+              {/* Product Image updated based on size selection */}
               <Image
                 className="w-full max-w-[670px] object-cover"
-                src={product.image}
+                src={currentImage}
                 alt="Product image"
                 width={670}
                 height={523}
@@ -118,28 +129,32 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               {product.title}
             </Text>
 
-            <Text className="text-[16px] text-[#000000] font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
-              Size:
-            </Text>
-
-            <select
-              className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
-              value={selectedSize}
-              onChange={(e) => {
-                const newSize = e.target.value;
-                setSelectedSize(newSize);
-                setItemSize(product.id, newSize); // Update the shopping cart with the selected size
-              }}
-            >
-              <option value="" disabled>
-                Select Size
-              </option>
-              {product.sizes.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
+            {/* Render size dropdown only if more than a single 'Normal' size exists */}
+            {product.sizes && showDropdown && (
+              <>
+                <Text className="text-[16px] text-[#000000] font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
+                  Size:
+                </Text>
+                <select
+                  className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
+                  value={selectedSize}
+                  onChange={(e) => {
+                    const newSize = e.target.value;
+                    setSelectedSize(newSize);
+                    setItemSize(product.id, newSize); // Update shopping cart with selected size
+                  }}
+                >
+                  <option value="" disabled>
+                    Select Size
+                  </option>
+                  {availableSizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
 
             <Text className="text-[16px] text-[#000000] font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
               Quantity:
@@ -177,12 +192,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 Buy Now
               </Button>
             </div>
-
-            {showValidationMessage && (
-              <p className="text-gradient text-[16px] font-jakrata font-medium">
-                Please select size before adding to cart.
-              </p>
-            )}
           </div>
         </div>
 

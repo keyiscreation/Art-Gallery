@@ -86,6 +86,21 @@ const useShoppingCart = () => {
 
   const firestoreProducts = useProducts();
 
+  // const cartProducts: (Product & { size?: string })[] = useMemo(() => {
+  //   return cartItems
+  //     .map((item: CartItem) => {
+  //       const foundProduct = firestoreProducts.find(
+  //         (product) => product.id === item.id
+  //       );
+  //       if (foundProduct) {
+  //         return { ...foundProduct, size: item.size };
+  //       }
+  //       return null;
+  //     })
+  //     .filter(Boolean); // Remove null values
+  // }, [cartItems, firestoreProducts]);
+
+  // Generate a list of cart products (each product may include a chosen size)
   const cartProducts: (Product & { size?: string })[] = useMemo(() => {
     return cartItems
       .map((item: CartItem) => {
@@ -97,7 +112,7 @@ const useShoppingCart = () => {
         }
         return null;
       })
-      .filter(Boolean); // Remove null values
+      .filter(Boolean) as (Product & { size?: string })[];
   }, [cartItems, firestoreProducts]);
 
   const cartProductsTotalPrice = useMemo(() => {

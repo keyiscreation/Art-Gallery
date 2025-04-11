@@ -1,14 +1,13 @@
-// app/cancel-url/page.tsx
+import React from "react";
 import Link from "next/link";
 // "use client";
 
 const PayPalCancel = () => {
   return (
     <div>
-      <h2>Your payment was canceled</h2>
+      <h2>Your payment is done successfully</h2>
       <p>
-        Your payment was not completed. You can go back to your cart or try
-        again.
+        Your payment was completed. You can go back to your cart and order more
       </p>
       <Link href="/cart">
         <button>Go to Cart</button>

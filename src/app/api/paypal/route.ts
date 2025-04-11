@@ -6,7 +6,7 @@ const PAYPAL_CLIENT_SECRET =
   "EJ-HcMKYsWJKKwuVHRW0v1GTLlvo0u_LfLqWFC6mlw5OMYVpeHNaKZZqQ0s4knbal8fZ1eRHLt-FANUj";
 
 // Function to create a new PayPal order
-async function createPayPalOrder() {
+async function createPayPalOrder(orderId: string, payerId: string) {
   const authResponse = await fetch(
     "https://api-m.sandbox.paypal.com/v1/oauth2/token",
     {
@@ -43,13 +43,13 @@ async function createPayPalOrder() {
           {
             amount: {
               currency_code: "USD", // Set the currency code (USD in this case)
-              value: "1.00", // Set the order amount (you can modify this)
+              value: "5.00", // Set the order amount (you can modify this)
             },
           },
         ],
         application_context: {
-          return_url: "http://localhost:3000/paypal-return",
-          cancel_url: "http://localhost:3000/cancel-url",
+          return_url: `http://localhost:3000/paypal-return`, // Dynamic return URL with orderId and payerId
+          cancel_url: "http://localhost:3000/cancel-url", // Same as before
         },
       }),
     }
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     });
 
     // Step 1: Create a new PayPal order
-    const orderData = await createPayPalOrder();
+    const orderData = await createPayPalOrder(orderId, payerName); // Pass orderId and payerId
     console.log("Created New PayPal Order:", orderData);
 
     // Step 2: Return the approve URL to redirect the user for approval

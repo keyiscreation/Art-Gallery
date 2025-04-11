@@ -295,7 +295,7 @@ const Checkout = () => {
                       className="flex gap-3 cursor-pointer"
                       onClick={() => handleNavigation(product.slugtitle)}
                     >
-                      <Image
+                      {/* <Image
                         className="w-[66px] max-h-[66px] object-cover"
                         src={product.image}
                         alt="product"
@@ -303,7 +303,7 @@ const Checkout = () => {
                         height={140}
                         onContextMenu={(e) => e.preventDefault()}
                         draggable="false"
-                      />
+                      /> */}
                       <div className="max-w-[106px]">
                         <Text className="text-[14px] font-medium leading-[18px] text-black">
                           {product.title}
