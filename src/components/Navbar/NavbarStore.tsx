@@ -45,7 +45,7 @@ const Navbar = () => {
     0
   );
 
-  console.log(totalQuantity, "totalQuantity");
+  // console.log(totalQuantity, "totalQuantity");
 
   // Load activeTab from local storage on component mount
   useEffect(() => {

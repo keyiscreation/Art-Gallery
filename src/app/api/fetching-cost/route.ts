@@ -12,20 +12,19 @@ interface ConfirmOrderPayload {
 // Function to get exchange rate from GBP to USD
 const getExchangeRate = async (): Promise<number> => {
   try {
-    // Fetch the exchange rate for USD to GBP conversion
+    // Fetch the exchange rate for GBP to USD conversion (GBP to USD, not USD to GBP)
     const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/USD`
+      `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/GBP`
     );
     const data = await response.json();
-    const gbpRate = data.conversion_rates.GBP;
+    const usdRate = data.conversion_rates.USD;
 
-    if (!gbpRate) {
+    if (!usdRate) {
       throw new Error("Failed to fetch exchange rate");
     }
 
-    // Convert GBP to USD by dividing by the exchange rate (1 GBP = ? USD)
-    const usdPerGbp = 1 / gbpRate;
-    return usdPerGbp;
+    // The exchange rate is already from GBP to USD, so no need to invert it
+    return usdRate;
   } catch (error) {
     console.error("Error fetching exchange rate:", error);
     throw new Error("Unable to fetch exchange rate");
@@ -116,9 +115,9 @@ export async function POST(request: Request) {
     // Convert the total charge from GBP to USD
     const totalChargeInUSD = totalCharge * exchangeRate;
 
-    const fixedamount = totalChargeInUSD.toFixed();
+    const totalChargeInUSDRounded = Math.round(totalChargeInUSD);
 
-    console.log("Total Charge in USD:", fixedamount); // Log for debugging
+    console.log("Total Charge in USD cents:", totalChargeInUSDRounded);
 
     // Send the response back with the correct values to the client
     return NextResponse.json(
@@ -127,7 +126,7 @@ export async function POST(request: Request) {
         data: {
           DeliveryChargeExcludingSalesTax: deliveryChargeExcludingSalesTax,
           PrintCostExcludingSalesTax: printCostExcludingSalesTax,
-          TotalCharge: totalCharge, // Sum of both charges
+          TotalCharge: totalChargeInUSDRounded, // Sum of both charges
         },
       },
       { status: 200 }

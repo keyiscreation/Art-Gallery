@@ -49,8 +49,8 @@ async function createPayPalOrder(orderId: string, payerId: string) {
           },
         ],
         application_context: {
-          return_url: `http://localhost:3000/paypal-return`, // Dynamic return URL with orderId and payerId
-          cancel_url: "http://localhost:3000/cancel-url", // Same as before
+          return_url: `http://localhost:3000/paypal-return`,
+          cancel_url: "http://localhost:3000/cancel-url",
         },
       }),
     }
@@ -66,21 +66,21 @@ export async function POST(req: Request) {
 
     // Extract necessary info from the received PayPal order
     const orderId = paypalOrder.id; // Order ID from the frontend
-    console.log("order id", orderId);
-    const amount = paypalOrder.purchase_units[0].amount.value; // Amount from the order
-    const payerName = paypalOrder.payer.name.given_name; // Payer's name
-    const payerEmail = paypalOrder.payer.email_address; // Payer's email
+    // console.log("order id", orderId);
+    // const amount = paypalOrder.purchase_units[0].amount.value;
+    const payerName = paypalOrder.payer.name.given_name;
+    // const payerEmail = paypalOrder.payer.email_address;
 
-    console.log("✅ Received PayPal Order:", {
-      orderId,
-      payerName,
-      payerEmail,
-      amount,
-    });
+    // console.log("Received PayPal Order:", {
+    //   orderId,
+    //   payerName,
+    //   payerEmail,
+    //   amount,
+    // });
 
     // Step 1: Create a new PayPal order
     const orderData = await createPayPalOrder(orderId, payerName); // Pass orderId and payerId
-    console.log("Created New PayPal Order:", orderData);
+    // console.log("Created New PayPal Order:", orderData);
 
     // Step 2: Return the approve URL to redirect the user for approval
     const approveUrl = orderData.links.find(

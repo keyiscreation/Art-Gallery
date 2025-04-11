@@ -20,6 +20,7 @@ const AdminPanel = () => {
   const [homePage, sethomePage] = useState(true);
   const [aboutPage, setaboutPage] = useState(false);
   const [navbarData, setNavbarData] = useState(false);
+
   return (
     <div className="flex justify-center items-center flex-col">
       <div className="flex w-full justify-between max-w-[1268px] mt-[100px]">

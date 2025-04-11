@@ -61,7 +61,7 @@ const ProductDetailPage: NextPage<ProductDescriptionProps> = ({ params }) => {
           };
 
           setCurrentProduct(productData);
-          console.log("product data", productData);
+          // console.log("product data", productData);
         } else {
           setCurrentProduct(null);
         }
