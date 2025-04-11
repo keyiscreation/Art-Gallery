@@ -35,24 +35,24 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
   const { onStripeSubmit } = useStripePayment();
   const [checked, setChecked] = useState(false);
   // const [totalCharge, settotalCharge] = useState<number>(0);
-  const [finalAmount, setfinalAmount] = useState<number>(0);
+  // const [finalAmount, setfinalAmount] = useState<number>(0);
   const { cartProductsTotalPrice } = useShoppingCart();
   const { cartProducts, getItemQuantity } = useShoppingCart(); // Get cartProducts and getItemQuantity
 
   // Function to fetch the GBP to USD exchange rate
-  const getExchangeRate = async () => {
-    try {
-      const response = await axios.get(
-        `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/USD`
-      );
-      const gbpRate = response.data.conversion_rates.GBP;
-      const usdPerGbp = 1 / gbpRate; // Correct: 1 GBP = ? USD
-      return usdPerGbp;
-    } catch (error) {
-      console.error("Error fetching exchange rate", error);
-      return 0;
-    }
-  };
+  // const getExchangeRate = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/USD`
+  //     );
+  //     const gbpRate = response.data.conversion_rates.GBP;
+  //     const usdPerGbp = 1 / gbpRate; // Correct: 1 GBP = ? USD
+  //     return usdPerGbp;
+  //   } catch (error) {
+  //     console.error("Error fetching exchange rate", error);
+  //     return 0;
+  //   }
+  // };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -115,8 +115,8 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       // ✅ Extract correct total charge from /api/fetching-cost response
       const { TotalCharge } = stepTwoRes.data.data;
 
-      const exchangeRate = await getExchangeRate();
-      const totalChargeInUSD = cartProductsTotalPrice * exchangeRate;
+      // const exchangeRate = await getExchangeRate();
+      // const totalChargeInUSD = cartProductsTotalPrice * exchangeRate;
 
       // console.log("Total Charge", TotalCharge);
       // console.log("total Charge In USD", totalChargeInUSD);
@@ -127,7 +127,7 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       // console.log("amount To Charge", amountToCharge);
       // Show popup with the correct TotalCharge
       const userConfirmed = window.confirm(
-        `You will be charged $${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
+        `You will be charged £${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
       );
 
       if (!userConfirmed) {

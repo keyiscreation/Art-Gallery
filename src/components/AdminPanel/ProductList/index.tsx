@@ -115,7 +115,7 @@ const ProductList: React.FC = () => {
     setEditData({});
   };
 
-  const handleInputChange = (field: keyof Product, value: any) => {
+  const handleInputChange = (field: keyof Product, value: string | number) => {
     setEditData((prev) => ({ ...prev, [field]: value }));
   };
 

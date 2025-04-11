@@ -6,14 +6,14 @@ import {
 import axios from "axios";
 //   import useToast from "@/hooks/useToast";
 
-import useShoppingCart from "@/hooks/useShoppingCart";
+// import useShoppingCart from "@/hooks/useShoppingCart";
 
 const useStripePayment = () => {
   const stripe = useStripe();
   const elements = useElements();
   // const toast = useToast();
 
-  const { cartProductsTotalPrice } = useShoppingCart();
+  // const { cartProductsTotalPrice } = useShoppingCart();
 
   const onStripeSubmit = async (amountToCharge: number) => {
     if (!stripe || !elements) {

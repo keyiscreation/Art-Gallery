@@ -21,6 +21,14 @@ interface Product {
   };
 }
 
+interface UpdatedSizes {
+  [key: string]: {
+    image: string;
+    hoverImage: string;
+    licenseNumber: string;
+  };
+}
+
 const AddProduct: React.FC = () => {
   const [product, setProduct] = useState<Product>({
     name: "",
@@ -133,7 +141,7 @@ const AddProduct: React.FC = () => {
     setLoading(true);
 
     try {
-      const updatedSizes: any = {};
+      const updatedSizes: UpdatedSizes = {};
 
       for (const [size, data] of Object.entries(product.sizes)) {
         if (!data.image || !data.hoverImage || !data.licenseNumber) {
@@ -235,7 +243,7 @@ const AddProduct: React.FC = () => {
               Sizes
             </Text>
 
-            {Object.entries(product.sizes).map(([size, data], index) => (
+            {Object.entries(product.sizes).map(([size, data]) => (
               <div key={size} className="mb-6 border p-4 rounded-md">
                 <h3 className="font-semibold text-md mb-2">{size} Size</h3>
 

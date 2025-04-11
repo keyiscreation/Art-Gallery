@@ -7,6 +7,7 @@ const PAYPAL_CLIENT_SECRET =
 
 // Function to create a new PayPal order
 async function createPayPalOrder(orderId: string, payerId: string) {
+  console.log(orderId, payerId);
   const authResponse = await fetch(
     "https://api-m.sandbox.paypal.com/v1/oauth2/token",
     {
@@ -83,7 +84,7 @@ export async function POST(req: Request) {
 
     // Step 2: Return the approve URL to redirect the user for approval
     const approveUrl = orderData.links.find(
-      (link: any) => link.rel === "approve"
+      (link: { rel: string; href: string }) => link.rel === "approve"
     )?.href;
 
     if (approveUrl) {
@@ -95,11 +96,19 @@ export async function POST(req: Request) {
     } else {
       throw new Error("PayPal approval URL not found.");
     }
-  } catch (err: any) {
-    console.error("❌ Error handling PayPal payment:", err);
-    return NextResponse.json(
-      { message: err.message || "Internal Server Error" },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("❌ Error handling PayPal payment:", err);
+      return NextResponse.json(
+        { message: err.message || "Internal Server Error" },
+        { status: 500 }
+      );
+    } else {
+      console.error("❌ Unexpected error:", err);
+      return NextResponse.json(
+        { message: "Internal Server Error" },
+        { status: 500 }
+      );
+    }
   }
 }

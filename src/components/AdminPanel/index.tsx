@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import ProtectedRoute from "../Layouts/ProtectedRoute";
+// import ProtectedRoute from "../Layouts/ProtectedRoute";
 import Text from "../ui/Text";
 
 import AddProduct from "./AddProduct";

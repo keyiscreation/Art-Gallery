@@ -7,10 +7,68 @@ import {
 } from "@paypal/react-paypal-js";
 import useShoppingCart from "@/hooks/useShoppingCart"; // Import your hook
 
+// Define AmountBreakdown type
+interface AmountBreakdown {
+  item_total?: {
+    currency_code: string;
+    value: string;
+  };
+  shipping?: {
+    currency_code: string;
+    value: string;
+  };
+  handling?: {
+    currency_code: string;
+    value: string;
+  };
+  tax_total?: {
+    currency_code: string;
+    value: string;
+  };
+  shipping_discount?: {
+    currency_code: string;
+    value: string;
+  };
+}
+
+// Define PurchaseUnit type
+interface PurchaseUnit {
+  reference_id?: string;
+  amount?: {
+    currency_code: string;
+    value: string;
+    breakdown?: AmountBreakdown;
+  };
+  payments?: {
+    captures?: Array<{
+      id?: string;
+      status?: string;
+      amount?: {
+        currency_code: string;
+        value: string;
+      };
+    }>;
+  };
+}
+
+// Define PayPalOrderDetails type
+interface PayPalOrderDetails {
+  id?: string;
+  status?: string;
+  payer?: {
+    email_address?: string;
+    name?: {
+      given_name?: string;
+      surname?: string;
+    };
+  };
+  purchase_units?: PurchaseUnit[]; // Use the extended PurchaseUnit type
+}
+
 const PayPalButtons = () => {
   const { cartProductsTotalPrice } = useShoppingCart(); // Get the total cart price
 
-  const handlePaymentSuccess = async (details: any) => {
+  const handlePaymentSuccess = async (details: PayPalOrderDetails) => {
     try {
       // Send the payment details to the backend API for processing
       const res = await fetch("/api/paypal", {
