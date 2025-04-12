@@ -22,7 +22,7 @@ interface Product {
   name: string;
   slugtitle: string;
   price: number;
-  image: string; // fallback or default image
+  image: string;
   hoverImage?: string;
   sizes?: Record<string, SizeInfo>;
 }
@@ -73,10 +73,9 @@ const Products = () => {
           </div>
         ) : (
           products.map((product) => {
-            // Default images
+            // Determine which images to use.
             let imageUrl = product.image;
             let hoverUrl = product.hoverImage || product.image;
-            // If sizes exist, use the "Normal" size images if available.
             if (product.sizes && product.sizes["Normal"]) {
               const sizeData = product.sizes["Normal"];
               imageUrl = sizeData.image;
@@ -85,32 +84,43 @@ const Products = () => {
 
             return (
               <div key={product.id} className="w-full max-w-[401.99px]">
-                {/* Product image container with hover effect */}
-                <div className="relative w-full group">
+                {/* Image container with fixed dimensions, white background, and overflow hidden */}
+                <div
+                  className="relative group w-full bg-white overflow-hidden cursor-pointer"
+                  onClick={() => handleNavigation(product.slugtitle)}
+                >
+                  {/* Default image fades out on hover */}
                   <Image
-                    className="w-full cursor-pointer transition-opacity duration-1000 ease-in-out"
                     src={imageUrl}
                     alt={product.name}
-                    onClick={() => handleNavigation(product.slugtitle)}
                     width={402}
                     height={314}
                     onContextMenu={(e) => e.preventDefault()}
+                    className="transition-opacity duration-1000 ease-in-out group-hover:opacity-0 object-contain"
                   />
 
-                  {/* Watermark overlay */}
+                  {/* Hover image – centered and not forced to fill the container */}
+                  <Image
+                    src={hoverUrl}
+                    alt={product.name}
+                    width={402}
+                    height={314}
+                    onContextMenu={(e) => e.preventDefault()}
+                    className="transition-opacity duration-1000 ease-in-out opacity-0 group-hover:opacity-100 object-contain"
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      maxWidth: "100%",
+                      maxHeight: "100%",
+                    }}
+                  />
+
+                  {/* Watermark overlay remains fixed on top */}
                   <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-20">
                     <Image className="w-full" src={logo} alt="Watermark Logo" />
                   </div>
-
-                  <Image
-                    className="absolute inset-0 w-full h-full cursor-pointer transition-opacity duration-1000 ease-in-out opacity-0 group-hover:opacity-100"
-                    src={hoverUrl}
-                    alt={product.name}
-                    onClick={() => handleNavigation(product.slugtitle)}
-                    width={402}
-                    height={314}
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
                 </div>
 
                 {/* Product details */}

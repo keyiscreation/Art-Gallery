@@ -46,6 +46,7 @@ const uploadToCloudinary = async (file: File) => {
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [addingSize, setAddingSize] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [editProductId, setEditProductId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Product>>({});
@@ -176,6 +177,8 @@ const ProductList: React.FC = () => {
       return;
     }
 
+    setAddingSize(true);
+
     // Upload the new size image and hover image
     const imageURL = await uploadToCloudinary(newSizeImage);
     const hoverImageURL = await uploadToCloudinary(newHoverImage);
@@ -201,6 +204,8 @@ const ProductList: React.FC = () => {
       };
     });
 
+    setAddingSize(false);
+    alert("New Size Added Successfully");
     setNewSizeName("");
     setNewLicenseNumber("");
     setNewSizeImage(null);
@@ -421,9 +426,10 @@ const ProductList: React.FC = () => {
                     />
                     <button
                       onClick={handleAddSize}
+                      disabled={addingSize}
                       className="bg-green-600 text-white px-4 py-2 mt-3 rounded"
                     >
-                      Add Size
+                      {addingSize ? "Adding Size" : "Add Size"}
                     </button>
                   </div>
                 </div>
