@@ -10,6 +10,7 @@ import Text from "../ui/Text";
 import OrderDetails from "./OrderDetails";
 import PayPalButtons from "../Paypal/PaypalButton";
 
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 type CartItem = {
   title: string;
