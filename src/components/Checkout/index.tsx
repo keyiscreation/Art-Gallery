@@ -9,7 +9,8 @@ import StripeForm from "./Stripe";
 import Text from "../ui/Text";
 import OrderDetails from "./OrderDetails";
 import PayPalButtons from "../Paypal/PaypalButton";
-
+import Button from "../ui/Button";
+import axios from "axios";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 type CartItem = {
@@ -35,7 +36,12 @@ type OrderFormData = {
 };
 
 const Checkout = () => {
-  const { cartProducts, getItemQuantity } = useShoppingCart();
+  const { cartProducts, getItemQuantity, cartProductsTotalPrice } =
+    useShoppingCart();
+  const [loading, setLoading] = useState(false);
+  const [showPaymentMethods, setshowPaymentMethods] = useState(false);
+  const [amountToChargefromUser, setamountToChargefromUser] = useState(0);
+  const [embryonicOrderIdProp, setembryonicOrderIdProp] = useState(0);
 
   const [formData, setFormData] = useState<OrderFormData>({
     firstName: "",
@@ -60,6 +66,7 @@ const Checkout = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     // Prepare final order data with cart details
     const updatedFormData = { ...formData };
@@ -73,6 +80,87 @@ const Checkout = () => {
       size: product.size || "",
       licenseNumber: product.licenseNumber,
     }));
+
+    // api hiiting
+
+    try {
+      // Exclude additionalInfo from validation check
+      const { ...formDataWithoutAdditionalInfo } = formData;
+
+      const allFieldsFilled: boolean = Object.values(
+        formDataWithoutAdditionalInfo
+      ).every((value: string | number | undefined | object) =>
+        typeof value === "string"
+          ? value.trim() !== ""
+          : value !== null && value !== undefined
+      );
+
+      if (!allFieldsFilled) {
+        alert("Please fill all required fields.");
+        setLoading(false);
+        return;
+      }
+
+      // STEP 1: Sync order (this does not fetch cost)
+      const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
+      const { embryonicOrderId, deliveryOptionId, externalReference } =
+        stepOneRes.data;
+
+      const embryonicOrderIdConst = embryonicOrderId;
+
+      localStorage.setItem("embryonicOrderId", embryonicOrderIdConst);
+      setembryonicOrderIdProp(embryonicOrderIdConst);
+      // console.log("Step one response:", stepOneRes.data);
+
+      // STEP 2: Fetch the total cost from /api/fetching-cost
+      const stepTwoRes = await axios.post("/api/fetching-cost", {
+        embryonicOrderId,
+        deliveryOptionId,
+        externalReference,
+        shippingCharge: 0,
+        productCharge: 0,
+        salesTax: 0,
+      });
+
+      if (!stepTwoRes.data.success) {
+        throw new Error("Failed to fetch total cost");
+      }
+
+      // Extract correct total charge from /api/fetching-cost response
+      const { TotalCharge } = stepTwoRes.data.data;
+
+      // const amountToCharge = TotalCharge + cartProductsTotalPrice;
+      // console.log("amount To Charge", amountToCharge);
+
+      // Show popup with the correct TotalCharge
+      const userConfirmed = window.confirm(
+        `You will be charged $${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
+      );
+
+      if (!userConfirmed) {
+        alert("Order cancelled.");
+        try {
+          const cancelRes = await axios.delete("/api/cancel-order", {
+            data: { embryonicOrderId },
+          });
+          console.log("Order cancel response:", cancelRes.data);
+        } catch (error) {
+          console.error("Error canceling the order:", error);
+        }
+        setLoading(false);
+        return;
+      }
+
+      const amountToCharge = TotalCharge + cartProductsTotalPrice;
+      setamountToChargefromUser(amountToCharge);
+
+      setshowPaymentMethods(true);
+    } catch (error) {
+      console.error("Error processing order:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -204,15 +292,65 @@ const Checkout = () => {
                   />
                 </div>
               </div>
+              <Button
+                type="submit"
+                loading={loading}
+                className="w-full h-[60.19px] mt-5 mb-3 bg-[#000000] max-w-full text-white "
+              >
+                {loading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                    Submitting...
+                  </span>
+                ) : (
+                  " Place Order"
+                )}
+              </Button>
             </form>
-            <Elements stripe={stripePromise}>
+
+            {showPaymentMethods && (
+              <>
+                <Elements stripe={stripePromise}>
+                  <StripeForm
+                    formData={formData}
+                    embryonicOrderId={embryonicOrderIdProp}
+                    amountToCharge={amountToChargefromUser}
+                    handleSubmit={handleSubmit}
+                  />
+                </Elements>
+                <PayPalButtons
+                  formData={formData}
+                  embryonicOrderId={embryonicOrderIdProp}
+                  amountToCharge={amountToChargefromUser}
+                />
+              </>
+            )}
+            {/* <Elements stripe={stripePromise}>
               <StripeForm formData={formData} handleSubmit={handleSubmit} />
-            </Elements>
+            </Elements> */}
           </div>
-          {/* Order Details Section */}
           <OrderDetails />
+          {/* Order Details Section */}
         </div>
-        <PayPalButtons />
       </div>
     </div>
   );

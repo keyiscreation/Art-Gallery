@@ -28,13 +28,18 @@ interface FormData {
 interface StripeFormProps {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
   formData: FormData;
+  amountToCharge: number;
+  embryonicOrderId: number;
 }
 
-const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
+const Stripe: React.FC<StripeFormProps> = ({
+  formData,
+  amountToCharge,
+  embryonicOrderId,
+}) => {
   const [loading, setLoading] = useState(false);
   const { onStripeSubmit } = useStripePayment();
   const [checked, setChecked] = useState(false);
-  const { cartProductsTotalPrice } = useShoppingCart();
   const { cartProducts, getItemQuantity } = useShoppingCart();
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -75,45 +80,68 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
       }
 
       // STEP 1: Sync order (this does not fetch cost)
-      const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
-      const { embryonicOrderId, deliveryOptionId, externalReference } =
-        stepOneRes.data;
+      // const stepOneRes = await axios.post("/api/sync-order", updatedFormData);
+      // const { embryonicOrderId, deliveryOptionId, externalReference } =
+      //   stepOneRes.data;
 
       // console.log("Step one response:", stepOneRes.data);
 
       // STEP 2: Fetch the total cost from /api/fetching-cost
-      const stepTwoRes = await axios.post("/api/fetching-cost", {
-        embryonicOrderId,
-        deliveryOptionId,
-        externalReference,
-        shippingCharge: 0,
-        productCharge: 0,
-        salesTax: 0,
-      });
+      // const stepTwoRes = await axios.post("/api/fetching-cost", {
+      //   embryonicOrderId,
+      //   deliveryOptionId,
+      //   externalReference,
+      //   shippingCharge: 0,
+      //   productCharge: 0,
+      //   salesTax: 0,
+      // });
 
-      if (!stepTwoRes.data.success) {
-        throw new Error("Failed to fetch total cost");
-      }
+      // if (!stepTwoRes.data.success) {
+      //   throw new Error("Failed to fetch total cost");
+      // }
 
       // Extract correct total charge from /api/fetching-cost response
-      const { TotalCharge } = stepTwoRes.data.data;
+      // const { TotalCharge } = stepTwoRes.data.data;
 
-      const amountToCharge = TotalCharge + cartProductsTotalPrice;
+      // const amountToCharge = TotalCharge + cartProductsTotalPrice;
       // console.log("amount To Charge", amountToCharge);
 
       // Show popup with the correct TotalCharge
-      const userConfirmed = window.confirm(
-        `You will be charged $${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
-      );
+      // const userConfirmed = window.confirm(
+      //   `You will be charged $${TotalCharge.toFixed()} for printing and shipping. Do you agree?`
+      // );
 
-      if (!userConfirmed) {
-        alert("Order cancelled.");
-        setLoading(false);
-        return;
-      }
+      // if (!userConfirmed) {
+      //   alert("Order cancelled.");
+      //   setLoading(false);
+      //   return;
+      // }
 
       // STEP 3: Process Stripe Payment after order steps
       const paymentRes = await onStripeSubmit(amountToCharge);
+      if (!paymentRes?.success) {
+        console.log("payment failed");
+        try {
+          const cancelRes = await axios.delete("/api/cancel-order", {
+            data: { embryonicOrderId },
+          });
+          console.log("Order cancel response:", cancelRes.data);
+        } catch (error) {
+          console.error("Error canceling the order:", error);
+        }
+      }
+
+      // if (!paymentRes?.success) {
+      //   try {
+      //     // Ensure embryonicOrderId is passed correctly in the DELETE request
+      //     const cancelRes = await axios.delete("/api/cancel-order", {
+      //       data: { embryonicOrderId }, // Sending the ID in the body of the DELETE request
+      //     });
+      //     console.log("Order cancel response:", cancelRes.data);
+      //   } catch (cancelError) {
+      //     console.error("Error canceling the order:", cancelError);
+      //   }
+      // }
 
       if (paymentRes?.success) {
         // STEP 4: Send confirmation email after payment is successful
@@ -125,10 +153,12 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
         }
       } else {
         alert("Payment failed. Please try again.");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error processing order:", error);
       alert("An error occurred. Please try again.");
+      window.location.reload();
     } finally {
       setLoading(false);
     }
@@ -191,10 +221,10 @@ const Stripe: React.FC<StripeFormProps> = ({ formData }) => {
                   d="M4 12a8 8 0 018-8v8H4z"
                 ></path>
               </svg>
-              Submitting...
+              Paying...
             </span>
           ) : (
-            " Place Order"
+            "Pay Amount"
           )}
         </Button>
       </form>

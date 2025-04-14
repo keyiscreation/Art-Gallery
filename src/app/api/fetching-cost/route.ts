@@ -107,7 +107,7 @@ export async function POST(request: Request) {
     const totalCharge =
       deliveryChargeExcludingSalesTax + printCostExcludingSalesTax;
 
-    console.log("pound", totalCharge);
+    // console.log("pound", totalCharge);
 
     // Fetch the exchange rate for GBP to USD conversion
     const exchangeRate = await getExchangeRate();
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
 
     const totalChargeInUSDRounded = Math.round(totalChargeInUSD);
 
-    console.log("Total Charge in USD cents:", totalChargeInUSDRounded);
+    // console.log("Total Charge in USD cents:", totalChargeInUSDRounded);
 
     // Send the response back with the correct values to the client
     return NextResponse.json(

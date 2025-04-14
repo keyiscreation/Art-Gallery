@@ -1,11 +1,9 @@
-"use client";
-
 import React from "react";
 import {
   PayPalScriptProvider,
   PayPalButtons as PayPalButton,
 } from "@paypal/react-paypal-js";
-import useShoppingCart from "@/hooks/useShoppingCart"; // Import your hook
+import useShoppingCart from "@/hooks/useShoppingCart";
 
 // Define AmountBreakdown type
 interface AmountBreakdown {
@@ -62,22 +60,65 @@ interface PayPalOrderDetails {
       surname?: string;
     };
   };
-  purchase_units?: PurchaseUnit[]; // Use the extended PurchaseUnit type
+  purchase_units?: PurchaseUnit[];
 }
 
-const PayPalButtons = () => {
-  const { cartProductsTotalPrice } = useShoppingCart(); // Get the total cart price
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  streetAddress: string;
+  aptNumber?: number;
+  state: string;
+  zipCode: number;
+  cartValues?: {
+    title: string;
+    price: number;
+    quantity: number;
+    pathnode?: string;
+    slugtitle?: string;
+    qrLink?: string;
+    size?: string;
+    licenseNumber?: string;
+  }[];
+}
+
+interface PayPalProps {
+  amountToCharge: number;
+  formData: FormData;
+  embryonicOrderId: number;
+}
+
+const PayPalButtons: React.FC<PayPalProps> = ({
+  formData,
+  amountToCharge,
+  embryonicOrderId,
+}) => {
+  const { cartProducts, getItemQuantity } = useShoppingCart();
+  const updatedFormData = { ...formData };
+
+  const amountToChargeString = amountToCharge.toString();
+
+  updatedFormData.cartValues = cartProducts.map((product) => ({
+    title: product.title,
+    price: Number(product.price),
+    quantity: getItemQuantity(product.id),
+    pathnode: product.pathnode,
+    slugtitle: product.slugtitle,
+    qrLink: product.qrLink,
+    size: product.size || "",
+    licenseNumber: product.licenseNumber,
+  }));
 
   const handlePaymentSuccess = async (details: PayPalOrderDetails) => {
     try {
-      // Send the payment details to the backend API for processing
       const res = await fetch("/api/paypal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          paypalOrder: details, // Send the PayPal payment details to the backend
+          paypalOrder: details,
         }),
       });
 
@@ -85,13 +126,32 @@ const PayPalButtons = () => {
       if (data.message === "Redirect the user to PayPal for approval") {
         // Extract the approve URL and redirect the user to PayPal
         const approveUrl = data.approveUrl;
-        window.location.href = approveUrl; // Redirect the user to PayPal
+        window.location.href = approveUrl;
       } else {
         alert("Payment processing failed");
       }
     } catch (error) {
       console.error("Error processing payment", error);
       alert("An error occurred while processing the payment");
+    }
+  };
+
+  const handlePaymentFailure = async () => {
+    try {
+      // Cancel the order if the payment fails
+      const cancelRes = await fetch("/api/cancel-order", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embryonicOrderId,
+        }),
+      });
+      const cancelData = await cancelRes.json();
+      console.log("Order cancelled:", cancelData);
+    } catch (error) {
+      console.error("Error canceling the order:", error);
     }
   };
 
@@ -112,7 +172,7 @@ const PayPalButtons = () => {
                 {
                   amount: {
                     currency_code: "USD",
-                    value: cartProductsTotalPrice.toFixed(2),
+                    value: amountToChargeString,
                   },
                 },
               ],
@@ -123,6 +183,18 @@ const PayPalButtons = () => {
               const details = await actions.order.capture();
               handlePaymentSuccess(details); // Send details to backend for processing
             }
+          }}
+          onError={async () => {
+            console.log("Payment failed");
+            await handlePaymentFailure(); // Call the cancel order function if payment fails
+            alert("Payment failed. The order has been canceled.");
+            window.location.reload();
+          }}
+          onCancel={async () => {
+            console.log("Payment failed");
+            await handlePaymentFailure(); // Call the cancel order function if payment fails
+            alert("Payment failed. The order has been canceled.");
+            window.location.reload();
           }}
         />
       </div>
