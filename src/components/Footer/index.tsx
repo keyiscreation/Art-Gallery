@@ -10,7 +10,6 @@ import twiter from "@/public/icons/u_twitter.svg";
 import insta from "@/public/icons/u_instagram.svg";
 import fb from "@/public/icons/u_facebook-f.svg";
 
-
 const Footer = () => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
