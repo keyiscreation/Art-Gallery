@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode;
   className?: string;
   as?: ComponentAs;
-  onClick?: React.MouseEventHandler<HTMLHeadingElement>; 
+  onClick?: React.MouseEventHandler<HTMLHeadingElement>;
 }
 
 const Text = forwardRef<HTMLHeadingElement | HTMLParagraphElement, Props>(
@@ -20,8 +20,8 @@ const Text = forwardRef<HTMLHeadingElement | HTMLParagraphElement, Props>(
         <h1
           ref={ref}
           className={cn(
-            "font-futurapt text-[57px]  font-medium leading-[73.07px] text-white mob:text-[40px] mob:leading-[50px]",
-            className,
+            "font-newCourier text-[50px] font-bold leading-[63.07px] text-white mob:text-[40px] mob:leading-[50px]",
+            className
           )}
           onClick={onClick}
         >
@@ -35,8 +35,8 @@ const Text = forwardRef<HTMLHeadingElement | HTMLParagraphElement, Props>(
         <h2
           ref={ref}
           className={cn(
-            "font-futurapt text-[57px]  font-normal leading-[73.07px] text-[#FFFFFF] mob:text-[40px] mob:leading-[50px]",
-            className,
+            "font-newCourier text-[57px]  font-normal leading-[73.07px] text-[#FFFFFF] mob:text-[40px] mob:leading-[50px]",
+            className
           )}
           onClick={onClick}
         >
@@ -48,13 +48,16 @@ const Text = forwardRef<HTMLHeadingElement | HTMLParagraphElement, Props>(
     return (
       <p
         ref={ref}
-        className={cn("font-futurapt text-[14px] font-normal leading-[17.95px] text-[#FFFFFF]", className)}
+        className={cn(
+          "font-newCourier text-[20px] font-normal leading-[17.95px] text-[#FFFFFF]",
+          className
+        )}
         onClick={onClick}
       >
         {children}
       </p>
     );
-  },
+  }
 );
 
 Text.displayName = "Text";

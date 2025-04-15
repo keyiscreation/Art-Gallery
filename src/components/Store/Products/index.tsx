@@ -8,7 +8,7 @@ import { db } from "@/firebase";
 import Text from "@/components/ui/Text";
 import Spinner from "@/components/ui/Spinner";
 
-import logo from "@/public/watermark.png";
+import logo from "@/public/signatureblack.png";
 import SearchProduct from "../Serach";
 
 interface SizeInfo {
@@ -58,7 +58,10 @@ const Products = () => {
 
   return (
     <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
-      <Text as="h1" className="text-black text-center">
+      <Text
+        as="h1"
+        className="text-black text-center font-newCourier font-bold"
+      >
         STORE
       </Text>
 
@@ -99,40 +102,49 @@ const Products = () => {
                     className="transition-opacity duration-1000 ease-in-out group-hover:opacity-0 object-contain"
                   />
 
-                  {/* Hover image – centered and not forced to fill the container */}
-                  <Image
-                    src={hoverUrl}
-                    alt={product.name}
-                    width={402}
-                    height={314}
-                    onContextMenu={(e) => e.preventDefault()}
-                    className="transition-opacity duration-1000 ease-in-out opacity-0 group-hover:opacity-100 object-contain"
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      maxWidth: "100%",
-                      maxHeight: "100%",
-                    }}
-                  />
+                  {/* Hover image with watermark, both wrapped together */}
+                  <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 group-hover:opacity-100 flex justify-center items-center z-10">
+                    <div className="relative">
+                      <Image
+                        src={hoverUrl}
+                        alt={product.name}
+                        width={402}
+                        height={314}
+                        onContextMenu={(e) => e.preventDefault()}
+                        className="object-contain max-w-full max-h-full"
+                      />
+                      {/* Watermark attached to image itself */}
+                      <div className="absolute bottom-3 right-2 w-[90px] pointer-events-none">
+                        <Image
+                          className="w-full"
+                          src={logo}
+                          alt="Watermark Logo"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Watermark overlay remains fixed on top */}
-                  <div className="absolute inset-0 flex justify-center items-center pointer-events-none z-20">
-                    <Image className="w-full" src={logo} alt="Watermark Logo" />
-                  </div>
+                  {/* <div className="absolute inset-0 flex justify-center w-[100px] items-center pointer-events-none z-20">
+                    <Image
+                      className="w-full relative"
+                      src={logo}
+                      alt="Watermark Logo"
+                    />
+                  </div> */}
                 </div>
 
                 {/* Product details */}
-                <div className="flex justify-between items-start mt-6">
-                  <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium max-w-[169px] mob:text-[20px] mob:leading-[25.64px]">
+                <div className="flex justify-center items-start mt-6">
+                  {/* max-w-[169px] */}
+                  <Text className="text-[#000000] text-[24px] leading-[30.77px] font-newCourier mob:text-[20px] mob:leading-[25.64px]">
                     {product.name}
                   </Text>
-                  <div className="bg-[#EBF1E0] px-3 py-1 max-h-[44.07px] flex items-center rounded-full">
+                  {/* <div className="bg-[#EBF1E0] px-3 py-1 max-h-[44.07px] flex items-center rounded-full">
                     <Text className="text-[#000000] text-[24px] leading-[30.77px] font-futurapt font-medium mob:text-[20px] mob:leading-[25.64px]">
                       ${product.price}
                     </Text>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             );

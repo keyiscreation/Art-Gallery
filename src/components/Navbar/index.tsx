@@ -140,7 +140,7 @@ const Navbar = () => {
                 <>
                   <Link
                     href="/"
-                    className="flex mob:justify-start xl:hidden max-w-[146.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
+                    className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
                   >
                     <Image
                       src={logoUrl}
@@ -153,13 +153,13 @@ const Navbar = () => {
                 </>
               )}
 
-              <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[32px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
+              <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (
                   <li key={`${link.url}-${index}`}>
                     <Link
                       href={link.url}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[16px] font-futurapt font-normal leading-[17.95px] text-white ${
+                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${
                         activeTab === link.url ? " font-medium" : "text-white"
                       }`}
                     >
@@ -170,13 +170,13 @@ const Navbar = () => {
               </ul>
 
               <div className="flex items-center gap-[32px] xl:hidden">
-                <Link href="/cart" className="relative max-w-[29px]">
+                <Link href="/cart" className="relative max-w-[49px]">
                   <Image className="" src={cartbucket} alt="cartbucket" />
                   <div className="absolute bottom-[-10px] right-[-4px] bg-[#6E8E73] rounded-full py-[2px] px-[6px] ">
-                    <Text className="text-[10px] font-futurapt font-bold ">
+                    <Text className="text-[10px] font-newCourier font-semibold">
                       {totalQuantity}
                     </Text>
-                    <Text className="text-[10px] font-futurapt font-bold hidden">
+                    <Text className="text-[10px] font-newCourier font-bold hidden">
                       {cartProducts.length}
                     </Text>
                   </div>
@@ -185,7 +185,7 @@ const Navbar = () => {
                   <Link
                     href="/store"
                     onClick={() => handleTabChange("/store")}
-                    className={`flex items-center justify-center bg-[#FFFFFF] w-[112.48px] h-[51.2px] rounded-[60px] text-[12px] text-[#000000] font-futurapt font-medium  leading-[15.38px] ${
+                    className={`flex items-center justify-center bg-[#FFFFFF] w-[120.48px] h-[51.2px] rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${
                       activeTab === "/store" ? " font-semibold" : ""
                     }`}
                   >

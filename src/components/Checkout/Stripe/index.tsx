@@ -22,8 +22,8 @@ interface FormData {
     slugtitle?: string;
     qrLink?: string;
     size?: string;
-    licenseNumber?: string;
   }[];
+  licenseNumber?: string;
 }
 interface StripeFormProps {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
@@ -49,17 +49,25 @@ const Stripe: React.FC<StripeFormProps> = ({
     // Prepare final order data with cart details
     const updatedFormData = { ...formData };
 
+    // console.log("form data", formData);
+
     // Ensure cartValues is properly typed and added to the formData
     updatedFormData.cartValues = cartProducts.map((product) => ({
       title: product.title,
-      price: Number(product.price),
+      price: Number(amountToCharge),
       quantity: getItemQuantity(product.id),
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
-      size: product.size || "",
-      licenseNumber: product.licenseNumber,
+      size: product.sizes ? Object.keys(product.sizes).join(", ") : "", // Assuming 'sizes' is an object with keys like 'Normal'
+      licenseNumber: product.sizes
+        ? Object.values(product.sizes)
+            .map((size) => size.licenseNumber)
+            .join(", ") // Extracting licenseNumber from each size object
+        : "",
     }));
+
+    console.log("updated form data", updatedFormData);
 
     try {
       // Exclude additionalInfo from validation check
@@ -148,18 +156,18 @@ const Stripe: React.FC<StripeFormProps> = ({
         const emailRes = await axios.post("/api/order", updatedFormData);
         if (emailRes.data.message === "Email Sent Successfully") {
           alert("Order confirmed and email sent!");
-          window.location.href = "/store";
+          // window.location.href = "/store";
         } else {
           throw new Error("Email sending failed");
         }
       } else {
         alert("Payment failed. Please try again.");
-        window.location.href = "/store";
+        // window.location.href = "/store";
       }
     } catch (error) {
       console.error("Error processing order:", error);
       alert("An error occurred. Please try again.");
-      window.location.href = "/store";
+      // window.location.href = "/store";
     } finally {
       setLoading(false);
     }

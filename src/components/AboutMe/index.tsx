@@ -68,7 +68,7 @@ const AboutMe = () => {
         </div>
         <hr className="border-[0.5px] border-black/50 w-full my-5 mob:hidden" />
 
-        <Text className="text-black text-[16px] leading-[20px] px-5">
+        <Text className="text-black text-[20px] leading-[28px] px-5">
           {aboutData?.intro.split(/<br\s*\/?>/g).map((line, index) => (
             <React.Fragment key={index}>
               {line}
