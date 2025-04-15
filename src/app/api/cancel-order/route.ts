@@ -22,21 +22,8 @@ export async function DELETE(request: Request) {
     // Call CreativeHub's DELETE API to cancel the embryonic order
 
     //Testing Account;
-    const response = await fetch(
-      `https://api.sandbox.tps-test.io/api/v1/orders/${embryonicOrderId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
-        },
-      }
-    );
-
-    //Production
     // const response = await fetch(
-    //   `https://api.creativehub.io/api/v1/orders/${embryonicOrderId}`, // URL to cancel the order
+    //   `https://api.sandbox.tps-test.io/api/v1/orders/${embryonicOrderId}`,
     //   {
     //     method: "DELETE",
     //     headers: {
@@ -46,6 +33,19 @@ export async function DELETE(request: Request) {
     //     },
     //   }
     // );
+
+    //Production
+    const response = await fetch(
+      `https://api.creativehub.io/api/v1/orders/${embryonicOrderId}`, // URL to cancel the order
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+        },
+      }
+    );
 
     // Check if response body is empty before parsing it
     let responseData;
