@@ -179,14 +179,14 @@ const Checkout = () => {
               <div className="flex gap-[16px] mb-3">
                 <Text
                   as="h1"
-                  className="text-[22px] text-[#000000] font-futuraBT font-normal"
+                  className="text-[25px] text-[#000000] font-medium"
                 >
                   Add New Address
                 </Text>
               </div>
               <div className="flex mob:block w-full gap-5 justify-between mb-2">
                 <div className="w-full max-w-[272.22px] mob:max-w-full">
-                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  <Text className="text-[16px] text-[#000000] font-normal mb-2">
                     First Name
                   </Text>
                   <input
@@ -197,11 +197,11 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="First Name"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
                 <div className="w-full max-w-[272.22px] mob:max-w-full">
-                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  <Text className="text-[16px] text-[#000000] font-normal mb-2">
                     Last Name
                   </Text>
                   <input
@@ -212,12 +212,12 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="Last Name"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
               </div>
               <div className="mb-2">
-                <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                <Text className="text-[16px] text-[#000000] font-normal mb-2">
                   Email
                 </Text>
                 <input
@@ -228,11 +228,11 @@ const Checkout = () => {
                   required
                   autoComplete="off"
                   placeholder="Email"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                 />
               </div>
               <div className="mb-2">
-                <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                <Text className="text-[16px] text-[#000000] font-normal mb-2">
                   Street Address
                 </Text>
                 <input
@@ -243,12 +243,12 @@ const Checkout = () => {
                   required
                   autoComplete="off"
                   placeholder="Street Address"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                 />
               </div>
               <div className="flex mob:block w-full gap-5 justify-between mb-5">
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
-                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  <Text className="text-[16px] text-[#000000] font-normal mb-2">
                     Apt Number
                   </Text>
                   <input
@@ -259,11 +259,11 @@ const Checkout = () => {
                     min="0"
                     autoComplete="off"
                     placeholder="Apt Number"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
-                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  <Text className="text-[16px] text-[#000000] font-normal mb-2">
                     State
                   </Text>
                   <input
@@ -274,11 +274,11 @@ const Checkout = () => {
                     required
                     autoComplete="off"
                     placeholder="State"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
                 <div className="w-full max-w-[182.38px] mob:max-w-full">
-                  <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+                  <Text className="text-[16px] text-[#000000] font-normal mb-2">
                     Zip Code
                   </Text>
                   <input
@@ -290,7 +290,7 @@ const Checkout = () => {
                     min="0"
                     autoComplete="off"
                     placeholder="Zip Code"
-                    className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[45px] w-full text-[15px]"
+                    className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                   />
                 </div>
               </div>

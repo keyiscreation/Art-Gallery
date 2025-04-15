@@ -178,16 +178,16 @@ const Stripe: React.FC<StripeFormProps> = ({
       <form className="w-full" onSubmit={(e) => onSubmit(e)}>
         <CreditCardInput />
 
-        <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+        <Text className="text-[16px] text-[#000000] font-newCourier font-normal mb-2">
           Name on card
         </Text>
         <input
-          className="px-3 border-[1px] bg-[#F2F2F2]  outline-none h-[45px] w-full  text-[15px] text-[#000000] placeholder:text-[16px] font-normal placeholder:text-[#00000033]"
+          className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier  outline-none h-[45px] w-full  text-[15px] text-[#000000] placeholder:text-[16px] font-normal placeholder:text-[#00000033]"
           type="text"
           placeholder="Name on card"
         />
-        <Text className="text-black font-futurapt text-[13px] leading-[11.54px] font-light mt-2">
-          You&apos;ll receive receipts and notifications at this email
+        <Text className="text-black font-newCourier text-[13px] leading-[11.54px] font-light mt-2">
+          You&apos;ll receive receipts and notifications at provided email
         </Text>
 
         <label className="flex items-center space-x-3 cursor-pointer mt-12">

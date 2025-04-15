@@ -32,14 +32,14 @@ const CreditCardInput = () => {
 
   return (
     <div className="w-full ">
-      <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+      <Text className="text-[16px] text-[#000000] font-newCourier font-normal mb-2">
         Card Number
       </Text>
       <CardNumberElement options={CARD_ELEMENT_OPTIONS} />
 
       <div className="flex w-full items-center gap-2">
         <div className="w-[49%]">
-          <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+          <Text className="text-[16px] text-[#000000] font-newCourier font-normal mb-2">
             Expiry Date
           </Text>
           <CardExpiryElement
@@ -48,7 +48,7 @@ const CreditCardInput = () => {
           />
         </div>
         <div className="w-[49%]">
-          <Text className="text-[16px] text-[#000000] font-futuraBT font-normal mb-2">
+          <Text className="text-[16px] text-[#000000] font-newCourier font-normal mb-2">
             CVC
           </Text>
           <CardCvcElement
