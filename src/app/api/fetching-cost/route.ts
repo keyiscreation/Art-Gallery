@@ -62,14 +62,30 @@ export async function POST(request: Request) {
     };
 
     // Call CreativeHub's confirmed order endpoint
+
+    //testing Account
+    // const confirmResponse = await fetch(
+    //   "https://api.sandbox.tps-test.io/api/v1/orders/confirmed",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //       Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+    //     },
+    //     body: JSON.stringify(confirmPayload),
+    //   }
+    // );
+
+    //Production Account
     const confirmResponse = await fetch(
-      "https://api.sandbox.tps-test.io/api/v1/orders/confirmed",
+      "https://api.creativehub.io/api/v1/orders/confirmed",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
         },
         body: JSON.stringify(confirmPayload),
       }

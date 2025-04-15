@@ -4,6 +4,7 @@ import {
   PayPalButtons as PayPalButton,
 } from "@paypal/react-paypal-js";
 import useShoppingCart from "@/hooks/useShoppingCart";
+import axios from "axios";
 
 // Define AmountBreakdown type
 interface AmountBreakdown {
@@ -129,6 +130,16 @@ const PayPalButtons: React.FC<PayPalProps> = ({
         window.location.href = approveUrl;
       } else {
         alert("Payment processing failed");
+      }
+
+      if (data.message === "Redirect the user to PayPal for approval") {
+        const emailRes = await axios.post("/api/order", updatedFormData);
+        if (emailRes.data.message === "Email Sent Successfully") {
+          alert("Order confirmed and email sent!");
+          window.location.reload();
+        } else {
+          throw new Error("Email sending failed");
+        }
       }
     } catch (error) {
       console.error("Error processing payment", error);
