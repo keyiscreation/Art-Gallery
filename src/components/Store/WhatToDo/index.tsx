@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import Image from "next/image";
 
@@ -55,25 +55,25 @@ const WhatToDo = () => {
       <div className="mx-auto w-full max-w-[1267.97px]">
         <Text
           as="h2"
-          className="text-[29px] text-center text-black leading-[37px] font-medium"
+          className="text-[40px] mb-5 text-center text-black leading-[37px] font-semibold font-newCourier"
         >
           What do I do if a print arrives damaged?
         </Text>
 
         <div className="mx-auto max-w-[1116px]">
-          <Text className="text-center text-[21px] leading-[26px] text-black mt-10 ">
+          <Text className="text-center text-[20px] leading-[26px] font-newCourier text-black mt-10 ">
             We’ve all been there: days of eagerly anticipating an item we bought
             online, followed by intense devastation when we see a mangled box on
             our stoop.
           </Text>
-          <Text className="text-center text-[21px] leading-[26px] text-black my-2 ">
+          <Text className="text-center text-[20px] leading-[26px] font-newCourier text-black my-2 ">
             Hopefully this won’t happen with your prints, but if it does - don’t
             worry! Simply send me an email at nate@nateinthewild.com and I will
             get a new print shipped out to you{" "}
             <span className="font-bold">immediately*</span>, completely free of
             charge.
           </Text>
-          <Text className="text-center text-[21px] leading-[26px] text-black ">
+          <Text className="text-center text-[20px] leading-[26px] font-newCourier text-black ">
             *”Immediately” only has an asterisk here because sometimes I
             disappear into the wilderness and don’t have cell service. I promise
             you the moment I’m back in civilization I will take care of your
@@ -104,10 +104,10 @@ const WhatToDo = () => {
                   />
                 </div>
               </div>
-              <Text className="text-[#000000] text-[19px] leading-[24px] mt-8">
+              <Text className="text-[#000000] font-newCourier text-[20px] leading-[24px] mt-8">
                 {review.review}
               </Text>
-              <Text className="text-[#000000] text-[20px] leading-[25px] mt-8">
+              <Text className="text-[#000000] font-newCourier text-[20px] leading-[25px] mt-8">
                 {review.reviewer}
               </Text>
             </div>

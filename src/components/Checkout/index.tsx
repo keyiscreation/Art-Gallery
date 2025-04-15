@@ -70,15 +70,17 @@ const Checkout = () => {
 
     // Prepare final order data with cart details
     const updatedFormData = { ...formData };
+
+    // console.log("form data", formData);
     updatedFormData["cartValues"] = cartProducts.map((product) => ({
       title: product.title,
-      price: Number(product.price),
+      price: Number(amountToChargefromUser),
       quantity: getItemQuantity(product.id),
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
-      size: product.size || "",
-      licenseNumber: product.licenseNumber,
+      size: product.sizes ? Object.keys(product.sizes).join(", ") : "", // Assuming `sizes` is a map and we join the keys as a string
+      licenseNumber: product.licenseNumber || "",
     }));
 
     // api hiiting

@@ -22,8 +22,8 @@ const SecondSection = () => {
         fill
       />
 
-      <div className="relative z-10 w-full">
-        <Text as="h1" className="text-center">
+      <div className="relative z-10 w-full max-w-[1110px]">
+        <Text as="h2" className="text-center">
           {homedata.secondSectionTitle}
         </Text>
 

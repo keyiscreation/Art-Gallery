@@ -17,10 +17,10 @@ const Footer = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // if (!email) {
-    //   alert("Please enter a valid email.");
-    //   return;
-    // }
+    if (!email) {
+      alert("Please enter a valid email.");
+      return;
+    }
 
     setLoading(true);
 
@@ -38,7 +38,7 @@ const Footer = () => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="py-20 mob:px-5">
       <Text
@@ -54,24 +54,37 @@ const Footer = () => {
         Get notified when new projects drop.
       </Text>
 
-      <form onSubmit={handleSubmit} action="" className="flex justify-center gap-[34px]">
+      <form
+        onSubmit={handleSubmit}
+        action=""
+        className="flex justify-center gap-[34px]"
+      >
         <input
           placeholder="E-mail Address"
           type="email"
           value={email}
           required
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-          className="px-3 border-[1px] border-[#000000] outline-none h-[60px] w-full max-w-[250px] text-[15px] text-[#000000] font-futurapt font-normal placehoder:text-[#000000] "
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setEmail(e.target.value)
+          }
+          className="px-3 border-[1px] border-[#000000] outline-none h-[60px] w-full max-w-[250px] text-[15px] text-[#000000] font-newCourier font-normal placehoder:text-[#000000] "
         />
 
-        <Button  type="submit" className="max-w-[146px]  bg-transparent border border-[#000000] text-[15px] text-[#000000] font-futurapt font-normal hover:opacity-100">
-        {loading ? "SUBSCRIBING..." : "SUBSCRIBE"}
+        <Button
+          type="submit"
+          className="max-w-[146px] bg-transparent border border-[#000000] text-[15px] font-newCourier text-[#000000] font-semibold hover:opacity-100"
+        >
+          {loading ? "SUBSCRIBING..." : "SUBSCRIBE"}
         </Button>
       </form>
 
-      <Text as="h1" className="text-center text-[#000000] mt-10">
+      <Text className="text-black text-center mt-10 text-[20px]">
+        What you place on your walls reflects the world you want to see.
+      </Text>
+      <Text as="h1" className="text-center text-[#000000] mt-10 text-[40px]">
         Follow
       </Text>
+
       <div className="flex justify-center items-center gap-5 mt-5">
         <Image
           className="w-[24.52px] h-[24.52px]"

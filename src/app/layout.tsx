@@ -42,6 +42,22 @@ const futura = localFont({
   variable: "--font-futura",
 });
 
+const newCourier = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Courier-New/Courier-New.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Courier-New/Courier New Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-newCourier",
+});
+
 export const metadata: Metadata = {
   title: "Art Gallery",
   description: "Store",
@@ -54,7 +70,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${futurapt.variable} ${futura.variable} `}>
+      <body
+        className={` ${futurapt.variable} ${futura.variable} ${newCourier.variable}`}
+      >
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

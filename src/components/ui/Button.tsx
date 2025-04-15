@@ -27,7 +27,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled={loading}
         onClick={onClick}
         className={cn(
-          "w-full flex justify-center items-center  bg-accent  h-[62px] max-w-[273px] text-[18px] font-normal leading-[23.08px] text-[#000000] hover:opacity-85 transition duration-500 ease-in-out",
+          "w-full flex justify-center font-newCourier items-center  bg-accent h-[62px] max-w-[273px] text-[20px] font-normal leading-[23.08px] text-[#000000] hover:opacity-85 transition duration-500 ease-in-out",
           className
         )}
       >

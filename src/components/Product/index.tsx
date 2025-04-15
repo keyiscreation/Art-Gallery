@@ -91,12 +91,15 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   return (
     <div>
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
-        <Text as="h1" className="text-black text-center">
+        <Text
+          as="h1"
+          className="text-black text-center font-newCourier font-bold"
+        >
           Product Page
         </Text>
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
 
-        <div className="flex flex-wrap items-end gap-10 mt-16 mb-14">
+        <div className="flex flex-wrap items-start gap-10 mt-16 mb-14">
           <div className="w-full max-w-[670px] relative">
             {/* Image container with watermark */}
             <div className="relative w-full h-full">
@@ -119,29 +122,29 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           </div>
 
           <div className="w-full max-w-[465px]">
-            <Text className="text-[38px] text-[#000000] font-semibold font-futura leading-[48px]">
+            <Text className="text-[38px] text-[#000000] font-medium font-newCourier leading-[48px]">
               {product.title}
             </Text>
-            <Text className="text-[26px] text-[#000000] font-normal font-futurapt leading-[33.33px]">
+            <Text className="text-[22px] text-[#000000] font-normal font-newCourier leading-[33.33px]">
               Price ${product.price}
             </Text>
-            <Text className="text-[18px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
+            {/* <Text className="text-[22px] text-[#000000] font-normal font-newCourier leading-[23.08px] mt-3">
               {product.title}
-            </Text>
+            </Text> */}
 
             {/* Render size dropdown only if more than a single 'Normal' size exists */}
             {product.sizes && showDropdown && (
               <>
-                <Text className="text-[16px] text-[#000000] font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
+                <Text className="text-[18px] text-[#000000] font-newCourier font-semibold leading-[20.51px] mt-8 mb-2">
                   Size:
                 </Text>
                 <select
-                  className="border border-[#000000] w-full max-w-[307px] h-[66px] p-2 text-[16px] font-medium"
+                  className="border border-[#000000] w-full max-w-[407px] h-[46px] p-2 text-[16px] font-newCourier font-medium"
                   value={selectedSize}
                   onChange={(e) => {
                     const newSize = e.target.value;
                     setSelectedSize(newSize);
-                    setItemSize(product.id, newSize); // Update shopping cart with selected size
+                    setItemSize(product.id, newSize);
                   }}
                 >
                   <option value="" disabled>
@@ -156,23 +159,23 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               </>
             )}
 
-            <Text className="text-[16px] text-[#000000] font-futurapt leading-[20.51px] font-medium mt-4 mb-1">
+            <Text className="text-[16px] text-[#000000] font-newCourier leading-[20.51px] font-semibold mt-4 mb-2">
               Quantity:
             </Text>
 
-            <div className="border border-[#000000]/70 w-[77px] h-[65px] flex justify-between items-center">
+            <div className="border border-[#000000]/70 w-[87px] h-[45px] font-newCourier flex justify-between items-center">
               <button
                 onClick={() => increaseCartQuantity(product.id, selectedSize)}
                 className="px-2 text-[24px]"
               >
                 +
               </button>
-              <Text className="text-[16px] text-[#000000] leading-[20px] mt-1">
+              <Text className="text-[16px] text-[#000000] leading-[20px] mt-1 font-newCourier font-semibold">
                 {getItemQuantity(product.id, selectedSize)}
               </Text>
               <button
                 onClick={() => decreaseCartQuantity(product.id, selectedSize)}
-                className="px-2 text-[24px]"
+                className="px-2 text-[24px] font-newCourier"
               >
                 -
               </button>
@@ -197,7 +200,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
         </div>
 
         {/* Product description and related content */}
-        <Text className="text-[#000000] text-[20px] leading-[25.64px] mb-6">
+        <Text className="text-[#000000] text-[20px] leading-[25.64px] mb-6 font-newCourier">
           Standing under a starry night sky and staring into space feels like a
           glimpse into infinity. I remember as a child lying on my back in our
           backyard, staring up at the stars and feeling like I could fall off
@@ -209,50 +212,50 @@ const Product: React.FC<ProductProps> = ({ product }) => {
         </Text>
 
         <div className="space-y-1">
-          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier ">
             PRINT SIZES:
           </Text>
-          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             The four print sizes offered in this collection are specifically
             chosen to allow for easy framing:
           </Text>
-          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier">
             SMALL: <span className="font-normal">12&rdquo; x 18&rdquo;</span>
           </Text>
-          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             The four print sizes offered in this collection are specifically
             chosen to allow for easy framing:
           </Text>
-          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier">
             MEDIUM:{" "}
             <span className="font-normal">
               16&rdquo; x 24&rdquo; *Best Value Price/Size Ratio
             </span>
           </Text>
-          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             Edition of 7 includes: A signed certificate of authenticity, with
             edition number.
           </Text>
-          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier">
             LARGE: <span className="font-normal">24&rdquo;x 36</span>
           </Text>
-          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             Edition of 3 includes: A signed certificate of authenticity, with
             edition number.
           </Text>
-          <Text className="text-[#000000] text-[20px] font-medium leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier">
             EXTRA LARGE: <span className="font-normal">40&rdquo; x 60</span>
           </Text>
-          <Text className="text-[#000000] text-[20px] font-normal leading-[25px]">
+          <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             Fully exclusive 1 of 1 edition includes: A signed certificate of
             authenticity, with edition number.
           </Text>
         </div>
 
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] mt-5">
+        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
           For more information, please see my Print Sizing Guide.
         </Text>
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] mt-5">
+        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
           Printed on Hahnemühle Photo Rag®, a museum-quality archival paper with
           brilliant colors, deep blacks, striking contrasts and perfect
           reproduction of detail. This acid- and lignin-free paper meets the
@@ -260,10 +263,10 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           several lifetimes. All prints include a signed Certificate of
           Authenticity along with edition number.
         </Text>
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] mt-5">
+        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
           Ships Worldwide within 5-7 business days.
         </Text>
-        <Text className="text-[#000000] text-[20px] font-medium leading-[25px] mt-5">
+        <Text className="text-[#000000] text-[20px] font-medium leading-[25px] font-newCourier mt-5">
           Quality Guaranteed:{" "}
           <span className="font-normal">
             If your print arrives damaged, please email me at
