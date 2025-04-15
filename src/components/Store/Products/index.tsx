@@ -9,7 +9,7 @@ import Text from "@/components/ui/Text";
 import Spinner from "@/components/ui/Spinner";
 
 import logo from "@/public/signatureblack.png";
-import SearchProduct from "../Serach";
+// import SearchProduct from "../Serach";
 
 interface SizeInfo {
   image: string;
@@ -66,7 +66,7 @@ const Products = () => {
       </Text>
 
       <hr className="border-[0.5px] border-black/50 w-full my-5" />
-      <SearchProduct />
+      {/* <SearchProduct /> */}
 
       {/* Products grid */}
       <div className="flex flex-wrap mob:justify-center mt-16 gap-[30px] justify-start mob:gap-[20px] mb-16">

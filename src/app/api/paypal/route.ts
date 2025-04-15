@@ -44,9 +44,8 @@ async function createPayPalOrder(orderId: string, payerId: string) {
           },
         ],
         application_context: {
-          return_url: `https://art-gallery-git-main-keyiscreations-projects.vercel.app//paypal-return`,
-          cancel_url:
-            "https://art-gallery-git-main-keyiscreations-projects.vercel.app//cancel-url",
+          return_url: `https://www.keyiscreation.com/paypal-return`,
+          cancel_url: "https://www.keyiscreation.com/cancel-url",
         },
       }),
     }
