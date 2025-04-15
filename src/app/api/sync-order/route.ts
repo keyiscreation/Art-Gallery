@@ -156,14 +156,30 @@ export async function POST(request: Request) {
     };
 
     // Send embryonic order payload to CreativeHub
+
+    //Testing Account
+    // const embryonicResponse = await fetch(
+    //   "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //       Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+    //     },
+    //     body: JSON.stringify(embryonicPayload),
+    //   }
+    // );
+
+    //Production Account
     const embryonicResponse = await fetch(
-      "https://api.sandbox.tps-test.io/api/v1/orders/embryonic",
+      "https://api.creativehub.io/api/v1/orders/embryonic",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey app-sc-j10NXtjDR5t45YCZZRgmCqjDjmFb8CKp`,
+          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
         },
         body: JSON.stringify(embryonicPayload),
       }
