@@ -1,10 +1,5 @@
 import { NextResponse } from "next/server";
 
-const PAYPAL_CLIENT_ID =
-  "AVktqGP6uIe_3GNWVeUsFJG3xgCbXgvEp9_v_qPHm4C_duQG8m5--0ODsFiWDmaENkZCycxslQhXDNYH";
-const PAYPAL_CLIENT_SECRET =
-  "EJ-HcMKYsWJKKwuVHRW0v1GTLlvo0u_LfLqWFC6mlw5OMYVpeHNaKZZqQ0s4knbal8fZ1eRHLt-FANUj";
-
 // Function to create a new PayPal order
 async function createPayPalOrder(orderId: string, payerId: string) {
   console.log(orderId, payerId);
@@ -15,7 +10,7 @@ async function createPayPalOrder(orderId: string, payerId: string) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Authorization: `Basic ${Buffer.from(
-          PAYPAL_CLIENT_ID + ":" + PAYPAL_CLIENT_SECRET
+          process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET
         ).toString("base64")}`,
       },
       body: "grant_type=client_credentials",
@@ -50,7 +45,8 @@ async function createPayPalOrder(orderId: string, payerId: string) {
         ],
         application_context: {
           return_url: `https://art-gallery-git-main-keyiscreations-projects.vercel.app//paypal-return`,
-          cancel_url: "https://art-gallery-git-main-keyiscreations-projects.vercel.app//cancel-url",
+          cancel_url:
+            "https://art-gallery-git-main-keyiscreations-projects.vercel.app//cancel-url",
         },
       }),
     }
