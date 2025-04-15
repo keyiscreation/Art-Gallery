@@ -11,6 +11,7 @@ export default {
       fontFamily: {
         futurapt: ["var(--font-futurapt)"],
         futura: ["var(--font-futura)"],
+        newCourier: ["var(--font-newCourier)"],
       },
       backgroundImage: {
         "custom-gradient": "linear-gradient(to bottom, #0E0E0E, #0A2C3B )",

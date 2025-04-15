@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar/NavbarStore";
 import Footer from "@/components/Footer/FooterStore";
 import PayPalProvider from "@/providers/PaypalProvider";
 import localFont from "next/font/local";
+
 import "./stripe.css";
 
 const futurapt = localFont({
@@ -41,6 +42,17 @@ const futura = localFont({
   ],
   variable: "--font-futura",
 });
+
+// const newCourier = localFont({
+//   src: [
+//     {
+//       path: "../../../public/fonts/Courier-New/Courier-New.ttf",
+//       weight: "500",
+//       style: "medium",
+//     },
+//   ],
+//   variable: "--font-newCourier",
+// });
 
 export default function OtherLayout({
   children,

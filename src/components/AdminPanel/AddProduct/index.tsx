@@ -116,11 +116,11 @@ const AddProduct: React.FC = () => {
   const uploadImageToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "art-gallery"); // Your preset
+    formData.append("upload_preset", "art-gallery");
 
     try {
       const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Your cloud name
+        "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
         formData
       );
       return response.data.secure_url;

@@ -26,7 +26,7 @@ const ThirdSection = () => {
             {homedata.thirdSectionTitle}
           </Text>
           <Link href="/store">
-            <Text className="text-accent items-center uppercase tracking-[0.7px]">
+            <Text className="text-accent items-center uppercase ">
               {homedata.thirdSectionBtnTitle}{" "}
               <span className="ml-[2px]">→</span>{" "}
             </Text>

@@ -70,27 +70,27 @@ const ContactUs = () => {
         </div>
 
         <div className="w-full max-w-[452px] ">
-          <Text className="text-[38px] text-black  font-futurapt font-bold leading-[48.7px]">
+          <Text className="text-[40px] text-black font-bold leading-[48.7px]">
             {" "}
             Say Hey!
           </Text>
 
-          <Text className="text-[18px] text-black leading-[23.08px] font-light mt-5">
+          <Text className="text-[20px] text-black leading-[23.08px] font-light mt-5">
             Fill out the form below, or email me at nate@nateinthewild.com
           </Text>
-          <Text className="text-[18px] text-black leading-[23.08px] font-light mt-5 mb-8">
+          <Text className="text-[20px] text-black leading-[23.08px] font-light mt-5 mb-8">
             For brand inquiries, email Nate@outdoorinfluence.co
           </Text>
 
           <form className="w-full" onSubmit={handleSubmit} autoComplete="off">
-            <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-3">
+            <Text className="text-[20px] text-[#000000] font-light mb-3">
               Name <span className="text-[10px]"> (required) </span>
             </Text>
             <div className="flex mob:block w-full gap-5 justify-between mb-3">
               {/* First Name */}
 
               <div className="w-full max-w-[272.22px] mob:max-w-full">
-                <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-2">
+                <Text className="text-[20px] text-[#000000] font-light mb-2">
                   First Name
                 </Text>
                 <input
@@ -101,13 +101,13 @@ const ContactUs = () => {
                   required
                   autoComplete="off"
                   // placeholder="First Name"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[16px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[20px]"
                 />
               </div>
 
               {/* Last Name */}
               <div className="w-full max-w-[272.22px] mob:max-w-full">
-                <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-2">
+                <Text className="text-[20px] text-[#000000] font-light mb-2">
                   Last Name
                 </Text>
                 <input
@@ -118,14 +118,14 @@ const ContactUs = () => {
                   required
                   autoComplete="off"
                   // placeholder="Last Name"
-                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000] font-light placeholder:text-[#00000033] placeholder:text-[16px]"
+                  className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000] font-light placeholder:text-[#00000033] placeholder:text-[20px]"
                 />
               </div>
             </div>
 
             {/* Email */}
             <div className="mb-3">
-              <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-2">
+              <Text className="text-[20px] text-[#000000] font-light mb-2">
                 Email <span className="text-[10px]"> (required) </span>
               </Text>
               <input
@@ -136,12 +136,12 @@ const ContactUs = () => {
                 required
                 autoComplete="off"
                 //   placeholder="Email"
-                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[16px]"
+                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[20px]"
               />
             </div>
 
             <div className="mb-3">
-              <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-2">
+              <Text className="text-[20px] text-[#000000] font-light mb-2">
                 Subject <span className="text-[10px]"> (required) </span>
               </Text>
               <input
@@ -152,11 +152,11 @@ const ContactUs = () => {
                 required
                 autoComplete="off"
                 //   placeholder=" Street Address"
-                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[16px]"
+                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[54px] w-full text-[15px] text-[#000000]  font-light placeholder:text-[#00000033] placeholder:text-[20px]"
               />
             </div>
             <div className="mb-3">
-              <Text className="text-[16px] text-[#000000] font-futuraBT font-light mb-2">
+              <Text className="text-[20px] text-[#000000] font-light mb-2">
                 Message <span className="text-[10px]"> (required) </span>
               </Text>
               <textarea
@@ -166,7 +166,7 @@ const ContactUs = () => {
                 required
                 autoComplete="off"
                 // placeholder="Enter your message..."
-                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[120px] w-full text-[15px] text-[#000000] font-light placeholder:text-[#00000033] placeholder:text-[16px] resize-none"
+                className="px-3 border-[1px] bg-[#F2F2F2] outline-none h-[120px] w-full text-[15px] text-[#000000] font-light placeholder:text-[#00000033] placeholder:text-[20px] resize-none"
               />
             </div>
 
