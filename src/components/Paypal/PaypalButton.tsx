@@ -171,10 +171,10 @@ const PayPalButtons: React.FC<PayPalProps> = ({
       options={{
         clientId:
           //live id
-          // "ASlbVPtp1B_5ahocMQA_2t1PPy_iSkVFP7zRRHcUO9I013EWkQAZLev0ZJvjb3dt0fH--_wkl9OQolhW",
+          "ASlbVPtp1B_5ahocMQA_2t1PPy_iSkVFP7zRRHcUO9I013EWkQAZLev0ZJvjb3dt0fH--_wkl9OQolhW",
 
-          //test id
-          "AVktqGP6uIe_3GNWVeUsFJG3xgCbXgvEp9_v_qPHm4C_duQG8m5--0ODsFiWDmaENkZCycxslQhXDNYH",
+        //test id
+        // "AVktqGP6uIe_3GNWVeUsFJG3xgCbXgvEp9_v_qPHm4C_duQG8m5--0ODsFiWDmaENkZCycxslQhXDNYH",
       }}
     >
       <div className="paypal-button-container">
