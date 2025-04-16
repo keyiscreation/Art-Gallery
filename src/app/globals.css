@@ -12,3 +12,11 @@
   box-shadow: 0px -20px 100px rgba(255, 255, 255, 0.3); 
 } */
 
+.shadow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.9) 40%,
+    rgba(255, 255, 255, 0.5) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}

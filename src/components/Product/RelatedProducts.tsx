@@ -70,8 +70,11 @@ const RelatedProducts = () => {
         ) : (
           products.map((product) => {
             let imageUrl = product.image;
-            if (product.sizes && product.sizes["Normal"]) {
-              imageUrl = product.sizes["Normal"].image;
+            if (
+              product.sizes &&
+              product.sizes["W 16.5 * H 23.4 (A2 Print only)"]
+            ) {
+              imageUrl = product.sizes["W 16.5 * H 23.4 (A2 Print only)"].image;
             }
 
             return (
@@ -84,7 +87,7 @@ const RelatedProducts = () => {
                   height={285}
                   onClick={() => handleNavigation(product.slugtitle)}
                 />
-                <Text className="text-[20px] font-newCourier text-black text-center leading-[30.77px] mt-4">
+                <Text className="text-[20px] font-semibold font-newCourier text-black text-center leading-[30.77px] mt-4">
                   {product.name}
                 </Text>
                 {/* <Text className="text-[22px] text-black font-newCourier text-center leading-[23px] mt-1">

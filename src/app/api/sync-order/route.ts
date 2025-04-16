@@ -236,6 +236,27 @@ export async function POST(request: Request) {
     const salesTax = deliveryOption.DeliveryChargeSalesTax;
     const totalExtraCharge = shippingCharge + salesTax;
 
+    // After processing the order and receiving a response from CreativeHub
+
+    // const orderRef = db.collection("orders").doc(externalReference);
+    // const orderData = {
+    //   orderCreatedAt: admin.firestore.Timestamp.now(), // Add current timestamp
+    //   status: "pending", // Set initial status to "pending"
+    //   externalReference,
+    //   firstName: formData.firstName,
+    //   lastName: formData.lastName,
+    //   email: formData.email,
+    //   cartValues: formData.cartValues,
+    //   shippingAddress: shippingAddress,
+    //   deliveryOptionId: deliveryOption.Id,
+    //   deliveryCharge: shippingCharge,
+    //   salesTax,
+    //   embryonicOrderId, // The ID from CreativeHub
+    // };
+
+    // // Save the order document in Firestore
+    // await orderRef.set(orderData);
+
     // Return embryonic order details and extra charges to the client
     return NextResponse.json(
       {
