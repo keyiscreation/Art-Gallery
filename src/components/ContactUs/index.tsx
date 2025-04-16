@@ -5,7 +5,7 @@ import axios from "axios";
 
 import Text from "../ui/Text";
 
-import imgleft from "@/public/images/contactus.png";
+import imgleft from "@/public/images/contact.png";
 import Button from "../ui/Button";
 
 type OrderFormData = {
@@ -64,7 +64,7 @@ const ContactUs = () => {
 
       <hr className="border-[0.5px] border-black/50 w-full my-5 max-w-[1284px] mx-auto" />
 
-      <div className="flex tab:flex-wrap  w-full max-w-[1284px] mx-auto gap-16 mob:gap-8  items-center mt-10 pb-20">
+      <div className="flex tab:flex-wrap  w-full max-w-[1284px] mx-auto gap-16 mob:gap-8  items-start mt-10 pb-20">
         <div className="w-full max-w-[740px]">
           <Image src={imgleft} alt="" width={740} height={832} />
         </div>

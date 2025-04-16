@@ -33,12 +33,12 @@ export default function CartPage() {
 
         {cartProducts.length === 0 && (
           <div className="text-center my-10">
-            <p className="text-lg font-medium text-gray-700">
+            <Text className="text-lg font-medium text-gray-700">
               No product is added to the cart.
-            </p>
+            </Text>
             <button
               onClick={() => router.push("/store")}
-              className="mt-4 px-4 py-2 bg-black font-futura text-white rounded transition"
+              className="mt-4 px-4 py-2 bg-black font-newCourier text-white rounded transition"
             >
               Go Back to Shop
             </button>

@@ -23,7 +23,7 @@ const SecondSection = () => {
       />
 
       <div className="relative z-10 w-full max-w-[1110px]">
-        <Text as="h2" className="text-center">
+        <Text as="h2" className="text-center uppercase">
           {homedata.secondSectionTitle}
         </Text>
 
