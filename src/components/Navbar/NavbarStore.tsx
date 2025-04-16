@@ -168,11 +168,13 @@ const Navbar = () => {
                   <Link
                     href="/store"
                     onClick={() => handleTabChange("/store")}
-                    className={`flex items-center justify-center bg-[#FFFFFF] w-[120.48px] h-[51.2px] rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${
+                    className={`flex items-center justify-center bg-[#FFFFFF]  rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${
                       activeTab === "/store" ? " font-semibold" : ""
                     }`}
                   >
-                    SHOP NOW
+                    <Text className="text-black font-bold px-5 py-4 mt-[2px]">
+                      SHOP NOW
+                    </Text>
                   </Link>
                 </div>
               </div>

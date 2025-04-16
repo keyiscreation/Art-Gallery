@@ -83,3 +83,87 @@ export async function DELETE(request: Request) {
     );
   }
 }
+
+// import * as admin from "firebase-admin";
+// import { https } from "firebase-functions";
+// import fetch from "node-fetch";
+// import { NextResponse } from "next/server";
+
+// admin.initializeApp();
+
+// const db = admin.firestore();
+
+// // Cloud Function to check for pending orders and cancel them if necessary
+// export const checkPendingOrders = https.onRequest(async (req, res) => {
+//   try {
+//     const ordersSnapshot = await db
+//       .collection("orders")
+//       .where("status", "==", "pending")
+//       .get();
+
+//     const now = new Date().getTime();
+
+//     // Iterate through all pending orders
+//     ordersSnapshot.forEach(async (orderDoc) => {
+//       const order = orderDoc.data();
+//       const orderCreatedAt = order.orderCreatedAt.toDate().getTime();
+
+//       // Check if the order is older than 5 minutes
+//       if (now - orderCreatedAt > 5 * 60 * 1000) {
+//         // Update status to "canceled"
+//         await orderDoc.ref.update({ status: "canceled" });
+
+//         // Call your cancel-order API to cancel the order in CreativeHub
+//         const cancelOrderResponse = await cancelOrder(order.embryonicOrderId);
+
+//         if (cancelOrderResponse.success) {
+//           console.log(`Order ${order.embryonicOrderId} successfully canceled.`);
+//         } else {
+//           console.error(
+//             `Failed to cancel order ${order.embryonicOrderId}: ${cancelOrderResponse.error}`
+//           );
+//         }
+//       }
+//     });
+
+//     res.status(200).send("Checked for pending orders.");
+//   } catch (error) {
+//     console.error("Error checking pending orders:", error);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
+
+// // Function to call the cancel-order API
+// async function cancelOrder(embryonicOrderId: string) {
+//   try {
+//     const cancelResponse = await fetch(
+//       `https://yourdomain.com/api/cancel-order`,
+//       {
+//         // Replace with your actual URL
+//         method: "DELETE",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           embryonicOrderId, // Pass the embryonicOrderId to your cancel-order API
+//         }),
+//       }
+//     );
+
+//     if (!cancelResponse.ok) {
+//       const errorData = await cancelResponse.json();
+//       return {
+//         success: false,
+//         error: errorData.error || "Failed to cancel order",
+//       };
+//     }
+
+//     return { success: true, message: "Order canceled successfully" };
+//   } catch (error) {
+//     console.error("Error calling cancel-order API:", error);
+//     return {
+//       success: false,
+//       error: error.message || "Error calling cancel-order API",
+//     };
+//   }
+// }

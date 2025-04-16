@@ -5,10 +5,11 @@ import axios from "axios";
 import Text from "../ui/Text";
 import Button from "../ui/Button";
 
-import youtube from "@/public/icons/youtube.svg";
-import twiter from "@/public/icons/u_twitter.svg";
+// import youtube from "@/public/icons/youtube.svg";
+import twiter from "@/public/icons/x-black.svg";
 import insta from "@/public/icons/u_instagram.svg";
-import fb from "@/public/icons/u_facebook-f.svg";
+// import fb from "@/public/icons/u_facebook-f.svg";
+import Link from "next/link";
 
 const Footer = () => {
   const [email, setEmail] = useState<string>("");
@@ -86,14 +87,20 @@ const Footer = () => {
       </Text>
 
       <div className="flex justify-center items-center gap-5 mt-5">
-        <Image
+        {/* <Image
           className="w-[24.52px] h-[24.52px]"
           src={youtube}
           alt="youtube"
-        />
-        <Image className="w-[24.52px] h-[24.52px]" src={twiter} alt="twiter" />
+        /> */}
+        <Link href="/https://instagram.com/keyiscreation">
+          <Image
+            className="w-[24.52px] h-[24.52px]"
+            src={twiter}
+            alt="twiter"
+          />
+        </Link>
         <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
-        <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" />
+        {/* <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" /> */}
       </div>
     </div>
   );

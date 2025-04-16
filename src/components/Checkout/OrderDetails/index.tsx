@@ -1,4 +1,6 @@
-import React, { Fragment } from "react";
+"use client";
+
+import React, { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Text from "@/components/ui/Text";
@@ -7,6 +9,9 @@ import useShoppingCart from "@/hooks/useShoppingCart";
 
 const OrderDetails = () => {
   const router = useRouter();
+  const [selectedSize, setSelectedSize] = useState<string>("");
+
+  console.log(setSelectedSize);
 
   const {
     cartProducts,
@@ -58,7 +63,7 @@ const OrderDetails = () => {
                 <Text className="text-[14px] font-medium leading-[18px] text-black text-end">
                   {product.title}
                 </Text>
-                <div className="flex justify-end">
+                {/* <div className="flex justify-end">
                   <div className="bg-[#F2F2F2] p-2 max-w-[143.3px] flex justify-between gap-5 my-2">
                     <Text className="font-medium text-black">Qty</Text>
                     <Text className="font-medium text-black">
@@ -77,7 +82,51 @@ const OrderDetails = () => {
                       </span>
                     </Text>
                   </div>
+                </div> */}
+
+                {/* <div className="border border-[#000000]/70 w-[143px] h-[45px] font-newCourier flex justify-between items-center my-2">
+                  <button
+                    onClick={() =>
+                      increaseCartQuantity(product.id, selectedSize)
+                    }
+                    className="px-2 text-[24px]"
+                  >
+                    +
+                  </button>
+                  <Text className="text-[16px] text-[#000000] leading-[20px] font-newCourier">
+                    {getItemQuantity(product.id, selectedSize)}
+                  </Text>
+                  <button
+                    onClick={() =>
+                      decreaseCartQuantity(product.id, selectedSize)
+                    }
+                    className="px-2 text-[24px] font-newCourier"
+                  >
+                    -
+                  </button>
+                </div> */}
+                <div className="border border-[#000000]/70 w-[143px] h-[45px] font-newCourier flex justify-between items-center my-2">
+                  <button
+                    onClick={() =>
+                      increaseCartQuantity(product.id, selectedSize)
+                    }
+                    className="px-2 text-[24px]"
+                  >
+                    +
+                  </button>
+                  <Text className="text-[16px] text-[#000000] leading-[20px] font-newCourier">
+                    {getItemQuantity(product.id, selectedSize)}
+                  </Text>
+                  <button
+                    onClick={() =>
+                      decreaseCartQuantity(product.id, selectedSize)
+                    }
+                    className="px-2 text-[24px] font-newCourier"
+                  >
+                    -
+                  </button>
                 </div>
+
                 <Text
                   onClick={() => removeFromCart(product.id)}
                   className="text-[12px] font-medium leading-[18px] text-[#FF0000] text-end underline cursor-pointer"

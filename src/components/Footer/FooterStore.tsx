@@ -7,7 +7,7 @@ import Text from "../ui/Text";
 import Button from "../ui/Button";
 
 import youtube from "@/public/icons/youtubewhite.svg";
-import twiter from "@/public/icons/twitter-white.svg";
+import twiter from "@/public/icons/x-White.svg";
 import insta from "@/public/icons/instagram-white.svg";
 import fb from "@/public/icons/facebook-white.svg";
 
