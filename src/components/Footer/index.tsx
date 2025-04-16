@@ -92,14 +92,12 @@ const Footer = () => {
           src={youtube}
           alt="youtube"
         /> */}
+
+        <Image className="w-[24.52px] h-[24.52px]" src={twiter} alt="twiter" />
+
         <Link href="/https://instagram.com/keyiscreation">
-          <Image
-            className="w-[24.52px] h-[24.52px]"
-            src={twiter}
-            alt="twiter"
-          />
+          <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
         </Link>
-        <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
         {/* <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" /> */}
       </div>
     </div>
