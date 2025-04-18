@@ -16,6 +16,7 @@ interface FormData {
   aptNumber?: number;
   state: string;
   zipCode: number;
+
   cartValues?: {
     title: string;
     price: number;
@@ -51,7 +52,7 @@ const Stripe: React.FC<StripeFormProps> = ({
     // Prepare final order data with cart details
     const updatedFormData = { ...formData };
 
-    // console.log("form data", formData);
+    console.log("form data", formData);
 
     // Ensure cartValues is properly typed and added to the formData
     updatedFormData.cartValues = cartProducts.map((product) => ({
@@ -61,11 +62,16 @@ const Stripe: React.FC<StripeFormProps> = ({
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
-      size: product.sizes ? Object.keys(product.sizes).join(", ") : "", // Assuming 'sizes' is an object with keys like 'Normal'
+      size: product.sizes ? Object.keys(product.sizes).join(", ") : "",
       licenseNumber: product.sizes
         ? Object.values(product.sizes)
             .map((size) => size.licenseNumber)
-            .join(", ") // Extracting licenseNumber from each size object
+            .join(", ")
+        : "",
+      image: product.sizes
+        ? Object.values(product.sizes)
+            .map((size) => size.image)
+            .join(", ")
         : "",
     }));
 
@@ -158,18 +164,18 @@ const Stripe: React.FC<StripeFormProps> = ({
         const emailRes = await axios.post("/api/order", updatedFormData);
         if (emailRes.data.message === "Email Sent Successfully") {
           alert("Order confirmed and email sent!");
-          // window.location.href = "/store";
+          window.location.href = "/store";
         } else {
           throw new Error("Email sending failed");
         }
       } else {
         alert("Payment failed. Please try again.");
-        // window.location.href = "/store";
+        window.location.href = "/store";
       }
     } catch (error) {
       console.error("Error processing order:", error);
       alert("An error occurred. Please try again.");
-      // window.location.href = "/store";
+      window.location.href = "/store";
     } finally {
       setLoading(false);
     }
