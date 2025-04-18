@@ -24,6 +24,7 @@ type CartItem = {
   slugtitle: string;
   size: string;
   licenseNumber?: string;
+  image?: string;
 };
 
 type OrderFormData = {
