@@ -1,39 +1,38 @@
 "use client";
 import React from "react";
-import Image, { StaticImageData } from "next/image";
-
+import Image from "next/image";
 import Text from "../ui/Text";
-
-// import productimg from "@/public/images/photos on wall 1.png";
 import useShoppingCart from "@/hooks/useShoppingCart";
-// import { useRouter } from "next/navigation";
 
-// import logo from "@/public/logo.png";
+interface SizeInfo {
+  image: string;
+  hoverImage: string;
+  licenseNumber: string;
+}
 
 interface ProductProps {
   product: {
-    id: number;
-    title: string;
+    id: string;
+    name: string;
     slugtitle: string;
-    price: string;
-    image: StaticImageData;
-    licenseNumber: string;
-    sizes: string[];
+    price: number;
+    image: string;
+    hoverImage?: string;
+    sizes?: Record<string, SizeInfo>;
   };
 }
-const QRProduct: React.FC<ProductProps> = ({ product }) => {
-  //   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0]);
-  //   const [showValidationMessage, setShowValidationMessage] = useState(false);
 
-  //   const router = useRouter();
-  const {
-    // cartProducts,
-    // getItemQuantity,
-    // increaseCartQuantity,
-    // decreaseCartQuantity,
-    // removeFromCart,
-    // cartProductsTotalPrice,
-  } = useShoppingCart();
+const QRProduct: React.FC<ProductProps> = ({ product }) => {
+  const { cartProducts } = useShoppingCart();
+
+  // 🟡 Find product from the cart using ID or slugtitle
+  const cartProduct = cartProducts.find(
+    (p) => p.id === product.id || p.slugtitle === product.slugtitle
+  );
+
+  // 🟡 Use the selected size if it exists in the cart
+  const selectedSize = cartProduct?.size || null;
+  const selectedSizeData = selectedSize ? product.sizes?.[selectedSize] : null;
 
   return (
     <div>
@@ -45,33 +44,36 @@ const QRProduct: React.FC<ProductProps> = ({ product }) => {
 
         <div className="flex flex-wrap items-center gap-10 mt-16 mb-14">
           <div className="w-full max-w-[670px] relative">
-            {/* Image container with watermark */}
             <div className="relative w-full h-full">
-              {/* Image with watermark */}
-              <Image
-                className="w-full max-w-[670px] object-cover"
-                src={product.image}
-                alt={product.title}
-              />
+              {selectedSizeData?.image ? (
+                <Image
+                  className="w-full max-w-[670px] object-cover"
+                  src={selectedSizeData.image}
+                  alt={product.name}
+                  width={670}
+                  height={500}
+                />
+              ) : (
+                <div className="w-full max-w-[670px] h-[500px] bg-gray-100 flex items-center justify-center text-gray-400">
+                  No image available
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="max-w-[465px]">
-            <Text className="text-[38px] text-[#000000] font-semibold font-futura leading-[48px]">
-              {product.title}
+          <div className="max-w-[500px]">
+            <Text className="text-[30px] mb-2 text-[#000000] leading-[48px]">
+              <span className="font-semibold">Product Name:</span>{" "}
+              {product.name}
             </Text>
-            <Text className="text-[26px] text-[#000000] font-normal font-futurapt leading-[33.33px]">
-              From $250.00
-            </Text>
-            <Text className="text-[20px] text-[#000000] font-normal font-futurapt leading-[23.08px] mt-3">
-              {product.title}
+            <Text className="text-[26px] text-[#000000] font-normal leading-[33.33px]">
+              <span className="font-semibold">Product Price:</span> $
+              {product.price}
             </Text>
 
-            <Text className="text-[20px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
-              Size: Large
-            </Text>
-            <Text className="text-[20px] text-[#000000]  font-futurapt leading-[20.51px] font-medium mt-8 mb-1">
-              License Number: {product.licenseNumber}
+            <Text className="text-[22px] text-[#000000] font-normal leading-[33.33px] mt-4">
+              <span className="font-semibold">Selected Size:</span>{" "}
+              {selectedSize ? selectedSize : "Not selected"}
             </Text>
           </div>
         </div>
