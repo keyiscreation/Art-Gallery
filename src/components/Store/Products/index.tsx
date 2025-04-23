@@ -107,7 +107,7 @@ const Products = () => {
                 className="object-contain max-w-full max-h-full"
               />
 
-              <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] shadow p-4 ">
+              <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] p-4 ">
                 <Image
                   className="mx-auto w-[80px]"
                   src={logo}
@@ -128,7 +128,7 @@ const Products = () => {
                     />
 
                     {/* Watermark for Main Image - Also fades out on hover */}
-                    <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] shadow p-4 transition-opacity duration-1000 ease-in-out group-hover:opacity-0">
+                    <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] transition-opacity duration-1000 ease-in-out group-hover:opacity-0">
                       <Image
                         className="mx-auto w-[80px]"
                         src={logo}
@@ -147,7 +147,7 @@ const Products = () => {
                           onContextMenu={(e) => e.preventDefault()}
                           className="object-contain max-w-full max-h-full"
                         />
-                        <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] pointer-events-none shadow p-4">
+                        <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] pointer-events-none">
                           <Image
                             className="mx-auto w-[80px]"
                             src={logo}

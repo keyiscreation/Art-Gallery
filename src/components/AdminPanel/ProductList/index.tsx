@@ -227,8 +227,11 @@ const ProductList: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[1268px] w-full mx-auto bg-white p-6 rounded-lg shadow-md mb-[100px]">
-      <Text as="h1" className="text-black mb-4 text-center text-2xl font-bold">
+    <div className="max-w-[1268px] w-full mx-auto bg-white p-6 rounded-lg mt-[40px] shadow-md mb-[100px]">
+      <Text
+        as="h1"
+        className="text-black text-center text-[48px] mb-10 font-bold"
+      >
         Product List
       </Text>
 

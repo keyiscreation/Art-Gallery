@@ -2,13 +2,7 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 import { db } from "@/firebase";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  getDocs,
-  doc,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 
@@ -41,7 +35,7 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     sizes: {
-      Normal: {
+      "16.5” x 23.4”": {
         image: null,
         hoverImage: null,
         licenseNumber: "",
@@ -51,7 +45,7 @@ const AddProduct: React.FC = () => {
 
   const [newSizeName, setNewSizeName] = useState("");
   const [loading, setLoading] = useState(false);
-  const defaultSizeName = "W 27.6 * H 39.4 (70x100cm)";
+  // const defaultSizeName = "W 27.6 * H 39.4 (70x100cm)";
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -186,7 +180,7 @@ const AddProduct: React.FC = () => {
         slugtitle: "",
         price: "",
         sizes: {
-          Normal: {
+          "16.5” x 23.4”": {
             image: null,
             hoverImage: null,
             licenseNumber: "",
@@ -201,29 +195,29 @@ const AddProduct: React.FC = () => {
     }
   };
 
-  const migrateSizeNames = async () => {
-    const productsSnapshot = await getDocs(collection(db, "products"));
+  // const migrateSizeNames = async () => {
+  //   const productsSnapshot = await getDocs(collection(db, "products"));
 
-    for (const productDoc of productsSnapshot.docs) {
-      const productData = productDoc.data();
+  //   for (const productDoc of productsSnapshot.docs) {
+  //     const productData = productDoc.data();
 
-      if (productData.sizes && productData.sizes["60cmx80cm"]) {
-        const updatedSizes = { ...productData.sizes };
+  //     if (productData.sizes && productData.sizes["60cmx80cm"]) {
+  //       const updatedSizes = { ...productData.sizes };
 
-        // Rename 'Normal' to new size name
-        updatedSizes[defaultSizeName] = updatedSizes["60cmx80cm"];
-        delete updatedSizes["60cmx80cm"];
+  //       // Rename 'Normal' to new size name
+  //       updatedSizes[defaultSizeName] = updatedSizes["60cmx80cm"];
+  //       delete updatedSizes["60cmx80cm"];
 
-        await updateDoc(doc(db, "products", productDoc.id), {
-          sizes: updatedSizes,
-        });
+  //       await updateDoc(doc(db, "products", productDoc.id), {
+  //         sizes: updatedSizes,
+  //       });
 
-        console.log(`Updated product ${productDoc.id}`);
-      }
-    }
+  //       console.log(`Updated product ${productDoc.id}`);
+  //     }
+  //   }
 
-    console.log("Migration complete!");
-  };
+  //   console.log("Migration complete!");
+  // };
 
   return (
     <div className="w-full flex justify-center items-center my-[100px] px-5">
@@ -273,10 +267,9 @@ const AddProduct: React.FC = () => {
             <Text as="h2" className="text-lg font-bold mb-3">
               Sizes
             </Text>
-
             {Object.entries(product.sizes).map(([size, data]) => (
               <div key={size} className="mb-6 border p-4 rounded-md">
-                <h3 className="font-semibold text-md mb-2">{size} Size</h3>
+                <h3 className="font-semibold text-md mb-2">{size}</h3>
 
                 <div className="mb-2">
                   <label className="block mb-1 font-futurapt">
@@ -341,12 +334,12 @@ const AddProduct: React.FC = () => {
             {loading ? "Adding..." : "Add Product"}
           </Button>
         </form>
-        <button
+        {/* <button
           className="bg-black py-3 px-5 text-white"
           onClick={migrateSizeNames}
         >
           Rename
-        </button>
+        </button> */}
       </div>
     </div>
   );

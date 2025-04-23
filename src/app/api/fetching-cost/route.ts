@@ -14,7 +14,7 @@ const getExchangeRate = async (): Promise<number> => {
   try {
     // Fetch the exchange rate for GBP to USD conversion (GBP to USD, not USD to GBP)
     const response = await fetch(
-      `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/GBP`
+      `https://v6.exchangerate-api.com/v6/419e95954b82776038815396/latest/EUR`
     );
     const data = await response.json();
     const usdRate = data.conversion_rates.USD;
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
         },
         body: JSON.stringify(confirmPayload),
       }

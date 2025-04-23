@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 
-// import ProtectedRoute from "../Layouts/ProtectedRoute";
 import Text from "../ui/Text";
 
 import AddProduct from "./AddProduct";
@@ -14,6 +13,8 @@ import UploadHomeData from "./HomePage/UploadHomeData";
 import HomePageEditor from "./HomePage/DisplayAndEdit";
 import UploadNavbarData from "./Navbar/UploadData";
 import NavbarDataManager from "./Navbar/DisplayandEdit";
+import UploadReviewData from "./Product-testimonial/UploadReviewData";
+import DisplayAndEditReviews from "./Product-testimonial/DisplayAndEdit";
 
 const AdminPanel = () => {
   const [addProduct, setaddProduct] = useState(false);
@@ -79,6 +80,8 @@ const AdminPanel = () => {
       {addProduct && (
         <>
           <AddProduct />
+          <UploadReviewData />
+          <DisplayAndEditReviews />
           <ProductList />
         </>
       )}

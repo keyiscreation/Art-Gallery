@@ -42,7 +42,7 @@ export async function DELETE(request: Request) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
         },
       }
     );

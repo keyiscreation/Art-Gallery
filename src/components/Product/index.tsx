@@ -131,7 +131,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                 className="object-contain max-w-full max-h-full"
               />
 
-              <div className="absolute bottom-3 right-2 w-[80px] rounded-[24px] shadow p-4 ">
+              <div className="absolute bottom-3 right-3 w-[80px] rounded-[24px]">
                 <Image
                   className="mx-auto w-[80px]"
                   src={logo}

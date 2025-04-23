@@ -24,6 +24,7 @@ type CartItem = {
   slugtitle: string;
   size: string;
   licenseNumber?: string;
+  image?: string;
 };
 
 type OrderFormData = {
@@ -83,7 +84,7 @@ const Checkout = () => {
       pathnode: product.pathnode,
       slugtitle: product.slugtitle,
       qrLink: product.qrLink,
-      size: product.sizes ? Object.keys(product.sizes).join(", ") : "", // Assuming `sizes` is a map and we join the keys as a string
+      size: product.size ? product.size : "Default", // Assuming `sizes` is a map and we join the keys as a string
       licenseNumber: product.licenseNumber || "",
     }));
 
