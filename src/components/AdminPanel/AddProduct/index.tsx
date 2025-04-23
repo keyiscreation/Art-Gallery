@@ -35,7 +35,7 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     sizes: {
-      Normal: {
+      "16.5” x 23.4”": {
         image: null,
         hoverImage: null,
         licenseNumber: "",
@@ -180,7 +180,7 @@ const AddProduct: React.FC = () => {
         slugtitle: "",
         price: "",
         sizes: {
-          Normal: {
+          "16.5” x 23.4”": {
             image: null,
             hoverImage: null,
             licenseNumber: "",
@@ -267,10 +267,9 @@ const AddProduct: React.FC = () => {
             <Text as="h2" className="text-lg font-bold mb-3">
               Sizes
             </Text>
-
             {Object.entries(product.sizes).map(([size, data]) => (
               <div key={size} className="mb-6 border p-4 rounded-md">
-                <h3 className="font-semibold text-md mb-2">{size} Size</h3>
+                <h3 className="font-semibold text-md mb-2">{size}</h3>
 
                 <div className="mb-2">
                   <label className="block mb-1 font-futurapt">

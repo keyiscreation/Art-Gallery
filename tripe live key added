@@ -1,0 +1,122 @@
+8475f78 fix: remove secret key and load from env
+9a69da1 fix: remove secret key and load from env
+01e8d94 minor
+d11b825 stripe live key added
+8c8f5fd License Key is sent to email is QR is made working
+62a4d0b testiominals are now set to admin panel
+e4e7f69 build issues are resolved
+1863634 UI issues are done
+b943018 checkout page UI is donme
+4361216 live keys added
+491d1bb changes are done
+85394a1 paypal live keysa added
+0d1ca93 live keys are added
+bb5a7f6 Update route.ts
+c7857c7 Merge branch 'feat/paypal' of https://github.com/salmanamjad123/Art-Gallery into feat/paypal
+32b3528 paypal integration is also setup with creativehub.
+e25c9cb Update index.tsx
+5b8cdb8 Merge branch 'feat/paypal' of https://github.com/salmanamjad123/Art-Gallery into feat/paypal
+68a8464 images UI is adjusted of product page
+5dd562c Update index.tsx
+46bc679 new flow is setup is done according to all stuff
+1e145f2 build issues are resolved
+4d7fa79 sync-order api is working
+19dee19 workflow with the variations
+72c9b52 working with the paypal
+6887405 Merge pull request #35 from salmanamjad123/feat/payment-method
+7a4036c Update index.tsx
+0b40b74 stripe paymaent
+9b6be44 Merge pull request #33 from salmanamjad123/feat/pop-up-flow
+43f3f4e Update index.tsx
+7df3035 Merge branch 'feat/pop-up-flow' of https://github.com/salmanamjad123/Art-Gallery into feat/pop-up-flow
+5c05750 build issues foxed
+a837896 Update DisplayAndEdit.tsx
+1692ee4 Merge branch 'feat/pop-up-flow' of https://github.com/salmanamjad123/Art-Gallery into feat/pop-up-flow
+d7c61a4 production key is added
+7d18102 production key added
+130b40a Merge pull request #31 from salmanamjad123/feat/pop-up-flow
+32836b5 Update index.tsx
+d5fd50e consoles are hidden
+cb8e5a7 payment is now being done after the price fetching from creative hub
+5d3bb99 Update index.tsx
+1a43445 navbar data is placed in firstore
+ab3540a homepage data is now fetched from firestore
+65e1361 Merge pull request #28 from salmanamjad123/feat/admin-panel
+c974520 Update index.tsx
+4bbd74f Merge branch 'main' into feat/admin-panel
+4d60361 home page data is now stored in firestore
+1b5c8c9 Merge branch 'feat/admin-panel' of https://github.com/salmanamjad123/Art-Gallery into feat/admin-panel
+3d2b610 about page is done
+f60e75d admin panel is done
+c474ad0 Merge pull request #26 from salmanamjad123/feat/dev
+21e4bd4 Merge pull request #25 from salmanamjad123/feat/admin-panel
+17815e5 Update index.tsx
+60d2afc pricing thing is done
+a5248b9 Merge pull request #24 from salmanamjad123/feat/dev
+4e8e196 Update index.tsx
+2fd9285 Merge pull request #23 from salmanamjad123/feat/admin-panel
+dae3daa shipment charges are done
+943f870 working on payment
+ad93340 Merge pull request #22 from salmanamjad123/feat/dev
+70f2203 Merge pull request #21 from salmanamjad123/feat/admin-panel
+e512c1e Update useProducts.ts
+0295321 creativehub setup is toatlly done
+df0497c hover image thing is done
+6a2cd12 Merge branch 'feat/admin-panel' of https://github.com/salmanamjad123/Art-Gallery into feat/admin-panel
+5bc86ed Product dynamic page data is fetched from firestore
+69ad3e2 Merge pull request #20 from salmanamjad123/feat/dev
+a761e8e Merge pull request #19 from salmanamjad123/feat/admin-panel
+8d75ca1 Update index.ts
+91294cd admin-panel is made a protected route
+574a666 searchbar is done and admin-panel is done
+9351148 login, logout and admin panle functionality is done
+b137345 firebase setup is done
+301acf2 Merge pull request #18 from salmanamjad123/feat/dev
+e57408c Merge pull request #17 from salmanamjad123/variation
+7f8205e keys adjusted
+f4fe425 images of hover product
+2db9222 language changer left
+b13c0b5 working on size
+126318c links added
+c0208f4 form page added
+008a7bd cart count adjusted
+1e52e04 form footer
+276c19a updating changes
+18bc35d Merge pull request #15 from salmanamjad123/feat/dev
+9da7f74 Merge pull request #14 from salmanamjad123/feat/adjustments
+5daad6d water mark adjusted
+c09248a Merge pull request #13 from salmanamjad123/feat/dev
+8e02a4a Merge pull request #12 from salmanamjad123/feat/adjustments
+6d94cb0 changes
+860efc4 changes
+16bac4f Merge pull request #11 from salmanamjad123/feat/dev
+5ce9f8e Merge pull request #10 from salmanamjad123/feat/animation
+93967a6 error remove
+b0fdf00 qr code work
+88d2939 Merge pull request #9 from salmanamjad123/feat/dev
+c4b4be5 Merge pull request #8 from salmanamjad123/feat/animation
+f9105db Update page.tsx
+55ae731 files are send to mail
+c938250 image hover and watermark
+685cba2 Merge pull request #7 from salmanamjad123/feat/dev
+e670d68 Merge pull request #6 from salmanamjad123/feat/animation
+45e5ea0 checkout added
+f4b3070 types adjusted
+2cd396e working on stripe
+67fcdb1 Merge pull request #5 from salmanamjad123/feat/dev
+f9d73bb Merge pull request #4 from salmanamjad123/navmob
+9302f5a Update index.tsx
+07b6b0e mob navbar link
+87b3707 Merge pull request #3 from salmanamjad123/feat/dev
+f0fd43b Merge pull request #2 from salmanamjad123/feat/store
+7ba3c09 Update index.tsx
+c612a6a working on checkout page
+656170e about page
+2679a44 store page
+9b44ae0 Merge pull request #1 from salmanamjad123/feat/dev
+d6d5713 navbar adjusted
+141d77e home page done
+1c12e12 home page footer left
+b7a15cd navbar added
+9896403 project setup
+ace3f5c first commit
