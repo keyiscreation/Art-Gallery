@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       metadata,
     });
 
-    console.log({ client_secret: paymentIntent?.client_secret });
+    // console.log({ client_secret: paymentIntent?.client_secret });
 
     return NextResponse.json({
       success: true,

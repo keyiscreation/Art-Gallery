@@ -75,7 +75,7 @@ const Stripe: React.FC<StripeFormProps> = ({
         : "",
     }));
 
-    console.log("updated form data", updatedFormData);
+    // console.log("updated form data", updatedFormData);
 
     try {
       // Exclude additionalInfo from validation check

@@ -101,6 +101,10 @@ export async function POST(request: Request) {
           .where("slugtitle", "==", item.slugtitle)
           .limit(1)
           .get();
+        // console.log("Product Snapshot:", productSnapshot);
+        if (productSnapshot.empty) {
+          throw new Error(`Product not found: ${item.slugtitle}`);
+        }
         let productId: number | null = null;
         let printOptionId: number | null = null;
         let licenseNumber: string = "";
@@ -108,19 +112,28 @@ export async function POST(request: Request) {
 
         if (!productSnapshot.empty) {
           const productData = productSnapshot.docs[0].data();
+          // console.log("Product Data:", productData);
+          // console.log(
+          //   "Available size keys in Firestore:",
+          //   Object.keys(productData.sizes)
+          // );
+          // console.log("Requested size key from cart:", item.size);
 
           // Check if licenseNumber exists in sizes object or as top-level
           if (productData.sizes && typeof productData.sizes === "object") {
-            const sizeData = productData.sizes[item.size]; // Get size data for the selected size
+            const sizeData = productData.sizes[item.size];
+            // console.log("Size Data:", sizeData);
             if (sizeData) {
               licenseNumber = sizeData.licenseNumber;
+              // console.log("License Number from sizeData:", licenseNumber);
               image = sizeData.image; // Get the image for the selected size
             }
           } else if (productData.licenseNumber) {
             licenseNumber = productData.licenseNumber;
-            image = productData.image || ""; // Fallback to default image if no sizes exist
+            image = productData.image || "";
           }
 
+          // console.log("License Number from Firestore:", licenseNumber);
           if (licenseNumber) {
             const parts = licenseNumber.split("-");
             if (parts.length === 2) {
@@ -179,16 +192,18 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `ApiKey ${process.env.CREATIVE_HUB_API_KEY}`,
+          Authorization: `ApiKey production-sW8JRmSxvd2TWKNm8rqFkzqVw4ykWF6x`,
         },
         body: JSON.stringify(embryonicPayload),
       }
     );
 
     const embryonicResponseText = await embryonicResponse.text();
+    // console.log("Raw Response:", embryonicResponseText);
     let embryonicData;
     try {
       embryonicData = JSON.parse(embryonicResponseText);
+      // console.log("Raw Response:", embryonicResponseText);
     } catch (err) {
       console.log(err);
       return NextResponse.json(
