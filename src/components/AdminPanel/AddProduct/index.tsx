@@ -35,7 +35,7 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     sizes: {
-      "16.5” x 23.4”": {
+      "Small": {
         image: null,
         hoverImage: null,
         licenseNumber: "",
@@ -45,7 +45,7 @@ const AddProduct: React.FC = () => {
 
   const [newSizeName, setNewSizeName] = useState("");
   const [loading, setLoading] = useState(false);
-  // const defaultSizeName = "W 27.6 * H 39.4 (70x100cm)";
+  
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -180,7 +180,7 @@ const AddProduct: React.FC = () => {
         slugtitle: "",
         price: "",
         sizes: {
-          "16.5” x 23.4”": {
+          "Small": {
             image: null,
             hoverImage: null,
             licenseNumber: "",
@@ -195,32 +195,42 @@ const AddProduct: React.FC = () => {
     }
   };
 
-  // const migrateSizeNames = async () => {
-  //   const productsSnapshot = await getDocs(collection(db, "products"));
+  // migrate size names
+// const defaultSizeName = "Small";
+//   const migrateSizeNames = async () => {
+//     const productsSnapshot = await getDocs(collection(db, "products"));
 
-  //   for (const productDoc of productsSnapshot.docs) {
-  //     const productData = productDoc.data();
+//     for (const productDoc of productsSnapshot.docs) {
+//       const productData = productDoc.data();
 
-  //     if (productData.sizes && productData.sizes["60cmx80cm"]) {
-  //       const updatedSizes = { ...productData.sizes };
+//       if (productData.sizes && productData.sizes["W 16.5 * H 23.4 (A2 Print only)"]) {
+//         const updatedSizes = { ...productData.sizes };
 
-  //       // Rename 'Normal' to new size name
-  //       updatedSizes[defaultSizeName] = updatedSizes["60cmx80cm"];
-  //       delete updatedSizes["60cmx80cm"];
+//         // Rename 'Normal' to new size name
+//         updatedSizes[defaultSizeName] = updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
+//         delete updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
 
-  //       await updateDoc(doc(db, "products", productDoc.id), {
-  //         sizes: updatedSizes,
-  //       });
+//         await updateDoc(doc(db, "products", productDoc.id), {
+//           sizes: updatedSizes,
+//         });
 
-  //       console.log(`Updated product ${productDoc.id}`);
-  //     }
-  //   }
+//         console.log(`Updated product ${productDoc.id}`);
+//       }
+//     }
 
-  //   console.log("Migration complete!");
-  // };
+//     console.log("Migration complete!");
+//   };
 
   return (
+
     <div className="w-full flex justify-center items-center my-[100px] px-5">
+
+        {/* <button
+          className="bg-black py-3 px-5 text-white"
+          onClick={migrateSizeNames}
+        >
+          Rename
+        </button> */}
       <div className="p-8 rounded-[12px] w-full max-w-[1268px] shadow-md">
         <Text as="h1" className="text-black mb-4 text-center">
           Add Product
@@ -334,12 +344,7 @@ const AddProduct: React.FC = () => {
             {loading ? "Adding..." : "Add Product"}
           </Button>
         </form>
-        {/* <button
-          className="bg-black py-3 px-5 text-white"
-          onClick={migrateSizeNames}
-        >
-          Rename
-        </button> */}
+      
       </div>
     </div>
   );

@@ -81,9 +81,9 @@ const Products = () => {
             let hoverUrl = product.hoverImage || product.image;
             if (
               product.sizes &&
-              product.sizes["W 16.5 * H 23.4 (A2 Print only)"]
+              product.sizes["Small"]
             ) {
-              const sizeData = product.sizes["W 16.5 * H 23.4 (A2 Print only)"];
+              const sizeData = product.sizes["Small"];
               imageUrl = sizeData.image;
               hoverUrl = sizeData.hoverImage;
             }

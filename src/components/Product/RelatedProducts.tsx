@@ -72,9 +72,9 @@ const RelatedProducts = () => {
             let imageUrl = product.image;
             if (
               product.sizes &&
-              product.sizes["W 16.5 * H 23.4 (A2 Print only)"]
+              product.sizes["Small"]
             ) {
-              imageUrl = product.sizes["W 16.5 * H 23.4 (A2 Print only)"].image;
+              imageUrl = product.sizes["Small"].image;
             }
 
             return (
