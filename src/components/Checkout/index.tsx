@@ -309,7 +309,7 @@ const Checkout = () => {
                       className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                     />
                   </div> */}
-                  <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  <div className="w-full max-w-[240.38px] mob:max-w-full">
                     <Text className="text-[16px] text-[#000000] font-normal mb-2">
                       State
                     </Text>
@@ -324,7 +324,7 @@ const Checkout = () => {
                       className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                     />
                   </div>
-                  <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  <div className="w-full max-w-[240.38px] mob:max-w-full">
                     <Text className="text-[16px] text-[#000000] font-normal mb-2">
                       Zip Code
                     </Text>
