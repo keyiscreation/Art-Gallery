@@ -15,6 +15,7 @@ import UploadNavbarData from "./Navbar/UploadData";
 import NavbarDataManager from "./Navbar/DisplayandEdit";
 import UploadReviewData from "./Product-testimonial/UploadReviewData";
 import DisplayAndEditReviews from "./Product-testimonial/DisplayAndEdit";
+import TextEditor from "./AddProduct/ProductSinglePageSizesContent";
 
 const AdminPanel = () => {
   const [addProduct, setaddProduct] = useState(false);
@@ -81,6 +82,7 @@ const AdminPanel = () => {
         <>
           <AddProduct />
           <UploadReviewData />
+          <TextEditor/>
           <DisplayAndEditReviews />
           <ProductList />
         </>
