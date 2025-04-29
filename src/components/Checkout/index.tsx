@@ -32,7 +32,7 @@ type OrderFormData = {
   lastName: string;
   email: string;
   streetAddress: string;
-  aptNumber?: number;
+  // aptNumber?: number;
   state: string;
   zipCode: number;
   cartValues: CartItem[];
@@ -53,7 +53,7 @@ const Checkout = () => {
     lastName: "",
     email: "",
     streetAddress: "",
-    aptNumber: undefined,
+    // aptNumber: undefined,
     state: "",
     zipCode: 0,
     cartValues: [],
@@ -294,7 +294,7 @@ const Checkout = () => {
                   />
                 </div>
                 <div className="flex mob:block w-full gap-5 justify-between mb-5">
-                  <div className="w-full max-w-[182.38px] mob:max-w-full">
+                  {/* <div className="w-full max-w-[182.38px] mob:max-w-full">
                     <Text className="text-[16px] text-[#000000] font-normal mb-2">
                       Apt Number
                     </Text>
@@ -308,7 +308,7 @@ const Checkout = () => {
                       placeholder="Apt Number"
                       className="px-3 border-[1px] bg-[#F2F2F2] font-newCourier outline-none h-[45px] w-full text-[15px]"
                     />
-                  </div>
+                  </div> */}
                   <div className="w-full max-w-[182.38px] mob:max-w-full">
                     <Text className="text-[16px] text-[#000000] font-normal mb-2">
                       State

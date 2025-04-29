@@ -76,10 +76,10 @@ const ContactUs = () => {
           </Text>
 
           <Text className="text-[20px] text-black leading-[23.08px] font-light mt-5">
-            Fill out the form below, or email me at nate@nateinthewild.com
+            Fill out the form below, or email me at keyiscreation@gmail.com
           </Text>
           <Text className="text-[20px] text-black leading-[23.08px] font-light mt-5 mb-8">
-            For brand inquiries, email Nate@outdoorinfluence.co
+            For brand inquiries, email keyiscreation@gmail.com
           </Text>
 
           <form className="w-full" onSubmit={handleSubmit} autoComplete="off">

@@ -49,7 +49,7 @@ const WhatToDo = () => {
           </Text>
           <Text className="text-center text-[20px] leading-[26px] font-newCourier text-black my-2 ">
             Hopefully this won’t happen with your prints, but if it does - don’t
-            worry! Simply send me an email at nate@nateinthewild.com and I will
+            worry! Simply send me an email at keyiscreation@gmail.com and I will
             get a new print shipped out to you{" "}
             <span className="font-bold">immediately*</span>, completely free of
             charge.

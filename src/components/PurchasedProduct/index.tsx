@@ -87,7 +87,7 @@ const PurchasedProduct: React.FC<ProductProps> = ({ product }) => {
           <span className="font-normal">
             {" "}
             If your print arrives damaged, please email me at
-            Nate@nateinthewild.com to receive a replacement, absolutely free.
+            keyiscreation@gmail.com to receive a replacement, absolutely free.
           </span>
         </Text>
       </div>

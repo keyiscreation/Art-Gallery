@@ -8,6 +8,9 @@ import Button from "../ui/Button";
 import RelatedProducts from "./RelatedProducts";
 import useShoppingCart from "@/hooks/useShoppingCart";
 
+import { db } from "@/firebase";
+import { doc, getDoc } from "firebase/firestore";
+
 import logo from "@/public/signatureblack.png";
 
 interface SizeDetail {
@@ -31,6 +34,7 @@ interface ProductProps {
 
 const Product: React.FC<ProductProps> = ({ product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [savedContent, setSavedContent] = useState<string | null>(null);
   const router = useRouter();
   const {
     getItemQuantity,
@@ -38,6 +42,26 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     decreaseCartQuantity,
     setItemSize,
   } = useShoppingCart();
+
+  const docId = "unique-id";
+
+  // Fetch the content from Firestore when the component loads
+  useEffect(() => {
+    const fetchContent = async () => {
+      const docRef = doc(db, "sizes", docId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const content = docSnap.data()?.content || "";
+        setSavedContent(content); // Set the saved content to be displayed
+        // setEditorContent(content); // Set the content in the editor as well
+      } else {
+        console.log("No such document!");
+      }
+    };
+
+    fetchContent();
+  }, []);
 
   // When the component loads (or product.sizes changes), set the default size.
   useEffect(() => {
@@ -96,8 +120,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
       <div className="mx-auto w-full max-w-[1267.97px] mob:px-5">
         <Text
           as="h1"
-          className="text-black text-center font-newCourier font-bold"
-        >
+          className="text-black text-center font-newCourier font-bold">
           Product Page
         </Text>
         <hr className="border-[0.5px] border-black/50 w-full my-5" />
@@ -165,8 +188,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
                     const newSize = e.target.value;
                     setSelectedSize(newSize);
                     setItemSize(product.id, newSize);
-                  }}
-                >
+                  }}>
                   <option value="" disabled>
                     Select Size
                   </option>
@@ -186,8 +208,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <div className="border border-[#000000]/70 w-[87px] h-[45px] font-newCourier flex justify-between items-center">
               <button
                 onClick={() => increaseCartQuantity(product.id, selectedSize)}
-                className="px-2 text-[24px]"
-              >
+                className="px-2 text-[24px]">
                 +
               </button>
               <Text className="text-[16px] text-[#000000] leading-[20px] mt-1 font-newCourier font-semibold">
@@ -195,8 +216,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
               </Text>
               <button
                 onClick={() => decreaseCartQuantity(product.id, selectedSize)}
-                className="px-2 text-[24px] font-newCourier"
-              >
+                className="px-2 text-[24px] font-newCourier">
                 -
               </button>
             </div>
@@ -204,15 +224,13 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             <div className="flex tab:gap-5 gap-5 mt-10 w-full">
               <Button
                 onClick={onAddToCart}
-                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-newCourier font-medium w-full"
-              >
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-newCourier font-medium w-full">
                 Add To Cart
               </Button>
 
               <Button
                 onClick={onBuyNow}
-                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-newCourier font-medium w-full"
-              >
+                className="bg-[#000000] rounded-[10px] text-[#FFFFFF] font-newCourier font-medium w-full">
                 Buy Now
               </Button>
             </div>
@@ -220,7 +238,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
         </div>
 
         {/* Product description and related content */}
-        <Text className="text-[#000000] text-[20px] leading-[25.64px] mb-6 font-newCourier">
+        {/* <Text className="text-[#000000] text-[20px] leading-[25.64px] mb-6 font-newCourier">
           Standing under a starry night sky and staring into space feels like a
           glimpse into infinity. I remember as a child lying on my back in our
           backyard, staring up at the stars and feeling like I could fall off
@@ -229,10 +247,10 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           the stars above. With the heavens above reflected below I finally
           didn’t feel separated from the cosmos, but rather enveloped in them,
           floating through infinity.
-        </Text>
+        </Text> */}
 
         <div className="space-y-1">
-          <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier ">
+          {/* <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier ">
             PRINT SIZES:
           </Text>
           <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
@@ -242,12 +260,12 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier">
             Normal:{" "}
             <span className="font-normal">16.5&rdquo; x 23.4&rdquo;</span>
-          </Text>
+          </Text> */}
           {/* <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             The four print sizes offered in this collection are specifically
             chosen to allow for easy framing:
           </Text> */}
-          <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier">
+          {/* <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier">
             Large:{" "}
             <span className="font-normal">
               23.4&rdquo; x 33.1&rdquo; *Best Value Price/Size Ratio
@@ -264,7 +282,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier">
             Edition of 3 includes: A signed certificate of authenticity, with
             edition number.
-          </Text>
+          </Text> */}
           {/* <Text className="text-[#000000] text-[20px] font-semibold leading-[25px] font-newCourier">
             EXTRA LARGE: <span className="font-normal">40&rdquo; x 60</span>
           </Text>
@@ -274,7 +292,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           </Text> */}
         </div>
 
-        <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
+        {/* <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
           For more information, please see my Print Sizing Guide.
         </Text>
         <Text className="text-[#000000] text-[20px] font-normal leading-[25px] font-newCourier mt-5">
@@ -292,10 +310,21 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           Quality Guaranteed:{" "}
           <span className="font-normal">
             If your print arrives damaged, please email me at
-            Nate@nateinthewild.com to receive a replacement, absolutely free.
+            keyiscreation@gmail.com to receive a replacement, absolutely free.
           </span>
-        </Text>
+        </Text> */}
 
+        <div className="font-normal text-[#000000] text-[20px] leading-[25.64px] mb-6 font-newCourier">
+          {savedContent ? (
+            <div
+              dangerouslySetInnerHTML={{
+                __html: savedContent,
+              }}
+            />
+          ) : (
+            <p>No content available.</p>
+          )}
+        </div>
         {/* Related products */}
         <RelatedProducts />
       </div>
