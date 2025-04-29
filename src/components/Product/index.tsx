@@ -67,8 +67,8 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   useEffect(() => {
     if (product.sizes && !selectedSize) {
       const availableSizes = Object.keys(product.sizes);
-      const defaultSize = product.sizes["W 16.5 * H 23.4 (A2 Print only)"]
-        ? "W 16.5 * H 23.4 (A2 Print only)"
+      const defaultSize = product.sizes["Small"]
+        ? "Small"
         : availableSizes[0];
       setSelectedSize(defaultSize);
       setItemSize(product.id, defaultSize);
@@ -76,18 +76,18 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   }, [product.sizes, product.id, setItemSize, selectedSize]);
 
   // Determine if dropdown should be displayed.
-  // Show dropdown if there are multiple sizes or if the single available size is not "W 16.5 * H 23.4 (A2 Print only)".
+  // Show dropdown if there are multiple sizes or if the single available size is not "Small".
   const availableSizes = product.sizes ? Object.keys(product.sizes) : [];
   const showDropdown =
     product.sizes &&
     (availableSizes.length > 1 ||
-      availableSizes[0] !== "W 16.5 * H 23.4 (A2 Print only)");
+      availableSizes[0] !== "Small");
 
   // Determine the current image URL based on the selected size.
   let currentImage = product.image;
   if (product.sizes) {
-    const defaultSize = product.sizes["W 16.5 * H 23.4 (A2 Print only)"]
-      ? "W 16.5 * H 23.4 (A2 Print only)"
+    const defaultSize = product.sizes["Small"]
+      ? "Small"
       : availableSizes[0];
     currentImage =
       product.sizes[selectedSize || defaultSize]?.image || product.image;
