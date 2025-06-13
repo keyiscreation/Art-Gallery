@@ -144,25 +144,52 @@ const Product: React.FC<ProductProps> = ({ product }) => {
             </div>
           </div> */}
           <div className="w-full max-w-[670px] flex justify-center items-center z-10">
-            <div className="w-full max-w-[670px] relative group">
-              <Image
-                src={currentImage}
-                alt={product.title}
-                width={670}
-                height={523}
-                onContextMenu={(e) => e.preventDefault()}
-                className="object-contain max-w-full max-h-full"
-              />
+  <div className="w-full max-w-[670px] relative group">
+    {/* Main Image (fades out on hover) */}
+    <Image
+      src={currentImage}
+      alt={product.title}
+      width={670}
+      height={523}
+      onContextMenu={(e) => e.preventDefault()}
+      className="object-contain max-w-full max-h-full transition-opacity duration-700 ease-in-out group-hover:opacity-0"
+    />
 
-              <div className="absolute bottom-3 right-3 w-[80px] rounded-[24px]">
-                <Image
-                  className="mx-auto w-[80px]"
-                  src={logo}
-                  alt="Watermark Logo"
-                />
-              </div>
-            </div>
-          </div>
+    {/* Main watermark (fades out on hover) */}
+    <div className="absolute bottom-3 right-3 w-[80px] rounded-[24px] transition-opacity duration-700 ease-in-out group-hover:opacity-0">
+      <Image
+        className="mx-auto w-[80px]"
+        src={logo}
+        alt="Watermark Logo"
+      />
+    </div>
+
+    {/* Hover image and watermark */}
+    <div className="absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100 flex justify-center items-center z-10">
+      <div className="relative">
+        <Image
+          src={
+            product.sizes?.[selectedSize || "Small"]?.hoverImage ||
+            currentImage
+          }
+          alt={product.title}
+          width={670}
+          height={523}
+          onContextMenu={(e) => e.preventDefault()}
+          className="object-contain max-w-full max-h-full"
+        />
+        <div className="absolute bottom-3 right-3 w-[80px] rounded-[24px] pointer-events-none">
+          <Image
+            className="mx-auto w-[80px]"
+            src={logo}
+            alt="Watermark Logo"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
           <div className="w-full max-w-[465px]">
             <Text className="text-[38px] text-[#000000] font-medium font-newCourier leading-[48px]">

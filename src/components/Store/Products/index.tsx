@@ -171,7 +171,7 @@ const Products = () => {
                 {/* Product details */}
                 <div className="flex justify-center items-start mt-6">
                   {/* max-w-[169px] */}
-                  <Text className="text-[#000000] font-bold text-[24px] leading-[30.77px] font-newCourier mob:text-[20px] mob:leading-[25.64px]">
+                  <Text  onClick={() => handleNavigation(product.slugtitle)} className="text-[#000000] cursor-pointer font-bold text-[24px] leading-[30.77px] font-newCourier mob:text-[20px] mob:leading-[25.64px]">
                     {product.name}
                   </Text>
                   {/* <div className="bg-[#EBF1E0] px-3 py-1 max-h-[44.07px] flex items-center rounded-full">
