@@ -165,11 +165,11 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     </div>
 
     {/* Hover image and watermark */}
-    <div className="absolute inset-0 transition-opacity duration-700 ease-in-out opacity-0 group-hover:opacity-100 flex justify-center items-center z-10">
+    <div className="absolute inset-0 flex justify-center items-center z-10">
       <div className="relative">
         <Image
           src={
-            product.sizes?.[selectedSize || "Small"]?.hoverImage ||
+            // product.sizes?.[selectedSize || "Small"]?.hoverImage ||
             currentImage
           }
           alt={product.title}
