@@ -127,14 +127,13 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isSticky ? "bg-black shadow-lg" : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky ? "bg-black shadow-lg" : "bg-transparent"
+        }`}
     >
-      <nav className="absolute min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
+      <nav className="absolute min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5 border-b border-white/20">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
-            <div className="flex justify-between items-center w-full mob:px-5 pb-4">
+            <div className="flex justify-between items-center w-full mob:px-5 ">
               {/* dekstop navbar */}
               {logoUrl && (
                 <>
@@ -153,15 +152,14 @@ const Navbar = () => {
                 </>
               )}
 
-              <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
+              <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (
                   <li key={`${link.url}-${index}`}>
                     <Link
                       href={link.url}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${
-                        activeTab === link.url ? " font-medium" : "text-white"
-                      }`}
+                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${activeTab === link.url ? " font-medium" : "text-white"
+                        }`}
                     >
                       {link.name}
                     </Link>
@@ -181,19 +179,40 @@ const Navbar = () => {
                     </Text>
                   </div>
                 </Link>
-                <div>
+                {/* <div>
                   <Link
                     href="/store"
                     onClick={() => handleTabChange("/store")}
-                    className={`flex items-center justify-center bg-[#FFFFFF]  rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${
-                      activeTab === "/store" ? " font-semibold" : ""
-                    }`}
+                    className={`flex items-center justify-center bg-[#FFFFFF]  rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${activeTab === "/store" ? " font-semibold" : ""
+                      }`}
                   >
                     <Text className="text-black font-bold px-5 py-4 mt-[2px]">
                       SHOP NOW
                     </Text>
                   </Link>
-                </div>
+                </div> */}
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center w-10 h-10 text-sm text-[#fff] rounded-lg"
+                  onClick={onOpen}
+                  aria-label="Open main menu"
+                >
+                  <svg
+                    className="w-[30px] h-[30px]"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 17 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 1h15M1 7h15M1 13h15"
+                    />
+                  </svg>
+                </button>
               </div>
 
               {/* dekstop navbar  end*/}
@@ -240,34 +259,36 @@ const Navbar = () => {
                     </a>
                   )}
                 </div>
-                <Drawer isOpen={isOpen} onClose={onClose}>
-                  <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {navbarData[0]?.links.map((link, index) => (
-                      <a
-                        href={link.url}
-                        key={`${link.url}-${index}`}
-                        onClick={() => handleTabChange(link.url)}
-                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${
-                          activeTab === link.url
-                            ? "text-white font-medium"
-                            : "text-white"
-                        }`}
-                      >
-                        <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
-                          {link.name.toUpperCase()}
-                        </li>
-                        <hr className="w-full border border-[#FFFFFF] my-2" />
-                      </a>
-                    ))}
-                  </ul>
-                </Drawer>
               </div>
+              <Drawer
+                isOpen={isOpen}
+                onClose={onClose}
+                className="!bg-black/0 backdrop-blur-lg"
+              >
+                <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
+                  {navbarData[0]?.links.map((link, index) => (
+                    <a
+                      href={link.url}
+                      key={`${link.url}-${index}`}
+                      onClick={() => handleTabChange(link.url)}
+                      className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${activeTab === link.url ? "text-white font-medium" : "text-white"
+                        }`}
+                    >
+                      <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
+                        {link.name.toUpperCase()}
+                      </li>
+                      <hr className="w-full border border-[#FFFFFF]/0 my-2" />
+                    </a>
+                  ))}
+                </ul>
+              </Drawer>
 
               {/* mobile navbar */}
             </div>
           </div>
         </div>
       </nav>
+      {/* <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-white/50" /> */}
     </div>
   );
 };

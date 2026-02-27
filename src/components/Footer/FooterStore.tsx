@@ -45,7 +45,7 @@ const Footer = () => {
     <div className="py-20 mob:px-5 bg-[#000000]">
       <Text
         as="h2"
-        className="text-center text-[40px] font-semibold mb-4 text-[#FFFFFF] leading-[38.46px] "
+        className="text-center text-[40px] font-semibold mb-4 text-accent leading-[38.46px] "
       >
         Newsletter
       </Text>
@@ -80,11 +80,14 @@ const Footer = () => {
         </Button>
       </form>
 
-      <Text className="text-white text-center mt-10 text-[20px]">
-        What you place on your walls reflects the world you want to see.
+      <Text className="text-accent text-center mt-10 text-[20px] font-semibold leading-[25.64px] mb-2 ">
+        Keyiscreation
+      </Text>
+      <Text className="text-white/70 text-center text-[18px] max-w-[800px] mx-auto">
+        Beautiful limited edition photographic prints. Each image comes with a certificate of authenticity and edition number.
       </Text>
 
-      <Text as="h1" className="text-center text-[40px] text-[#FFFFFF] mt-10">
+      <Text as="h1" className="text-center text-[40px] text-accent mt-10">
         Follow
       </Text>
       <div className="flex justify-center items-center gap-5 mt-5">
@@ -106,6 +109,18 @@ const Footer = () => {
           <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
         </Link>
         {/* <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" /> */}
+      </div>
+
+      <div className="mt-10 h-px w-full max-w-[800px] mx-auto bg-white/30" />
+
+      <div className="mt-6 flex flex-col items-center justify-center gap-4 max-w-[1200px] mx-auto">
+
+        <Link
+          href="/admin-panel"
+          className="border border-white/70 px-5 py-2 text-[13px] font-newCourier font-semibold text-white transition hover:bg-white hover:text-black"
+        >
+          ADMIN LOGIN
+        </Link>
       </div>
     </div>
   );

@@ -20,3 +20,20 @@
     rgba(255, 255, 255, 0) 100%
   );
 }
+
+@keyframes slowZoom {
+  0% {
+    transform: scale(1);
+  }
+  68% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+.bg-slow-zoom {
+  animation: slowZoom var(--hero-cycle, 6000ms) ease-in-out both;
+  will-change: transform;
+}

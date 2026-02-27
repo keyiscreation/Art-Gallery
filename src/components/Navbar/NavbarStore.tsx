@@ -142,9 +142,8 @@ const Navbar = () => {
                     <Link
                       href={link.url}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[20px] font-newCourier font-semibold leading-[17.95px] text-white ${
-                        activeTab === link.url ? " font-medium" : "text-white"
-                      }`}
+                      className={`block text-[20px] font-newCourier font-semibold leading-[17.95px] text-white ${activeTab === link.url ? " font-medium" : "text-white"
+                        }`}
                     >
                       {link.name}
                     </Link>
@@ -168,9 +167,8 @@ const Navbar = () => {
                   <Link
                     href="/store"
                     onClick={() => handleTabChange("/store")}
-                    className={`flex items-center justify-center bg-[#FFFFFF]  rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${
-                      activeTab === "/store" ? " font-semibold" : ""
-                    }`}
+                    className={`flex items-center justify-center bg-[#FFFFFF]  rounded-[60px] text-[18px] text-[#000000] font-newCourier font-bold leading-[15.38px] ${activeTab === "/store" ? " font-semibold" : ""
+                      }`}
                   >
                     <Text className="text-black font-bold px-5 py-4 mt-[2px]">
                       SHOP NOW
@@ -230,11 +228,10 @@ const Navbar = () => {
                         href={link.url}
                         key={`${link.url}-${index}`}
                         onClick={() => handleTabChange(link.url)}
-                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${
-                          activeTab === link.url
-                            ? "text-white font-medium"
-                            : "text-white"
-                        }`}
+                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${activeTab === link.url
+                          ? "text-white font-medium"
+                          : "text-white"
+                          }`}
                       >
                         <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
                           {link.name.toUpperCase()}

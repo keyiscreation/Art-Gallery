@@ -11,6 +11,7 @@ import SixthSection from "@/components/Home/SixthSection";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/Navbar";
+import FooterStore from "@/components/Footer/FooterStore";
 
 // Register the plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -31,7 +32,7 @@ export default function Home() {
       if (card) {
         gsap.fromTo(
           card,
-          { scale: 1,scrub: 2, boxShadow: "none", y: 0, x: 0 },
+          { scale: 1, scrub: 2, boxShadow: "none", y: 0, x: 0 },
           {
             scale: 1,
             boxShadow: "0px -20px 100px rgba(255, 255, 255, 0.3)",
@@ -71,6 +72,7 @@ export default function Home() {
     <div>
       <Navbar />
 
+
       <div className="flex justify-center relative w-full" id="what-we-do">
         <div className="relative w-full">
           {cardContents.map((Component, index) => (
@@ -89,7 +91,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Footer />
+      <FooterStore />
     </div>
   );
 }
