@@ -40,7 +40,7 @@ const Navbar = () => {
 
   const { cartProducts } = useShoppingCart();
 
-  const totalQuantity: number = cartItems.reduce(
+  const totalQuantity: number = (Array.isArray(cartItems) ? cartItems : []).reduce(
     (sum: number, item: CartItem) => sum + item.quantity,
     0
   );

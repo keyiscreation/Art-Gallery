@@ -21,7 +21,7 @@ const useShoppingCart = () => {
 
   const cartQuantity = useMemo(
     () =>
-      cartItems?.reduce(
+      (Array.isArray(cartItems) ? cartItems : []).reduce(
         (quantity: number, item: CartItem) => item.quantity + quantity,
         0
       ),
@@ -30,19 +30,18 @@ const useShoppingCart = () => {
 
   const getItemQuantity = (id: number | string, size?: string) => {
     console.log(size);
-    return cartItems.find((item: CartItem) => item.id === id)?.quantity || 0;
+    return (Array.isArray(cartItems) ? cartItems : []).find((item: CartItem) => item.id === id)?.quantity || 0;
   };
 
   const increaseCartQuantity = (id: number | string, size?: string) => {
     setCartItems((currItems: CartItem[]) => {
-      const existingItem = currItems.find((item: CartItem) => item.id === id);
+      const items = Array.isArray(currItems) ? currItems : [];
+      const existingItem = items.find((item: CartItem) => item.id === id);
 
       if (existingItem == null) {
-        // If the item is not already in the cart, create it with the selected size
-        return [...currItems, { id, quantity: 1, size }];
+        return [...items, { id, quantity: 1, size }];
       } else {
-        // If the item is already in the cart, increase its quantity
-        return currItems.map((item: CartItem) => {
+        return items.map((item: CartItem) => {
           if (item.id === id) {
             return { ...item, quantity: item.quantity + 1 };
           }
@@ -55,10 +54,11 @@ const useShoppingCart = () => {
   const decreaseCartQuantity = (id: number | string, size?: string) => {
     console.log(size);
     setCartItems((currItems: CartItem[]) => {
-      if (currItems.find((item) => item.id === id)?.quantity === 1) {
-        return currItems.filter((item: CartItem) => item.id !== id);
+      const items = Array.isArray(currItems) ? currItems : [];
+      if (items.find((item) => item.id === id)?.quantity === 1) {
+        return items.filter((item: CartItem) => item.id !== id);
       } else {
-        return currItems.map((item: CartItem) => {
+        return items.map((item: CartItem) => {
           if (item.id === id) {
             return { ...item, quantity: item.quantity - 1 };
           } else {
@@ -72,13 +72,15 @@ const useShoppingCart = () => {
   const removeFromCart = (id: number | string, size?: string) => {
     console.log(size);
     setCartItems((currItems: CartItem[]) => {
-      return currItems.filter((item: CartItem) => item.id !== id);
+      const items = Array.isArray(currItems) ? currItems : [];
+      return items.filter((item: CartItem) => item.id !== id);
     });
   };
 
   const setItemSize = (id: number | string, size: string) => {
     setCartItems((currItems: CartItem[]) => {
-      return currItems.map((item: CartItem) => {
+      const items = Array.isArray(currItems) ? currItems : [];
+      return items.map((item: CartItem) => {
         if (item.id === id) {
           return { ...item, size };
         }
@@ -105,7 +107,8 @@ const useShoppingCart = () => {
 
   // Generate a list of cart products (each product may include a chosen size)
   const cartProducts: (Product & { size?: string })[] = useMemo(() => {
-    return cartItems
+    const items = Array.isArray(cartItems) ? cartItems : [];
+    return items
       .map((item: CartItem) => {
         const foundProduct = firestoreProducts.find(
           (product) => product.id === item.id
