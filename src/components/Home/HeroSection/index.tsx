@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 import Text from "@/components/ui/Text";
 // import bg from "@/public/images/herobg.png";
 import bgshadow from "@/public/images/heroshadow.png";
 import Button from "@/components/ui/Button";
 
 const HeroSection = () => {
+  const router = useRouter();
   // const homedata = useHomeData();
   const CYCLE_MS = 5000;
   const homedata = {
@@ -75,6 +76,8 @@ const HeroSection = () => {
 
           <Button
             type="button"
+            onClick={() => router.push("/store")}
+
             className="border border-white/70 bg-white/10 backdrop-blur-md py-5 text-[20px] text-white transition hover:bg-white hover:text-black "
           >
             EXPLORE COLLECTION
