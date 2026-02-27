@@ -119,7 +119,8 @@ const Navbar = () => {
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
             <div className="flex justify-between items-center w-full mob:px-5 ">
               {/* dekstop navbar */}
-              {logoUrl && (
+            <div className="">
+            {logoUrl && (
                 <>
                   <Link
                     href="/"
@@ -135,6 +136,7 @@ const Navbar = () => {
                   </Link>
                 </>
               )}
+            </div>
 
               <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (
