@@ -75,7 +75,7 @@ const HeroSection = () => {
 
           <Button
             type="button"
-            className="border border-white/70 bg-white/10 backdrop-blur-md py-5 text-[20px] text-white transition "
+            className="border border-white/70 bg-white/10 backdrop-blur-md py-5 text-[20px] text-white transition hover:bg-white hover:text-black "
           >
             EXPLORE COLLECTION
           </Button>

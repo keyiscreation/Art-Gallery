@@ -32,15 +32,15 @@ type NavbarDataType = {
 };
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [navbarData, setNavbarData] = useState<NavbarDataType[]>([]);
-  const [activeTab, setActiveTab] = useState("/"); // Initial active tab set to home
-  const [cartItems] = useAtomValue("cart");
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("/");
   const [logoUrl, setLogoUrl] = useState<string>("");
 
+  const [cartItems] = useAtomValue("cart");
   const { cartProducts } = useShoppingCart();
 
-  const totalQuantity: number = cartItems.reduce(
+  const totalQuantity: number = (Array.isArray(cartItems) ? cartItems : []).reduce(
     (sum: number, item: CartItem) => sum + item.quantity,
     0
   );
@@ -117,13 +117,13 @@ const Navbar = () => {
       <nav className="relative min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
-            <div className="flex justify-between items-center w-full mob:px-5 pb-4">
+            <div className="flex justify-between items-center w-full mob:px-5 ">
               {/* dekstop navbar */}
               {logoUrl && (
                 <>
                   <Link
                     href="/"
-                    className="flex mob:justify-start xl:hidden max-w-[116.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
+                    className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
                   >
                     <Image
                       src={logoUrl}
@@ -136,13 +136,13 @@ const Navbar = () => {
                 </>
               )}
 
-              <ul className="font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
+              <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (
                   <li key={`${link.url}-${index}`}>
                     <Link
                       href={link.url}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[20px] font-newCourier font-semibold leading-[17.95px] text-white ${activeTab === link.url ? " font-medium" : "text-white"
+                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${activeTab === link.url ? " font-medium" : "text-white"
                         }`}
                     >
                       {link.name}
@@ -163,7 +163,7 @@ const Navbar = () => {
                     </Text>
                   </div>
                 </Link>
-                <div>
+                {/* <div>
                   <Link
                     href="/store"
                     onClick={() => handleTabChange("/store")}
@@ -174,7 +174,29 @@ const Navbar = () => {
                       SHOP NOW
                     </Text>
                   </Link>
-                </div>
+                </div> */}
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center w-10 h-10 text-sm text-[#fff] rounded-lg"
+                  onClick={onOpen}
+                  aria-label="Open main menu"
+                >
+                  <svg
+                    className="w-[30px] h-[30px]"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 17 14"
+                  >
+                    <path
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M1 1h15M1 7h15M1 13h15"
+                    />
+                  </svg>
+                </button>
               </div>
 
               {/* dekstop navbar  end*/}
@@ -221,27 +243,29 @@ const Navbar = () => {
                     </a>
                   )}
                 </div>
-                <Drawer isOpen={isOpen} onClose={onClose}>
-                  <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
-                    {navbarData[0]?.links.map((link, index) => (
-                      <a
-                        href={link.url}
-                        key={`${link.url}-${index}`}
-                        onClick={() => handleTabChange(link.url)}
-                        className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${activeTab === link.url
-                          ? "text-white font-medium"
-                          : "text-white"
-                          }`}
-                      >
-                        <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
-                          {link.name.toUpperCase()}
-                        </li>
-                        <hr className="w-full border border-[#FFFFFF] my-2" />
-                      </a>
-                    ))}
-                  </ul>
-                </Drawer>
               </div>
+              <Drawer
+                isOpen={isOpen}
+                onClose={onClose}
+                className="!bg-black backdrop-blur-lg"
+              >
+                <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
+                  {navbarData[0]?.links.map((link, index) => (
+                    <a
+                      href={link.url}
+                      key={`${link.url}-${index}`}
+                      onClick={() => handleTabChange(link.url)}
+                      className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${activeTab === link.url ? "text-white font-medium" : "text-white"
+                        }`}
+                    >
+                      <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
+                        {link.name.toUpperCase()}
+                      </li>
+                      <hr className="w-full border border-[#FFFFFF]/0 my-2" />
+                    </a>
+                  ))}
+                </ul>
+              </Drawer>
 
               {/* mobile navbar */}
             </div>
