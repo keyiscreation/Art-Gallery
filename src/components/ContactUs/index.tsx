@@ -58,11 +58,11 @@ const ContactUs = () => {
 
   return (
     <div className="px-5">
-      <Text as="h1" className="text-black text-center">
+      {/* <Text as="h1" className="text-black text-center">
         Contact Us
       </Text>
 
-      <hr className="border-[0.5px] border-black/50 w-full my-5 max-w-[1284px] mx-auto" />
+      <hr className="border-[0.5px] border-black/50 w-full my-5 max-w-[1284px] mx-auto" /> */}
 
       <div className="flex tab:flex-wrap  w-full max-w-[1284px] mx-auto gap-16 mob:gap-8  items-start mt-10 pb-20">
         <div className="w-full max-w-[740px]">

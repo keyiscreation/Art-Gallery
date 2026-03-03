@@ -36,7 +36,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/");
   const [logoUrl, setLogoUrl] = useState<string>("");
-  const [isSticky, setIsSticky] = useState(false);
 
   const [cartItems] = useAtomValue("cart");
   const { cartProducts } = useShoppingCart();
@@ -64,19 +63,6 @@ const Navbar = () => {
 
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -127,32 +113,30 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky ? "bg-black shadow-lg" : "bg-transparent"}`}
-    >
-      <nav className="absolute min-h-[80px] bg-cover z-50 w-full px-14 mob:px-5 border-b border-white/20">
+    <div className="relative bg-[#000000] mb-16">
+      <nav className="relative min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
             <div className="flex justify-between items-center w-full mob:px-5 ">
               {/* dekstop navbar */}
-            <div className="">
-            {logoUrl && (
-                <>
-                  <Link
-                    href="/"
-                    className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
-                  >
-                    <Image
-                      src={logoUrl}
-                      alt="Logo"
-                      priority
-                      width={138}
-                      height={114}
-                    />
-                  </Link>
-                </>
-              )}
-            </div>
+              <div className="">
+                {logoUrl && (
+                  <>
+                    <Link
+                      href="/"
+                      className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
+                    >
+                      <Image
+                        src={logoUrl}
+                        alt="Logo"
+                        priority
+                        width={138}
+                        height={114}
+                      />
+                    </Link>
+                  </>
+                )}
+              </div>
 
               <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (

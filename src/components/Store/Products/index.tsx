@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { collection, getDocs } from "firebase/firestore";
 
 import { db } from "@/firebase";
 import Text from "@/components/ui/Text";
 import Spinner from "@/components/ui/Spinner";
+import ProductModal from "@/components/Product/ProductModal";
 
 interface SizeInfo {
   image: string;
@@ -36,9 +36,10 @@ const ROW_LAYOUTS = [
 ];
 
 const Products = () => {
-  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -61,11 +62,35 @@ const Products = () => {
   }, []);
 
   const handleProductClick = (product: Product) => {
-    router.push(`/products/${product.slugtitle}`);
+    setSelectedProduct(product);
+    setIsModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  // Map store product (name) to modal product (title)
+  const modalProduct = selectedProduct
+    ? {
+        id: selectedProduct.id,
+        title: selectedProduct.name,
+        slugtitle: selectedProduct.slugtitle,
+        price: selectedProduct.price,
+        image: selectedProduct.image,
+        sizes: selectedProduct.sizes,
+      }
+    : null;
+
   return (
-    <div className="mx-auto w-full   lg:px-8 pb-8 mob:pb-6">
+    <>
+      <ProductModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={modalProduct}
+      />
+      <div className="mx-auto w-full   lg:px-8 pb-8 mob:pb-6">
 
 
       {loading ? (
@@ -133,6 +158,7 @@ const Products = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

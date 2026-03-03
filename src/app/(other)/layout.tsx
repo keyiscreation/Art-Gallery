@@ -1,5 +1,5 @@
 // app/(other)/layout.tsx
-import Navbar from "@/components/Navbar/NavbarStore";
+import NavbarSwitcher from "@/components/Navbar/NavbarSwitcher";
 import Footer from "@/components/Footer/FooterStore";
 import PayPalProvider from "@/providers/PaypalProvider";
 import localFont from "next/font/local";
@@ -62,7 +62,7 @@ export default function OtherLayout({
   return (
     <>
       <PayPalProvider>
-        <Navbar />
+        <NavbarSwitcher />
         <div className={`${futurapt.variable} ${futura.variable}`}>
           {children}
         </div>
