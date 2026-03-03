@@ -1,45 +1,46 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import axios from "axios";
+// import React, { useState } from "react";
+// import Image from "next/image";
+// import axios from "axios";
 
 import Text from "../ui/Text";
-import Button from "../ui/Button";
+// import Button from "../ui/Button";
 
 // import youtube from "@/public/icons/youtubewhite.svg";
-import twiter from "@/public/icons/x-White.svg";
-import insta from "@/public/icons/instagram-white.svg";
+// import twiter from "@/public/icons/x-White.svg";
+// import insta from "@/public/icons/instagram-white.svg";
 // import fb from "@/public/icons/facebook-white.svg";
 import Link from "next/link";
 
 const Footer = () => {
-  const [email, setEmail] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // if (!email) {
-    //   alert("Please enter a valid email.");
-    //   return;
-    // }
-
-    setLoading(true);
-
-    try {
-      const response = await axios.post("/api/newsletter", { email });
-
-      if (response.status === 200) {
-        alert("Successfully subscribed!");
-        setEmail(""); // Clear input after successful submission
-      }
-    } catch (error) {
-      console.error("Subscription failed:", error);
-      alert("Failed to subscribe. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Newsletter state and submit handler (currently unused with newsletter UI commented out)
+  // const [email, setEmail] = useState<string>("");
+  // const [loading, setLoading] = useState<boolean>(false);
+  //
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //
+  //   if (!email) {
+  //     alert("Please enter a valid email.");
+  //     return;
+  //   }
+  //
+  //   setLoading(true);
+  //
+  //   try {
+  //     const response = await axios.post("/api/newsletter", { email });
+  //
+  //     if (response.status === 200) {
+  //       alert("Successfully subscribed!");
+  //       setEmail(""); // Clear input after successful submission
+  //     }
+  //   } catch (error) {
+  //     console.error("Subscription failed:", error);
+  //     alert("Failed to subscribe. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="py-20 mob:px-5 bg-[#000000]">
