@@ -137,22 +137,22 @@ const Navbar = () => {
             <div className="flex justify-between items-center w-full mob:px-5 ">
               {/* dekstop navbar */}
               <div className="">
-              {logoUrl && (
-                <>
-                  <Link
-                    href="/"
-                    className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
-                  >
-                    <Image
-                      src={logoUrl}
-                      alt="Logo"
-                      priority
-                      width={138}
-                      height={114}
-                    />
-                  </Link>
-                </>
-              )}
+                {logoUrl && (
+                  <>
+                    <Link
+                      href="/"
+                      className="flex mob:justify-start xl:hidden max-w-[115.81px] space-x-3 mob:w-[140px] rtl:space-x-reverse"
+                    >
+                      <Image
+                        src={logoUrl}
+                        alt="Logo"
+                        priority
+                        width={138}
+                        height={114}
+                      />
+                    </Link>
+                  </>
+                )}
               </div>
 
               <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
