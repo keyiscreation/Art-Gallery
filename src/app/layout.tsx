@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 
 import { AuthProvider } from "@/providers/AuthContext";
+import LoadingGate from "@/components/LoadingGate";
 
 import "./globals.css";
 
@@ -73,7 +74,9 @@ export default function RootLayout({
       <body
         className={` ${futurapt.variable} ${futura.variable} ${newCourier.variable}`}
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <LoadingGate>{children}</LoadingGate>
+        </AuthProvider>
       </body>
     </html>
   );
