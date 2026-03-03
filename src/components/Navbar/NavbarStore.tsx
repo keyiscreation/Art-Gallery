@@ -36,6 +36,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/");
   const [logoUrl, setLogoUrl] = useState<string>("");
+  const [isSticky, setIsSticky] = useState(false);
 
   const [cartItems] = useAtomValue("cart");
   const { cartProducts } = useShoppingCart();
@@ -63,6 +64,19 @@ const Navbar = () => {
 
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsSticky(true);
+      } else {
+        setIsSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -113,8 +127,10 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="relative bg-[#000000] mb-16">
-      <nav className="relative min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5">
+    <div
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky ? "bg-black shadow-lg" : "bg-transparent"}`}
+    >
+      <nav className="absolute min-h-[80px] bg-cover z-50 w-full px-14 mob:px-5 border-b border-white/20">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
           <div className="relative max-w-[100%] min-h-[80px] w-full flex flex-wrap items-center justify-between mx-auto py-4">
             <div className="flex justify-between items-center w-full mob:px-5 ">
