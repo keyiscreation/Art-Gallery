@@ -1,49 +1,50 @@
 "use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import axios from "axios";
+// import React, { useState } from "react";
+// import Image from "next/image";
+// import axios from "axios";
 
 import Text from "../ui/Text";
-import Button from "../ui/Button";
+// import Button from "../ui/Button";
 
 // import youtube from "@/public/icons/youtubewhite.svg";
-import twiter from "@/public/icons/x-White.svg";
-import insta from "@/public/icons/instagram-white.svg";
+// import twiter from "@/public/icons/x-White.svg";
+// import insta from "@/public/icons/instagram-white.svg";
 // import fb from "@/public/icons/facebook-white.svg";
 import Link from "next/link";
 
 const Footer = () => {
-  const [email, setEmail] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // if (!email) {
-    //   alert("Please enter a valid email.");
-    //   return;
-    // }
-
-    setLoading(true);
-
-    try {
-      const response = await axios.post("/api/newsletter", { email });
-
-      if (response.status === 200) {
-        alert("Successfully subscribed!");
-        setEmail(""); // Clear input after successful submission
-      }
-    } catch (error) {
-      console.error("Subscription failed:", error);
-      alert("Failed to subscribe. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Newsletter state and submit handler (currently unused with newsletter UI commented out)
+  // const [email, setEmail] = useState<string>("");
+  // const [loading, setLoading] = useState<boolean>(false);
+  //
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //
+  //   if (!email) {
+  //     alert("Please enter a valid email.");
+  //     return;
+  //   }
+  //
+  //   setLoading(true);
+  //
+  //   try {
+  //     const response = await axios.post("/api/newsletter", { email });
+  //
+  //     if (response.status === 200) {
+  //       alert("Successfully subscribed!");
+  //       setEmail(""); // Clear input after successful submission
+  //     }
+  //   } catch (error) {
+  //     console.error("Subscription failed:", error);
+  //     alert("Failed to subscribe. Please try again.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="py-20 mob:px-5 bg-[#000000]">
-      <Text
+      {/* <Text
         as="h2"
         className="text-center text-[40px] font-semibold mb-4 text-accent leading-[38.46px] "
       >
@@ -78,18 +79,21 @@ const Footer = () => {
         >
           {loading ? "SUBSCRIBING..." : "SUBSCRIBE"}
         </Button>
-      </form>
+      </form> */}
 
-      <Text className="text-accent text-center mt-10 text-[20px] font-semibold leading-[25.64px] mb-2 ">
+      <Text className="text-white text-center mt-10 text-[20px] font-semibold leading-[25.64px]  ">
         Keyiscreation
       </Text>
-      <Text className="text-white/70 text-center text-[18px] max-w-[800px] mx-auto">
+      <Text className="text-white/70 text-center text-[18px] max-w-[800px] mx-auto my-4">
         Beautiful limited edition photographic prints. Each image comes with a certificate of authenticity and edition number.
       </Text>
-
-      <Text as="h1" className="text-center text-[40px] text-accent mt-10">
-        Follow
+      <Text className="text-white/70 italic text-center text-[16px] max-w-[800px] mx-auto my-8">
+        In memory of my friend Þorleifur
       </Text>
+
+      {/* <Text as="h1" className="text-center text-[40px] text-accent mt-10">
+        Follow
+      </Text> */}
       <div className="flex justify-center items-center gap-5 mt-5">
         {/* <Image
           className="w-[24.52px] h-[24.52px]"
@@ -97,23 +101,26 @@ const Footer = () => {
           alt="youtube"
         /> */}
 
-        <Link href="https://x.com/keyiscreation?t=nfKjEi1hOGfy78NpZLZDRw&s=08">
+        {/* <Link href="https://x.com/keyiscreation?t=nfKjEi1hOGfy78NpZLZDRw&s=08">
           <Image
             className="w-[24.52px] h-[24.52px]"
             src={twiter}
             alt="twiter"
           />
-        </Link>
+        </Link> */}
 
-        <Link href="https://www.instagram.com/keyiscreation?igsh=MWhzcHJqeWN1N292dQ==">
-          <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" />
+        <Link className="text-[#F4C430] text-sm flex items-center gap-1" href="https://www.instagram.com/keyiscreation?igsh=MWhzcHJqeWN1N292dQ==">
+          {/* <Image className="w-[24.52px] h-[24.52px]" src={insta} alt="insta" /> */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" data-fg-b7rw67=":914.573:/App.tsx:893:17:30165:598:e:svg:etete"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" data-fg-b7rw68=":914.573:/App.tsx:904:19:30541:56:e:rect"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" data-fg-b7rw69=":914.573:/App.tsx:905:19:30616:59:e:path"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" data-fg-b7rw70=":914.573:/App.tsx:906:19:30694:46:e:line"></line></svg>
+           @keyiscreation
         </Link>
         {/* <Image className="w-[24.52px] h-[24.52px]" src={fb} alt="fb" /> */}
       </div>
+        <Text className="text-white/70  text-center text-[16px] mt-4">© 2025</Text>
 
       <div className="mt-10 h-px w-full max-w-[800px] mx-auto bg-white/30" />
 
-      <div className="mt-6 flex flex-col items-center justify-center gap-4 max-w-[1200px] mx-auto">
+      {/* <div className="mt-6 flex flex-col items-center justify-center gap-4 max-w-[1200px] mx-auto">
 
         <Link
           href="/admin-panel"
@@ -121,7 +128,7 @@ const Footer = () => {
         >
           ADMIN LOGIN
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

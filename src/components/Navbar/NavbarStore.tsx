@@ -59,6 +59,7 @@ const Navbar = () => {
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     localStorage.setItem("activeTab", tab);
+    setIsOpen(false);
   };
 
   const onClose = () => setIsOpen(false);
@@ -233,7 +234,7 @@ const Navbar = () => {
                     </button>
                   </div>
                   {logoUrl && (
-                    <a href="/">
+                    <Link href="/">
                       <Image
                         src={logoUrl}
                         alt="Logo"
@@ -242,7 +243,7 @@ const Navbar = () => {
                         width={138}
                         height={114}
                       />
-                    </a>
+                    </Link>
                   )}
                 </div>
               </div>
@@ -253,7 +254,7 @@ const Navbar = () => {
               >
                 <ul className="font-normal w-full z-50 flex flex-col py-4 gap-2">
                   {navbarData[0]?.links.map((link, index) => (
-                    <a
+                    <Link
                       href={link.url}
                       key={`${link.url}-${index}`}
                       onClick={() => handleTabChange(link.url)}
@@ -264,7 +265,7 @@ const Navbar = () => {
                         {link.name.toUpperCase()}
                       </li>
                       <hr className="w-full border border-[#FFFFFF]/0 my-2" />
-                    </a>
+                    </Link>
                   ))}
                 </ul>
               </Drawer>
