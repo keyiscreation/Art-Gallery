@@ -28,6 +28,7 @@ export default {
         navsize: { max: "1180px" },
         tab: { max: "991px" },
         mob: { max: "768px" },
+        desk: { min: "1000px" },
       },
     },
   },

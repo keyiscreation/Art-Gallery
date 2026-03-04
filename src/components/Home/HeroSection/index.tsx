@@ -49,7 +49,7 @@ const HeroSection = () => {
   const homedata = useHomeData();
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative md:min-h-screen h-[600px] overflow-hidden">
       <div className="absolute inset-0 z-10 bg-black/30" />
 
       {/* Background video */}
@@ -74,8 +74,9 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-30 flex items-center justify-center md:pt-[100px] px-6">
         <div className="flex max-w-[1000px] flex-col items-center gap-10 text-center">
           <Text className="text-center text-[20px] font-normal leading-[25.64px] text-[#FFFFFF]">
-            Limited edition photographic prints on museum-quality fine art paper.
-            Each piece comes with a certificate of authenticity and edition number.
+            Limited edition photographic prints on museum-quality fine art
+            paper. Each piece comes with a certificate of authenticity and
+            edition number.
           </Text>
 
           <Button

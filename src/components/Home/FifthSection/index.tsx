@@ -21,7 +21,7 @@ const FifthSection = () => {
         alt="bg"
         fill
       />
-      <div className=" min-h-screen overflow-hidden flex items-center justify-start  px-14 mob:px-5 ">
+      <div className=" md:min-h-screen h-[500px] overflow-hidden flex items-center justify-start  px-14 mob:px-5 ">
         <div className="relative z-10 w-full">
           <Text as="h2" className="mb-3 uppercase max-w-[900px] font-light">
             {homedata.fifthSectionTitle}

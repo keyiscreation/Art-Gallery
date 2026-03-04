@@ -29,14 +29,15 @@ const ForthSection = () => {
           fill
         />
         <div className="bg-black opacity-40 absolute w-full h-full"></div>
-        <div className=" min-h-screen overflow-hidden flex items-center justify-start  px-14 mob:px-5 ">
+        <div className=" md:min-h-screen h-[500px] overflow-hidden flex items-center justify-start  px-14 mob:px-5 ">
           <div className="relative z-10 w-full">
             <Text as="h2" className="mb-3 uppercase max-w-[900px] font-light">
               {homedata.fourthSectionTitle}
             </Text>
             <Link href="/store">
               <Text className="text-accent items-center uppercase  underline underline-offset-[3px]">
-                {homedata.fourthSectionBtnTitle} <span className="">→</span>{" "}
+                {homedata.fourthSectionBtnTitle}{" "}
+                <span className="">→</span>{" "}
               </Text>
             </Link>
           </div>

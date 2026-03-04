@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { db } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
@@ -31,19 +32,22 @@ type NavbarDataType = {
 };
 
 const Navbar = () => {
+  const pathname = usePathname();
+  const isStorePage = pathname === "/store";
+
   const [navbarData, setNavbarData] = useState<NavbarDataType[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("/");
   const [isSticky, setIsSticky] = useState(false);
   const [logoUrl, setLogoUrl] = useState<string>("");
+  const [showArtStore, setShowArtStore] = useState(false);
 
   const [cartItems] = useAtomValue("cart");
   const { cartProducts } = useShoppingCart();
 
-  const totalQuantity: number = (Array.isArray(cartItems) ? cartItems : []).reduce(
-    (sum: number, item: CartItem) => sum + item.quantity,
-    0
-  );
+  const totalQuantity: number = (
+    Array.isArray(cartItems) ? cartItems : []
+  ).reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
 
   // Load activeTab from local storage on component mount
   useEffect(() => {
@@ -69,6 +73,8 @@ const Navbar = () => {
       } else {
         setIsSticky(false);
       }
+
+      setShowArtStore(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -128,8 +134,9 @@ const Navbar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isSticky ? "bg-black shadow-lg" : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isSticky ? "bg-black shadow-lg" : "bg-transparent"
+      }`}
     >
       <nav className="absolute min-h-[80px] bg-cover z-50 w-full  px-14 mob:px-5 border-b border-white/20">
         <div className="flex justify-center items-center w-full min-h-[80px] ">
@@ -155,14 +162,32 @@ const Navbar = () => {
                 )}
               </div>
 
+              {/* Art Store — mobile/tablet, slides in from top after threshold */}
+              <div className="xl:hidden overflow-hidden h-[28px] flex items-center">
+                <Link
+                  href="/store"
+                  onClick={() => handleTabChange("/store")}
+                  className="block text-white font-bold font-newCourier text-[18px] uppercase tracking-widest transition-transform duration-500 ease-out"
+                  style={{
+                    transform:
+                      showArtStore && !isStorePage
+                        ? "translateY(0%)"
+                        : "translateY(-110%)",
+                  }}
+                >
+                  Art Store
+                </Link>
+              </div>
+
               <ul className="hidden font-normal mob:absolute xl:hidden mob:top-[100px] items-center mob:px-4 mob:left-0 mob:w-full z-50 flex-col py-4 md:p-0 mt-4 gap-[92px] md:flex-row rtl:space-x-reverse md:mt-0 tab:bg-black">
                 {navbarData[0]?.links.map((link, index) => (
                   <li key={`${link.url}-${index}`}>
                     <Link
                       href={link.url}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${activeTab === link.url ? " font-medium" : "text-white"
-                        }`}
+                      className={`block text-[22px] font-newCourier font-semibold leading-[17.95px] text-white ${
+                        activeTab === link.url ? " font-medium" : "text-white"
+                      }`}
                     >
                       {link.name}
                     </Link>
@@ -249,6 +274,24 @@ const Navbar = () => {
                       </svg>
                     </button>
                   </div>
+
+                  {/* Art Store — desktop, slides in from top after threshold */}
+                  <div className="overflow-hidden h-[28px] flex items-center">
+                    <Link
+                      href="/store"
+                      onClick={() => handleTabChange("/store")}
+                      className="block text-white font-newCourier font-semibold text-[15px] uppercase tracking-widest transition-transform duration-500 ease-out"
+                      style={{
+                        transform:
+                          showArtStore && !isStorePage
+                            ? "translateY(0%)"
+                            : "translateY(-110%)",
+                      }}
+                    >
+                      Art Store
+                    </Link>
+                  </div>
+
                   {logoUrl && (
                     <Link href="/">
                       <Image
@@ -274,8 +317,11 @@ const Navbar = () => {
                       href={link.url}
                       key={`${link.url}-${index}`}
                       onClick={() => handleTabChange(link.url)}
-                      className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${activeTab === link.url ? "text-white font-medium" : "text-white"
-                        }`}
+                      className={`block text-[16px] font-futura font-normal leading-[17.95px] text-white ${
+                        activeTab === link.url
+                          ? "text-white font-medium"
+                          : "text-white"
+                      }`}
                     >
                       <li className="flex justify-center py-[15px] list-items mob:px-[25px] uppercase">
                         {link.name.toUpperCase()}

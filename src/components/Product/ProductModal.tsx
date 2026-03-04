@@ -43,11 +43,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const router = useRouter();
-  const {
-    getItemQuantity,
-    increaseCartQuantity,
-    setItemSize,
-  } = useShoppingCart();
+  const { getItemQuantity, increaseCartQuantity, setItemSize } =
+    useShoppingCart();
 
   useEffect(() => {
     if (product?.sizes && !selectedSize) {
@@ -78,10 +75,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const SIZE_ORDER = ["Small", "Medium", "Large"];
   const availableSizes = product.sizes
     ? Object.keys(product.sizes).sort(
-      (a, b) =>
-        (SIZE_ORDER.indexOf(a) >= 0 ? SIZE_ORDER.indexOf(a) : 999) -
-        (SIZE_ORDER.indexOf(b) >= 0 ? SIZE_ORDER.indexOf(b) : 999)
-    )
+        (a, b) =>
+          (SIZE_ORDER.indexOf(a) >= 0 ? SIZE_ORDER.indexOf(a) : 999) -
+          (SIZE_ORDER.indexOf(b) >= 0 ? SIZE_ORDER.indexOf(b) : 999),
+      )
     : [];
   const showSizeOptions =
     product.sizes &&
@@ -124,17 +121,17 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 sm:p-4"
+      className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 desk:items-center"
       onClick={handleBackdropClick}
     >
       <div
-        className="relative flex h-[95vh] w-full max-w-[1267.97px] flex-col overflow-hidden rounded-lg bg-white shadow-xl sm:flex-row sm:max-h-[900px]"
+        className="relative flex w-full max-w-[1267.97px] flex-col rounded-lg bg-white shadow-xl desk:flex-row desk:h-[90vh] desk:max-h-[900px] desk:overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Back button - fixed at top on mobile, inside image on desktop */}
         <button
           onClick={onClose}
-          className="absolute left-4 top-4 z-20 flex sm:hidden items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-md transition hover:bg-white"
+          className="absolute left-4 top-4 z-20 flex desk:hidden items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-md transition hover:bg-white"
           aria-label="Back"
         >
           <svg
@@ -154,12 +151,12 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </button>
 
         {/* Mobile: scrollable area with image + product info (pt for back button) */}
-        <div className="flex flex-1 flex-col overflow-y-auto  sm:pt-0 sm:flex-row sm:overflow-hidden">
+        <div className="flex flex-1 flex-col desk:flex-row desk:overflow-hidden">
           {/* Left section - Image (~65%) */}
-          <div className="relative w-full sm:w-[65%] h-[300px] shrink-0 sm:h-full sm:min-h-0 ">
+          <div className="relative w-full desk:w-[65%] h-[300px] shrink-0 desk:h-full desk:min-h-0">
             <button
               onClick={onClose}
-              className="absolute left-4 top-4 z-10 hidden sm:flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-md transition hover:bg-white"
+              className="absolute left-4 top-4 z-10 hidden desk:flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-black shadow-md transition hover:bg-white"
               aria-label="Back"
             >
               <svg
@@ -181,14 +178,14 @@ const ProductModal: React.FC<ProductModalProps> = ({
               src={currentImage}
               alt={product.title}
               fill
-              className="object-contain"
+              className="object-cover desk:object-contain"
               onContextMenu={(e) => e.preventDefault()}
               sizes="70vw"
             />
           </div>
 
           {/* Right section - Product details (~35%) */}
-          <div className="flex w-full flex-col p-6 sm:w-[35%] sm:min-w-[320px] sm:overflow-y-auto sm:p-8 sm:min-h-0">
+          <div className="flex w-full flex-col p-6 desk:w-[35%] desk:min-w-[320px] desk:overflow-y-auto desk:p-8 desk:min-h-0">
             <Text className="text-2xl font-semibold text-black font-newCourier mb-4">
               {product.title}
             </Text>
@@ -202,7 +199,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
             {/* Certificate link */}
             <Link
-              href={'/store'}
+              href={"/store"}
               className="mb-6 flex items-center gap-2 text-sm text-black hover:underline font-newCourier"
             >
               <svg
@@ -240,14 +237,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
                           setSelectedSize(size);
                           setItemSize(product.id, size);
                         }}
-                        className={`flex items-start gap-3  border p-4 text-left transition ${isSelected
-                          ? "border-gray-800 bg-gray-50"
-                          : "border-gray-200 hover:border-gray-300"
-                          }`}
+                        className={`flex items-start gap-3  border p-4 text-left transition ${
+                          isSelected
+                            ? "border-gray-800 bg-gray-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
                       >
                         <span
-                          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? "border-gray-800" : "border-gray-300"
-                            }`}
+                          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 ${
+                            isSelected ? "border-gray-800" : "border-gray-300"
+                          }`}
                         >
                           {isSelected && (
                             <span className="h-2 w-2 rounded-full bg-gray-800" />

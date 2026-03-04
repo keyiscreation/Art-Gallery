@@ -14,7 +14,7 @@ const SecondSection = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden flex items-center justify-center custom-scale">
+    <div className="relative md:min-h-screen h-[500px] overflow-hidden flex items-center justify-center custom-scale">
       <Image
         className="absolute w-full object-cover object-center h-full z-0"
         src={homedata.images.SecondSection}
