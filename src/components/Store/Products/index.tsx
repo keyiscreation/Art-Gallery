@@ -1,12 +1,16 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { collection, getDocs } from "firebase/firestore";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { db } from "@/firebase";
 import Text from "@/components/ui/Text";
 import Spinner from "@/components/ui/Spinner";
 import ProductModal from "@/components/Product/ProductModal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface SizeInfo {
   image: string;
@@ -40,6 +44,8 @@ const Products = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -60,6 +66,40 @@ const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  // Detect mobile breakpoint
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  // Mobile zoom-in scroll animation (mirrors home page)
+  useEffect(() => {
+    if (!isMobile || products.length === 0) return;
+
+    itemRefs.current.forEach((item) => {
+      if (!item) return;
+      gsap.fromTo(
+        item,
+        { scale: 0.65, transformOrigin: "center center" },
+        {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: item,
+            start: "top bottom",
+            end: "center center",
+            scrub: 1,
+          },
+        },
+      );
+    });
+
+    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+  }, [isMobile, products]);
 
   const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
@@ -90,12 +130,47 @@ const Products = () => {
         onClose={handleCloseModal}
         product={modalProduct}
       />
-      <div className="mx-auto w-full   lg:px-8 pb-8 mob:pb-6">
+      <div className="mx-auto w-full   lg:px-3 pb-8 mob:pb-6">
         {loading ? (
           <div className="w-full flex justify-center items-center min-h-[400px]">
             <Spinner />
           </div>
+        ) : isMobile ? (
+          /* ── Mobile: single column, zoom-in animation ── */
+          <div className="flex flex-col gap-[2px]">
+            {products.map((product, index) => {
+              let imageUrl = product.image;
+              if (product.sizes?.["Small"]) {
+                imageUrl = product.sizes["Small"].image;
+              }
+              return (
+                <div
+                  key={product.id}
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
+                  className="relative w-full h-[500px] overflow-hidden cursor-pointer group"
+                  onClick={() => handleProductClick(product)}
+                >
+                  <Image
+                    src={imageUrl}
+                    alt={product.name}
+                    fill
+                    sizes="100vw"
+                    onContextMenu={(e) => e.preventDefault()}
+                    className="object-cover transition-all duration-300 group-hover:scale-105 grayscale group-hover:grayscale-0 mob:h-[400px] "
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center text-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <Text className="text-white font-newCourier font-bold text-lg uppercase text-center max-w-[90%] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                      {product.name}
+                    </Text>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         ) : (
+          /* ── Desktop: original variable-ratio grid ── */
           <div className="flex flex-col gap-[2px]">
             {(() => {
               let productIndex = 0;
@@ -142,10 +217,8 @@ const Products = () => {
                               onContextMenu={(e) => e.preventDefault()}
                               className="object-cover transition-all duration-300 group-hover:scale-105 grayscale group-hover:grayscale-0"
                             />
-
-                            {/* Title - centered, visible on hover */}
                             <div className="absolute inset-0 flex items-center justify-center text-center px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                              <Text className="text-white font-newCourier font-bold text-lg sm:text-xl uppercase text-center max-w-[90%] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                              <Text className="text-white font-newCourier font-bold text-lg uppercase text-center max-w-[90%] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                                 {product.name}
                               </Text>
                             </div>
