@@ -1,10 +1,12 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Text from "@/components/ui/Text";
 import bgshadow from "@/public/images/heroshadow.png";
 import Button from "@/components/ui/Button";
 import useHomeData from "@/hooks/UseHomeData";
+import { useAtomValue } from "@/jotai/useAtomValue";
 
 // Image slideshow commented out — replaced by looping background video
 // import { useEffect, useMemo, useState } from "react";
@@ -47,6 +49,44 @@ import useHomeData from "@/hooks/UseHomeData";
 const HeroSection = () => {
   const router = useRouter();
   const homedata = useHomeData();
+  const [, setHeroVideoReady] = useAtomValue("heroVideoReady");
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Immediately block the loader — we own the "ready" signal now
+  useEffect(() => {
+    setHeroVideoReady(false);
+    // Absolute safety net: never block longer than 8 seconds
+    const fallback = setTimeout(() => setHeroVideoReady(true), 8000);
+    return () => clearTimeout(fallback);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Once homedata arrives, either signal ready (no video) or wait for canplay
+  useEffect(() => {
+    if (!homedata) return;
+
+    if (!homedata.heroSectionBgVideoUrl) {
+      setHeroVideoReady(true);
+      return;
+    }
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Force muted directly on the DOM node — Safari ignores the React prop
+    video.muted = true;
+
+    const onCanPlay = () => {
+      setHeroVideoReady(true);
+      // Programmatically play to bypass Safari's autoplay restrictions
+      video.play().catch(() => {
+        // Autoplay was blocked; silently ignore — video stays paused
+      });
+    };
+
+    video.addEventListener("canplay", onCanPlay);
+    return () => video.removeEventListener("canplay", onCanPlay);
+  }, [homedata, setHeroVideoReady]);
 
   return (
     <div className="relative md:min-h-screen h-[600px] overflow-hidden">
@@ -55,12 +95,16 @@ const HeroSection = () => {
       {/* Background video */}
       {homedata?.heroSectionBgVideoUrl && (
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover object-center"
           src={homedata.heroSectionBgVideoUrl}
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...({ "webkit-playsinline": "true" } as any)}
         />
       )}
 

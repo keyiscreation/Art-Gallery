@@ -10,6 +10,8 @@ export interface IAtomObject {
 
 const isMounted = atom<boolean>(false);
 const isLoading = atom<boolean>(true);
+// true by default so non-home pages never block the loader
+const heroVideoReady = atom<boolean>(true);
 
 // Ensure cart is always an array (handles corrupt/legacy localStorage)
 const cartStorage = {
@@ -35,6 +37,7 @@ const isCartOpen = atom<boolean>(false);
 export const atoms: IAtomObject = {
   isMounted,
   isLoading,
+  heroVideoReady,
   cart,
   isCartOpen,
 };
