@@ -27,6 +27,7 @@ type HomeDataType = {
   fifthSectionTitle: string;
   sixthSectionTitle: string;
   sixthSectionBtnTitle: string;
+  heroSectionBgVideoUrl: string;
   images: Record<string, string>;
 };
 
@@ -37,6 +38,7 @@ const HomeDataDisplay = () => {
   const [newImageFiles, setNewImageFiles] = useState<
     Record<string, File | null>
   >({});
+  const [newVideoFile, setNewVideoFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -69,7 +71,7 @@ const HomeDataDisplay = () => {
 
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    key: string
+    key: string,
   ) => {
     if (e.target.files?.[0]) {
       setNewImageFiles((prev) => ({ ...prev, [key]: e.target.files![0] }));
@@ -83,11 +85,36 @@ const HomeDataDisplay = () => {
     try {
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
-        formData
+        formData,
       );
       return response.data.secure_url;
     } catch (error) {
       console.error("Error uploading image:", error);
+      return null;
+    }
+  };
+
+  const uploadVideoToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "art-gallery");
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/duox5d29k/video/upload",
+        formData,
+      );
+
+      return response.data.secure_url;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Cloudinary video upload error:",
+          error.response?.data?.error?.message,
+        );
+      } else {
+        console.error("Error uploading video:", error);
+      }
       return null;
     }
   };
@@ -106,9 +133,26 @@ const HomeDataDisplay = () => {
       }
     }
 
+    let heroSectionBgVideoUrl = editedData.heroSectionBgVideoUrl || "";
+    if (newVideoFile) {
+      const uploadedVideoUrl = await uploadVideoToCloudinary(newVideoFile);
+      if (uploadedVideoUrl) {
+        heroSectionBgVideoUrl = uploadedVideoUrl;
+      }
+    }
+
     const homeRef = doc(db, "homeData", editedData.id);
-    await updateDoc(homeRef, { ...editedData, images: updatedImages });
-    setHomeData({ ...editedData, images: updatedImages });
+    await updateDoc(homeRef, {
+      ...editedData,
+      images: updatedImages,
+      heroSectionBgVideoUrl,
+    });
+    setHomeData({
+      ...editedData,
+      images: updatedImages,
+      heroSectionBgVideoUrl,
+    });
+    setNewVideoFile(null);
     setEditing(false);
     setLoading(false);
   };
@@ -122,6 +166,35 @@ const HomeDataDisplay = () => {
         <Text className="text-2xl font-bold text-center mb-5">Home Data</Text>
         {editing ? (
           <div className="space-y-4">
+            <div>
+              <label className="block font-futurapt mb-1">
+                Hero Section Bg Video
+              </label>
+              <input
+                type="file"
+                accept="video/*"
+                className="border p-2 rounded w-full"
+                onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    setNewVideoFile(e.target.files[0]);
+                  }
+                }}
+              />
+              {newVideoFile ? (
+                <video
+                  src={URL.createObjectURL(newVideoFile)}
+                  controls
+                  className="mt-2 w-full max-h-[200px] rounded-md object-cover"
+                />
+              ) : editedData?.heroSectionBgVideoUrl ? (
+                <video
+                  src={editedData.heroSectionBgVideoUrl}
+                  controls
+                  className="mt-2 w-full max-h-[200px] rounded-md object-cover"
+                />
+              ) : null}
+            </div>
+
             <div>
               <label className="block font-futurapt mb-1">
                 Second Section Title
@@ -347,6 +420,20 @@ const HomeDataDisplay = () => {
                 {homeData.sixthSectionBtnTitle}
               </Text>
               {/* Repeat for other fields as needed */}
+
+              {/* Display Hero Video */}
+              {homeData.heroSectionBgVideoUrl && (
+                <div className="mb-5">
+                  <Text className="text-[20px] font-medium text-black mb-2">
+                    Hero Section Bg Video:
+                  </Text>
+                  <video
+                    src={homeData.heroSectionBgVideoUrl}
+                    controls
+                    className="w-full max-h-[300px] rounded-md object-cover"
+                  />
+                </div>
+              )}
 
               {/* Display Images */}
               <div className="flex flex-wrap justify-center gap-[40px]">

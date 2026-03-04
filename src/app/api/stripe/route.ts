@@ -1,14 +1,13 @@
 import { NextResponse, NextRequest } from "next/server";
 
 import Stripe from "stripe";
-// console.log(process.env.STRIPE_API_KEY,"stripe key api");
-// const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
-const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
-  apiVersion: "2025-02-24.acacia",
-  typescript: true,
-});
 
 export async function POST(request: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_API_KEY!, {
+    apiVersion: "2025-02-24.acacia",
+    typescript: true,
+  });
+
   try {
     const { amount, metadata } = await request.json();
 

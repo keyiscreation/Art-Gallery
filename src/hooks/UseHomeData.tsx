@@ -15,6 +15,7 @@ type HomeDataType = {
   fifthSectionBtnTitle: string;
   sixthSectionTitle: string;
   sixthSectionBtnTitle: string;
+  heroSectionBgVideoUrl: string;
   images: Record<string, string>;
 };
 

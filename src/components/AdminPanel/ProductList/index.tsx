@@ -16,6 +16,7 @@ interface SizeInfo {
   image: string;
   hoverImage: string;
   licenseNumber: string;
+  stock: number;
 }
 
 interface Product {
@@ -53,6 +54,7 @@ const ProductList: React.FC = () => {
   const [saving, setSaving] = useState<boolean>(false);
   const [newSizeName, setNewSizeName] = useState<string>("");
   const [newLicenseNumber, setNewLicenseNumber] = useState<string>("");
+  const [newStockQty, setNewStockQty] = useState<string>("");
   const [newSizeImage, setNewSizeImage] = useState<File | null>(null);
   const [newHoverImage, setNewHoverImage] = useState<File | null>(null);
 
@@ -123,13 +125,14 @@ const ProductList: React.FC = () => {
   const handleSizeChange = (
     size: string,
     field: keyof SizeInfo,
-    value: string
+    value: string | number
   ) => {
     setEditData((prev) => {
       const currentSize = prev.sizes?.[size] || {
         image: "",
         hoverImage: "",
         licenseNumber: "",
+        stock: 0,
       };
       return {
         ...prev,
@@ -157,6 +160,7 @@ const ProductList: React.FC = () => {
         image: "",
         hoverImage: "",
         licenseNumber: "",
+        stock: 0,
       };
       return {
         ...prev,
@@ -192,6 +196,7 @@ const ProductList: React.FC = () => {
       image: imageURL,
       hoverImage: hoverImageURL,
       licenseNumber: newLicenseNumber,
+      stock: parseInt(newStockQty) || 0,
     };
 
     setEditData((prev) => {
@@ -208,6 +213,7 @@ const ProductList: React.FC = () => {
     alert("New Size Added Successfully");
     setNewSizeName("");
     setNewLicenseNumber("");
+    setNewStockQty("");
     setNewSizeImage(null);
     setNewHoverImage(null);
   };
@@ -279,7 +285,6 @@ const ProductList: React.FC = () => {
                     placeholder="Price"
                   />
                 </label>
-
                 {editData.sizes &&
                   Object.entries(editData.sizes).map(([size, data]) => (
                     <div key={size} className="border p-3 rounded-md">
@@ -290,14 +295,27 @@ const ProductList: React.FC = () => {
                         <input
                           value={data.licenseNumber}
                           onChange={(e) =>
-                            handleSizeChange(
-                              size,
-                              "licenseNumber",
-                              e.target.value
-                            )
+                            handleSizeChange(size, "licenseNumber", e.target.value)
                           }
                           className="border p-2 w-full mt-1"
                           placeholder="License Number"
+                        />
+                      </label>
+
+                      <label className="block mt-2">
+                        <span>Available in Stock</span>
+                        <input
+                          type="number"
+                          min="0"
+                          value={data.stock ?? 0}
+                          onChange={(e) => {
+                            if (e.target.value !== "") {
+                              handleSizeChange(size, "stock", parseInt(e.target.value, 10) || 0);
+                            }
+                          }}
+                          onWheel={(e) => (e.target as HTMLInputElement).blur()}
+                          className="border p-2 w-full mt-1"
+                          placeholder="Stock quantity"
                         />
                       </label>
 
@@ -414,6 +432,15 @@ const ProductList: React.FC = () => {
                       className="border p-2 w-full mt-1"
                     />
                     <input
+                      type="number"
+                      min="0"
+                      placeholder="Available in stock"
+                      value={newStockQty}
+                      onChange={(e) => setNewStockQty(e.target.value)}
+                      onWheel={(e) => (e.target as HTMLInputElement).blur()}
+                      className="border p-2 w-full mt-1"
+                    />
+                    <input
                       type="file"
                       onChange={(e) =>
                         setNewSizeImage(e.target.files?.[0] || null)
@@ -483,6 +510,10 @@ const ProductList: React.FC = () => {
                       <Text className="text-[16px] text-black">
                         <span className="font-semibold">License:</span>{" "}
                         {sizeData.licenseNumber || "—"}
+                      </Text>
+                      <Text className="text-[16px] text-black">
+                        <span className="font-semibold">In Stock:</span>{" "}
+                        {sizeData.stock ?? 0}
                       </Text>
                       {sizeData.image && (
                         <Image

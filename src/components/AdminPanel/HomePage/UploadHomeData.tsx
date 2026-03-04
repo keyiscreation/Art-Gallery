@@ -21,17 +21,40 @@ type ImageType = {
 const uploadImageToCloudinary = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "art-gallery"); // Replace with your Cloudinary upload preset
+  formData.append("upload_preset", "art-gallery");
 
   try {
     const response = await axios.post(
-      "https://api.cloudinary.com/v1_1/duox5d29k/image/upload", // Replace with your Cloudinary cloud name
+      "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
       formData
     );
 
-    return response.data.secure_url; // Get the uploaded image URL
+    return response.data.secure_url;
   } catch (error) {
     console.error("Error uploading image:", error);
+    return null;
+  }
+};
+
+// Upload video to Cloudinary
+const uploadVideoToCloudinary = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "art-gallery");
+
+  try {
+    const response = await axios.post(
+      "https://api.cloudinary.com/v1_1/duox5d29k/auto/upload",
+      formData
+    );
+
+    return response.data.secure_url;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("Cloudinary video upload error:", error.response?.data);
+    } else {
+      console.error("Error uploading video:", error);
+    }
     return null;
   }
 };
@@ -60,6 +83,8 @@ const UploadHomeData = () => {
   const [sixthSectionTitle, setsixthSectionTitle] = useState<string>("");
   const [sixthSectionBtnTitle, setsixthSectionBtnTitle] = useState<string>("");
 
+  const [heroSectionBgVideo, setHeroSectionBgVideo] = useState<File | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleFileChange = (
@@ -76,14 +101,19 @@ const UploadHomeData = () => {
     setLoading(true);
 
     try {
-      const uploadedImages = await Promise.all(
-        Object.entries(images).map(async ([key, file]) => {
-          if (file) {
-            return [key, await uploadImageToCloudinary(file)];
-          }
-          return [key, null];
-        })
-      );
+      const [uploadedImages, heroVideoUrl] = await Promise.all([
+        Promise.all(
+          Object.entries(images).map(async ([key, file]) => {
+            if (file) {
+              return [key, await uploadImageToCloudinary(file)];
+            }
+            return [key, null];
+          })
+        ),
+        heroSectionBgVideo
+          ? uploadVideoToCloudinary(heroSectionBgVideo)
+          : Promise.resolve(null),
+      ]);
 
       const imageUrls = Object.fromEntries(uploadedImages);
 
@@ -98,6 +128,7 @@ const UploadHomeData = () => {
         fifthSectionTitle,
         sixthSectionTitle,
         sixthSectionBtnTitle,
+        heroSectionBgVideoUrl: heroVideoUrl,
         images: imageUrls,
       });
 
@@ -110,6 +141,7 @@ const UploadHomeData = () => {
       setfifthSectionTitle("");
       setsixthSectionBtnTitle("");
       setsixthSectionTitle("");
+      setHeroSectionBgVideo(null);
 
       setImages({
         HerosectionImage1: null,
@@ -135,6 +167,30 @@ const UploadHomeData = () => {
           Upload Home Data
         </Text>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block font-futurapt mb-1">
+              Hero Section Bg Video
+            </label>
+            <input
+              type="file"
+              accept="video/*"
+              required
+              className="w-full p-2 border rounded-md font-futurapt"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  setHeroSectionBgVideo(e.target.files[0]);
+                }
+              }}
+            />
+            {heroSectionBgVideo && (
+              <video
+                src={URL.createObjectURL(heroSectionBgVideo)}
+                controls
+                className="mt-2 w-full max-h-[200px] rounded-md object-cover"
+              />
+            )}
+          </div>
+
           <div>
             <label className="block font-futurapt mb-1">
               Second Section Title

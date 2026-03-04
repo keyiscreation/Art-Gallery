@@ -10,6 +10,7 @@ interface SizeData {
   image: File | null;
   hoverImage: File | null;
   licenseNumber: string;
+  stock: string;
 }
 
 interface Product {
@@ -26,6 +27,7 @@ interface UpdatedSizes {
     image: string;
     hoverImage: string;
     licenseNumber: string;
+    stock: number;
   };
 }
 
@@ -35,17 +37,17 @@ const AddProduct: React.FC = () => {
     slugtitle: "",
     price: "",
     sizes: {
-      "Small": {
+      Small: {
         image: null,
         hoverImage: null,
         licenseNumber: "",
+        stock: "",
       },
     },
   });
 
   const [newSizeName, setNewSizeName] = useState("");
   const [loading, setLoading] = useState(false);
-  
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -54,7 +56,7 @@ const AddProduct: React.FC = () => {
 
   const handleSizeChange = (
     e: ChangeEvent<HTMLInputElement>,
-    sizeKey: string
+    sizeKey: string,
   ) => {
     const { name, value } = e.target;
     setProduct((prev) => ({
@@ -72,7 +74,7 @@ const AddProduct: React.FC = () => {
   const handleFileChange = (
     e: ChangeEvent<HTMLInputElement>,
     sizeKey: string,
-    type: "image" | "hoverImage"
+    type: "image" | "hoverImage",
   ) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -108,6 +110,7 @@ const AddProduct: React.FC = () => {
           image: null,
           hoverImage: null,
           licenseNumber: "",
+          stock: "",
         },
       },
     }));
@@ -122,7 +125,7 @@ const AddProduct: React.FC = () => {
     try {
       const response = await axios.post(
         "https://api.cloudinary.com/v1_1/duox5d29k/image/upload",
-        formData
+        formData,
       );
       return response.data.secure_url;
     } catch (err) {
@@ -164,6 +167,7 @@ const AddProduct: React.FC = () => {
           image: imageURL,
           hoverImage: hoverImageURL,
           licenseNumber: data.licenseNumber,
+          stock: parseInt(data.stock) || 0,
         };
       }
 
@@ -180,10 +184,11 @@ const AddProduct: React.FC = () => {
         slugtitle: "",
         price: "",
         sizes: {
-          "Small": {
+          Small: {
             image: null,
             hoverImage: null,
             licenseNumber: "",
+            stock: "",
           },
         },
       });
@@ -196,36 +201,34 @@ const AddProduct: React.FC = () => {
   };
 
   // migrate size names
-// const defaultSizeName = "Small";
-//   const migrateSizeNames = async () => {
-//     const productsSnapshot = await getDocs(collection(db, "products"));
+  // const defaultSizeName = "Small";
+  //   const migrateSizeNames = async () => {
+  //     const productsSnapshot = await getDocs(collection(db, "products"));
 
-//     for (const productDoc of productsSnapshot.docs) {
-//       const productData = productDoc.data();
+  //     for (const productDoc of productsSnapshot.docs) {
+  //       const productData = productDoc.data();
 
-//       if (productData.sizes && productData.sizes["W 16.5 * H 23.4 (A2 Print only)"]) {
-//         const updatedSizes = { ...productData.sizes };
+  //       if (productData.sizes && productData.sizes["W 16.5 * H 23.4 (A2 Print only)"]) {
+  //         const updatedSizes = { ...productData.sizes };
 
-//         // Rename 'Normal' to new size name
-//         updatedSizes[defaultSizeName] = updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
-//         delete updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
+  //         // Rename 'Normal' to new size name
+  //         updatedSizes[defaultSizeName] = updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
+  //         delete updatedSizes["W 16.5 * H 23.4 (A2 Print only)"];
 
-//         await updateDoc(doc(db, "products", productDoc.id), {
-//           sizes: updatedSizes,
-//         });
+  //         await updateDoc(doc(db, "products", productDoc.id), {
+  //           sizes: updatedSizes,
+  //         });
 
-//         console.log(`Updated product ${productDoc.id}`);
-//       }
-//     }
+  //         console.log(`Updated product ${productDoc.id}`);
+  //       }
+  //     }
 
-//     console.log("Migration complete!");
-//   };
+  //     console.log("Migration complete!");
+  //   };
 
   return (
-
     <div className="w-full flex justify-center items-center my-[100px] px-5">
-
-        {/* <button
+      {/* <button
           className="bg-black py-3 px-5 text-white"
           onClick={migrateSizeNames}
         >
@@ -295,6 +298,22 @@ const AddProduct: React.FC = () => {
                 </div>
 
                 <div className="mb-2">
+                  <label className="block mb-1 font-futurapt">
+                    Available in Stock
+                  </label>
+                  <input
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value={data.stock}
+                    onChange={(e) => handleSizeChange(e, size)}
+                    onWheel={(e) => (e.target as HTMLInputElement).blur()}
+                    className="w-full p-2 border rounded-md"
+                    placeholder="Enter stock quantity"
+                  />
+                </div>
+
+                <div className="mb-2">
                   <label className="block mb-1 font-futurapt">Image</label>
                   <input
                     type="file"
@@ -344,7 +363,6 @@ const AddProduct: React.FC = () => {
             {loading ? "Adding..." : "Add Product"}
           </Button>
         </form>
-      
       </div>
     </div>
   );

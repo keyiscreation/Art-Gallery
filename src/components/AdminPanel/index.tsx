@@ -82,7 +82,7 @@ const AdminPanel = () => {
         <>
           <AddProduct />
           <UploadReviewData />
-          <TextEditor/>
+          <TextEditor />
           <DisplayAndEditReviews />
           <ProductList />
         </>

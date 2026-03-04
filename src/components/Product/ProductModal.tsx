@@ -11,6 +11,7 @@ interface SizeDetail {
   image: string;
   hoverImage: string;
   licenseNumber: string;
+  stock?: number;
 }
 
 interface ProductData {
@@ -267,7 +268,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             ${product.price}
                           </span>
                           <span className="text-xs text-gray-500 font-newCourier">
-                            10 available
+                            {product.sizes?.[size]?.stock ?? 0} available
                           </span>
                         </div>
                       </button>
