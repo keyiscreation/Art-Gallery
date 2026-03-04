@@ -80,6 +80,7 @@ const HeroSection = () => {
           </Text>
 
           <Button
+            id="hero-cta-button"
             type="button"
             onClick={() => router.push("/store")}
             className="border border-white/70 bg-white/10 backdrop-blur-md py-5 text-[20px] text-white transition hover:bg-white hover:text-black"

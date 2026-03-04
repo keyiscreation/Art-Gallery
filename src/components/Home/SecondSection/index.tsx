@@ -23,12 +23,15 @@ const SecondSection = () => {
       />
 
       <div className="relative z-10 w-full max-w-[1110px]">
-        <Text as="h2" className="text-center uppercase">
+        <Text as="h2" className="text-center uppercase mob:text-[20px]">
           {homedata.secondSectionTitle}
         </Text>
 
         <div className="flex justify-center">
-          <Link className="max-w-[273px] w-full" href="/store">
+          <Link
+            className="max-w-[273px] w-full mob:text-[20px] mob:px-5"
+            href="/store"
+          >
             <Button className="mt-4">{homedata.secondSectionBtnTitle}</Button>
           </Link>
         </div>

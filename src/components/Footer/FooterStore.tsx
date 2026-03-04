@@ -158,12 +158,9 @@ const Footer = () => {
 
       <div className="mt-10 h-px w-full max-w-[800px] mx-auto bg-white/30" />
 
-      <div className="mt-10 h-px w-full max-w-[150px] mx-auto bg-white/30" />
-      <div className="flex justify-center items-center mt-8">
+      <div className="mx-auto w-[150px]">
         <Link href="/admin-panel" className="w-fit mx-auto">
-          <Text className="text-white/40 text-center text-[16px] mt-4">
-            Mockup
-          </Text>
+          <div className="mt-10 h-px w-full max-w-[150px] mx-auto bg-white/30" />
         </Link>
       </div>
 

@@ -2,8 +2,9 @@ import React from "react";
 
 import { cn } from "@/lib/utils";
 interface ButtonProps {
+  id?: string;
   text?: string;
-  children?: React.ReactNode; // Add children prop
+  children?: React.ReactNode;
   className?: string;
   type?: "button" | "submit" | "reset";
   loading?: boolean;
@@ -12,6 +13,7 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
+  id,
   text = "Explore Music",
   children,
   className,
@@ -23,6 +25,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <>
       <button
+        id={id}
         type={type}
         disabled={loading}
         onClick={onClick}

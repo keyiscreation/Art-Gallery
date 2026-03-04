@@ -66,17 +66,29 @@ const Navbar = () => {
 
   const onClose = () => setIsOpen(false);
   const onOpen = () => setIsOpen(true);
+  // Sticky navbar on scroll
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+    const handleScroll = () => setIsSticky(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-      setShowArtStore(window.scrollY > 10);
-    };
+  // Show "Art Store" when the hero CTA button leaves the viewport.
+  // Falls back to a scroll threshold on pages that have no hero button.
+  useEffect(() => {
+    const heroBtn = document.getElementById("hero-cta-button");
 
+    if (heroBtn) {
+      const observer = new IntersectionObserver(
+        ([entry]) => setShowArtStore(!entry.isIntersecting),
+        { threshold: 0 }
+      );
+      observer.observe(heroBtn);
+      return () => observer.disconnect();
+    }
+
+    // Non-home pages: show after any meaningful scroll
+    const handleScroll = () => setShowArtStore(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
