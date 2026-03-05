@@ -178,7 +178,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
               src={currentImage}
               alt={product.title}
               fill
-              className="object-cover desk:object-contain"
+              className="object-contain"
               onContextMenu={(e) => e.preventDefault()}
               sizes="70vw"
             />
