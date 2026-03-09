@@ -3,6 +3,7 @@
 // import Image from "next/image";
 // import axios from "axios";
 
+import { useState, useEffect } from "react";
 import Text from "../ui/Text";
 // import Button from "../ui/Button";
 
@@ -11,8 +12,22 @@ import Text from "../ui/Text";
 // import insta from "@/public/icons/instagram-white.svg";
 // import fb from "@/public/icons/facebook-white.svg";
 import Link from "next/link";
+import AdminLoginModal from "./AdminLoginModal";
 
 const Footer = () => {
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === "A") {
+        e.preventDefault();
+        setAdminModalOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Newsletter state and submit handler (currently unused with newsletter UI commented out)
   // const [email, setEmail] = useState<string>("");
   // const [loading, setLoading] = useState<boolean>(false);
@@ -159,10 +174,20 @@ const Footer = () => {
       <div className="mt-10 h-px w-full max-w-[800px] mx-auto bg-white/30" />
 
       <div className="mx-auto w-[150px]">
-        <Link href="/admin-panel" className="w-fit mx-auto">
-          <div className="mt-10 h-px w-full max-w-[150px] mx-auto bg-white/30" />
-        </Link>
+        <button
+          type="button"
+          onClick={() => setAdminModalOpen(true)}
+          className="w-full cursor-pointer focus:outline-none focus:ring-0"
+          aria-label="Open admin login"
+        >
+          <div className="mt-10 h-px w-full max-w-[150px] mx-auto bg-white/30 hover:bg-white/50 transition-colors" />
+        </button>
       </div>
+
+      <AdminLoginModal
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
+      />
 
       {/* <div className="mt-6 flex flex-col items-center justify-center gap-4 max-w-[1200px] mx-auto">
 

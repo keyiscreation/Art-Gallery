@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -11,21 +11,72 @@ import { auth } from "../../firebase";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
 
+const DIGIT_COUNT = 6;
+
 const Login = () => {
   const [loginEmail, setLoginEmail] = useState<string>("");
-  const [loginPassword, setLoginPassword] = useState<string>("");
+  const [passwordDigits, setPasswordDigits] = useState<string[]>(
+    Array(DIGIT_COUNT).fill("")
+  );
   const [loginError, setLoginError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const router = useRouter();
+
+  const loginPassword = passwordDigits.join("");
+
+  const focusInput = useCallback((index: number) => {
+    inputRefs.current[index]?.focus();
+  }, []);
+
+  const handlePasswordDigitChange = (index: number, value: string) => {
+    if (value.length > 1) return;
+    const newDigits = [...passwordDigits];
+    newDigits[index] = value;
+    setPasswordDigits(newDigits);
+    if (value && index < DIGIT_COUNT - 1) {
+      focusInput(index + 1);
+    }
+  };
+
+  const handlePasswordKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Backspace" && !passwordDigits[index] && index > 0) {
+      e.preventDefault();
+      const newDigits = [...passwordDigits];
+      newDigits[index - 1] = "";
+      setPasswordDigits(newDigits);
+      focusInput(index - 1);
+    }
+  };
+
+  const handlePasswordPaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pasted = e.clipboardData.getData("text").slice(0, DIGIT_COUNT);
+    if (!/^[\x20-\x7E]*$/.test(pasted)) return;
+    const newDigits = [...passwordDigits];
+    for (let i = 0; i < pasted.length; i++) {
+      newDigits[i] = pasted[i];
+    }
+    setPasswordDigits(newDigits);
+    const nextEmpty = newDigits.findIndex((d) => !d);
+    focusInput(nextEmpty === -1 ? DIGIT_COUNT - 1 : nextEmpty);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoginError("");
+    if (loginPassword.length !== DIGIT_COUNT) {
+      setLoginError("Please enter all 6 digits of your password.");
+      return;
+    }
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-      // console.log("login successful");
       router.push("/admin-panel");
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -61,16 +112,32 @@ const Login = () => {
               setLoginEmail(e.target.value);
             }}
           />
-          <input
-            className="w-[100%] h-[56px] py-2 px-6 rounded-[6px] bg-[#F2F5FA] text-secondary font-medium leading-6  mb-4 input-styling  focus:input-box-shadow duration-300 "
-            type="password"
-            name="password"
-            placeholder="PASSWORD"
-            required
-            onChange={(e) => {
-              setLoginPassword(e.target.value);
-            }}
-          />
+          <label className="sr-only" htmlFor="password-digit-0">
+            PASSWORD (6 digits)
+          </label>
+          <div className="flex gap-2 mb-4 w-full justify-center" role="group" aria-label="Password - enter 6 characters">
+            {passwordDigits.map((digit, index) => (
+              <input
+                key={index}
+                id={index === 0 ? "password-digit-0" : undefined}
+                ref={(el) => {
+                  inputRefs.current[index] = el;
+                }}
+                type="password"
+                inputMode="text"
+                autoComplete="one-time-code"
+                maxLength={1}
+                aria-label={`Password digit ${index + 1}`}
+                value={digit}
+                onChange={(e) =>
+                  handlePasswordDigitChange(index, e.target.value)
+                }
+                onKeyDown={(e) => handlePasswordKeyDown(index, e)}
+                onPaste={handlePasswordPaste}
+                className="password-digit-box w-12 h-12 sm:w-14 sm:h-14 rounded-[12px] bg-white border-2 border-[#d1d5db] text-center text-secondary font-semibold text-lg focus:outline-none focus:border-black focus:ring-0 transition-[border-color] duration-200"
+              />
+            ))}
+          </div>
           <Button
             type="submit"
             disabled={loading}

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import localFont from "next/font/local";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { AuthProvider } from "@/providers/AuthContext";
 import LoadingGate from "@/components/LoadingGate";
@@ -76,6 +78,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <LoadingGate>{children}</LoadingGate>
+          <ToastContainer position="top-center" theme="dark" />
         </AuthProvider>
       </body>
     </html>
