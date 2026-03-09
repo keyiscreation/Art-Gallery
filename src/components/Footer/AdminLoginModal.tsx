@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithCustomToken, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
@@ -26,7 +26,7 @@ const Lock = () => {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="1.5"
+      strokeWidth="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
       className="lucide lucide-lock h-5 w-5"
@@ -109,12 +109,6 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
       setSendCodeStatus("error");
     }
   }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      handleSendCode();
-    }
-  }, [isOpen, handleSendCode]);
 
   const handleVerify = async () => {
     const code = digits.join("");
@@ -228,6 +222,18 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           Enter PIN code to access admin panel
         </p>
 
+        <p className="text-black/80 text-sm mb-4">
+          To log in to the panel, request the shortcode via{" "}
+          <button
+            type="button"
+            onClick={handleSendCode}
+            className="text-black font-semibold underline underline-offset-1 hover:no-underline cursor-pointer"
+          >
+            email
+          </button>
+          .
+        </p>
+
         {sendCodeStatus === "sent" && (
           <p className="text-green-400 text-sm mb-4">
             Code sent! Check your email.
@@ -239,7 +245,7 @@ const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           </p>
         )}
         {sendCodeStatus === "sending" && (
-          <p className="text-white/80 text-sm mb-4">
+          <p className="text-black/90 text-sm mb-4">
             Sending code to your email…
           </p>
         )}

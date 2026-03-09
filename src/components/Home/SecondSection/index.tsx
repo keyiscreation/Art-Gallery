@@ -17,7 +17,7 @@ const SecondSection = () => {
     <div className="relative md:min-h-screen h-[500px] overflow-hidden flex items-center justify-center custom-scale">
       <Image
         className="absolute w-full object-cover object-center h-full z-0"
-        src={homedata.images.SecondSection}
+        src={homedata?.images?.SecondSection}
         alt="Second Section Background"
         fill
       />

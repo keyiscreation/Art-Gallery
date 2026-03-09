@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { admindb } from "@/lib/utils/firebaseadmin";
 
-const ADMIN_EMAIL = "keyiscreation1@gmail.com";
+const ADMIN_EMAIL = "chadilrauf@gmail.com";
 const OTP_COLLECTION = "admin_otp";
 const OTP_EXPIRY_MINUTES = 10;
 
@@ -12,7 +12,7 @@ function generateFourDigitCode(): string {
 
 export async function POST() {
   try {
-    const appPassword = "kgyn etvd imbk zkwr";
+    const appPassword = "foel vztq hmji trnq";
     if (!appPassword) {
       return NextResponse.json(
         {
