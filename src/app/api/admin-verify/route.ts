@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import admin from "firebase-admin";
 import { admindb } from "@/lib/utils/firebaseadmin";
 
-const ADMIN_EMAIL = "chadilrauf@gmail.com";
+const ADMIN_EMAIL = "keyiscreation@gmail.com";
 const OTP_COLLECTION = "admin_otp";
 
 function getExpiresAt(data: Record<string, unknown> | undefined): Date {

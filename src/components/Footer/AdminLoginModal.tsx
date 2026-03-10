@@ -27,8 +27,8 @@ const Lock = () => {
       fill="none"
       stroke="currentColor"
       strokeWidth="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className="lucide lucide-lock h-5 w-5"
       aria-hidden="true"
     >
